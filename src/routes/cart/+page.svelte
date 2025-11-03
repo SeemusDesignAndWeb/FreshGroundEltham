@@ -70,8 +70,9 @@
 									<p class="text-sm text-gray-600">{formatPrice(item.price)} each</p>
 								</div>
 								<div class="flex items-center gap-2">
-									<label class="text-gray-700 font-medium">Quantity:</label>
+									<label for="quantity-{item.id}" class="text-gray-700 font-medium">Quantity:</label>
 									<input 
+										id="quantity-{item.id}"
 										type="number" 
 										min="1" 
 										value={item.quantity}

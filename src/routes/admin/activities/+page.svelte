@@ -5,7 +5,7 @@
 
 	let { data } = $props<PageData>();
 	let activities = $state<Activity[]>(data?.activities || []);
-	let editingId: string | null = null;
+	let editingId = $state<string | null>(null);
 	let showAddForm = $state(false);
 	let formData = $state<Partial<Activity>>({
 		title: '',

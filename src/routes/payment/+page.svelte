@@ -3,7 +3,7 @@
 	import { cart, clearCart } from '$lib/stores/cart';
 	import { goto } from '$app/navigation';
 
-	let bookingData: any = null;
+	let bookingData = $state<any>(null);
 	let processing = $state(false);
 	let stripe: any = null;
 	let elements: any = null;

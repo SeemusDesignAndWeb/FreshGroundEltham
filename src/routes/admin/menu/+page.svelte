@@ -3,7 +3,7 @@
 	import type { MenuItem } from '$lib/server/database';
 
 	let menuItems = $state<MenuItem[]>([]);
-	let editingMenuItemId: string | null = null;
+	let editingMenuItemId = $state<string | null>(null);
 	let showMenuItemForm = $state(false);
 	let menuItemFormData = $state<Partial<MenuItem>>({
 		category: '',

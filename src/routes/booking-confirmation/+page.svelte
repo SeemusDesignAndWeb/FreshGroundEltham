@@ -2,7 +2,7 @@
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
 
-	let confirmation: any = null;
+	let confirmation = $state<any>(null);
 	let emailSent = $state(false);
 
 	function formatPrice(price: number) {

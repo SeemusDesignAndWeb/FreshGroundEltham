@@ -3,7 +3,7 @@
 	import type { Testimonial } from '$lib/server/database';
 
 	let testimonials = $state<Testimonial[]>([]);
-	let editingTestimonialId: string | null = null;
+	let editingTestimonialId = $state<string | null>(null);
 	let showTestimonialForm = $state(false);
 	let testimonialFormData = $state<Partial<Testimonial>>({
 		name: '',
