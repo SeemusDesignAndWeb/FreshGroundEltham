@@ -1,0 +1,88 @@
+<script lang="ts">
+	import { onMount } from 'svelte';
+	import type { MenuItem } from '$lib/server/database';
+	import type { PageData } from './$types';
+
+	let { data } = $props<PageData>();
+	let menuItems = $state<MenuItem[]>(data?.menuItems || []);
+
+	onMount(async () => {
+		try {
+			const response = await fetch('/api/menu');
+			if (response.ok) {
+				const result = await response.json();
+				menuItems = result.menuItems || [];
+			}
+		} catch (error) {
+			console.error('Error loading menu:', error);
+		}
+	});
+
+	function formatPrice(price: number) {
+		return new Intl.NumberFormat('en-GB', {
+			style: 'currency',
+			currency: 'GBP'
+		}).format(price);
+	}
+
+	function groupByCategory(items: MenuItem[]) {
+		const grouped: Record<string, MenuItem[]> = {};
+		items.forEach(item => {
+			if (!grouped[item.category]) {
+				grouped[item.category] = [];
+			}
+			grouped[item.category].push(item);
+		});
+		return grouped;
+	}
+
+	const groupedMenu = $derived(groupByCategory(menuItems));
+</script>
+
+<svelte:head>
+	<title>Menu - Fresh Ground Coffee House</title>
+	<meta name="description" content="View our menu at Fresh Ground Coffee House - quality coffee, tea, and food at accessible prices" />
+</svelte:head>
+
+<!-- Hero Section -->
+<div class="relative z-0">
+	<section class="relative bg-cover bg-center py-8 px-4 -mt-[120px] pt-[calc(120px+2rem)] min-h-[200px] flex items-center" style="background-image: url('https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=1920&q=80');">
+		<div class="absolute inset-0 bg-gradient-to-r from-[#39918c]/80 to-[#2f435a]/80 z-10"></div>
+		<div class="max-w-4xl mx-auto text-center relative z-20 text-white">
+			<h1 class="text-4xl md:text-5xl font-bold mb-4">Our Menu</h1>
+			<p class="text-xl text-gray-100">Quality food and beverages at accessible prices</p>
+		</div>
+	</section>
+</div>
+
+<!-- Menu Section -->
+<section class="py-16 px-4 bg-white">
+	<div class="max-w-6xl mx-auto">
+		{#if Object.keys(groupedMenu).length > 0}
+			{#each Object.entries(groupedMenu) as [category, items]}
+				<div class="mb-12">
+					<h2 class="text-4xl font-bold text-[#39918c] mb-6 text-center">{category}</h2>
+					<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+						{#each items as item (item.id)}
+							<div class="bg-white rounded-lg p-6 shadow-md border border-gray-200 hover:shadow-lg transition-shadow">
+								<div class="flex justify-between items-start mb-2">
+									<h3 class="text-2xl font-bold text-[#39918c] flex-1">{item.name}</h3>
+									<span class="text-xl font-bold text-[#39918c] ml-4">{formatPrice(item.price)}</span>
+								</div>
+								{#if item.description}
+									<p class="text-gray-600">{item.description}</p>
+								{/if}
+							</div>
+						{/each}
+					</div>
+				</div>
+			{/each}
+		{:else}
+			<div class="text-center py-12">
+				<p class="text-xl text-gray-600 mb-4">Menu coming soon!</p>
+				<p class="text-gray-500">Check back soon for our full menu.</p>
+			</div>
+		{/if}
+	</div>
+</section>
+
