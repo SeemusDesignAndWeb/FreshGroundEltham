@@ -12,8 +12,12 @@
 	let bannerEnabled = $state(false);
 	let bannerIcon = $state('');
 	let bannerEndIcon = $state('');
+	let navigationItems = $state<Array<{path: string; label: string; hidden: boolean}>>([]);
 	
 	let cartCount = $derived($cart.reduce((sum, item) => sum + item.quantity, 0));
+	
+	// Get visible navigation items
+	let visibleNavItems = $derived(navigationItems.filter(item => !item.hidden));
 	
 	onMount(() => {
 		// Load banner message
@@ -33,6 +37,22 @@
 			})
 			.catch(error => {
 				console.error('Error loading banner:', error);
+			});
+
+		// Load navigation settings
+		fetch('/api/navigation')
+			.then(response => {
+				if (response.ok) {
+					return response.json();
+				}
+			})
+			.then(data => {
+				if (data && data.items) {
+					navigationItems = data.items;
+				}
+			})
+			.catch(error => {
+				console.error('Error loading navigation:', error);
 			});
 
 		// Handle scroll
@@ -128,36 +148,13 @@
 
 			<!-- Desktop menu -->
 			<ul class="hidden md:flex items-center gap-6 list-none m-0 p-0">
-				<li>
-					<a href="/" class="font-medium transition-colors {isScrolled ? 'text-white hover:text-[#39918c]' : 'text-white hover:text-[#39918c]'} {$page.url.pathname === '/' ? (isScrolled ? 'text-[#39918c]' : 'text-[#39918c]') : ''}">
-						Home
-					</a>
-				</li>
-				<li>
-					<a href="/about" class="font-medium transition-colors {isScrolled ? 'text-white hover:text-[#39918c]' : 'text-white hover:text-[#39918c]'} {$page.url.pathname === '/about' ? (isScrolled ? 'text-[#39918c]' : 'text-[#39918c]') : ''}">
-						About Us
-					</a>
-				</li>
-				<li>
-					<a href="/opening-times" class="font-medium transition-colors {isScrolled ? 'text-white hover:text-[#39918c]' : 'text-white hover:text-[#39918c]'} {$page.url.pathname === '/opening-times' ? (isScrolled ? 'text-[#39918c]' : 'text-[#39918c]') : ''}">
-						Opening Times
-					</a>
-				</li>
-				<li>
-					<a href="/activities" class="font-medium transition-colors {isScrolled ? 'text-white hover:text-[#39918c]' : 'text-white hover:text-[#39918c]'} {$page.url.pathname === '/activities' ? (isScrolled ? 'text-[#39918c]' : 'text-[#39918c]') : ''}">
-						Kids Activities
-					</a>
-				</li>
-				<li>
-					<a href="/donate" class="font-medium transition-colors {isScrolled ? 'text-white hover:text-[#39918c]' : 'text-white hover:text-[#39918c]'} {$page.url.pathname === '/donate' ? (isScrolled ? 'text-[#39918c]' : 'text-[#39918c]') : ''}">
-						Donate
-					</a>
-				</li>
-				<li>
-					<a href="/contact" class="font-medium transition-colors {isScrolled ? 'text-white hover:text-[#39918c]' : 'text-white hover:text-[#39918c]'} {$page.url.pathname === '/contact' ? (isScrolled ? 'text-[#39918c]' : 'text-[#39918c]') : ''}">
-						Contact Us
-					</a>
-				</li>
+				{#each visibleNavItems as item}
+					<li>
+						<a href={item.path} class="font-medium transition-colors {isScrolled ? 'text-white hover:text-[#39918c]' : 'text-white hover:text-[#39918c]'} {$page.url.pathname === item.path ? (isScrolled ? 'text-[#39918c]' : 'text-[#39918c]') : ''}">
+							{item.label}
+						</a>
+					</li>
+				{/each}
 			</ul>
 
 			<!-- Mobile menu button -->
@@ -179,12 +176,13 @@
 			<!-- Mobile menu -->
 			{#if mobileMenuOpen}
 				<ul class="md:hidden mt-4 space-y-2 list-none m-0 p-0 pb-4">
-					<li><a href="/" class="block py-2 transition-colors {isScrolled ? 'text-white hover:text-[#39918c]' : 'text-white hover:text-[#39918c]'}">Home</a></li>
-					<li><a href="/about" class="block py-2 transition-colors {isScrolled ? 'text-white hover:text-[#39918c]' : 'text-white hover:text-[#39918c]'}">About Us</a></li>
-					<li><a href="/opening-times" class="block py-2 transition-colors {isScrolled ? 'text-white hover:text-[#39918c]' : 'text-white hover:text-[#39918c]'}">Opening Times</a></li>
-					<li><a href="/activities" class="block py-2 transition-colors {isScrolled ? 'text-white hover:text-[#39918c]' : 'text-white hover:text-[#39918c]'}">Kids Activities</a></li>
-					<li><a href="/donate" class="block py-2 transition-colors {isScrolled ? 'text-white hover:text-[#39918c]' : 'text-white hover:text-[#39918c]'}">Donate</a></li>
-					<li><a href="/contact" class="block py-2 transition-colors {isScrolled ? 'text-white hover:text-[#39918c]' : 'text-white hover:text-[#39918c]'}">Contact Us</a></li>
+					{#each visibleNavItems as item}
+						<li>
+							<a href={item.path} class="block py-2 transition-colors {isScrolled ? 'text-white hover:text-[#39918c]' : 'text-white hover:text-[#39918c]'}">
+								{item.label}
+							</a>
+						</li>
+					{/each}
 				</ul>
 			{/if}
 	</nav>

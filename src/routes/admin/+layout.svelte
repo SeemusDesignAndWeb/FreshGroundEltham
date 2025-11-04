@@ -59,6 +59,12 @@
 						>
 							Images
 						</a>
+						<a 
+							href="/admin/navigation" 
+							class="px-3 py-2 rounded transition-colors {$page.url.pathname === '/admin/navigation' ? 'bg-[#39918c] text-white' : 'text-gray-200 hover:bg-[#39918c]/50'}"
+						>
+							Navigation
+						</a>
 					</div>
 				</div>
 				<div class="flex items-center gap-4">
@@ -114,6 +120,12 @@
 				class="px-3 py-2 rounded transition-colors {$page.url.pathname === '/admin/images' ? 'bg-[#39918c] text-white' : 'text-gray-200 hover:bg-[#39918c]/50'}"
 			>
 				Images
+			</a>
+			<a 
+				href="/admin/navigation" 
+				class="px-3 py-2 rounded transition-colors {$page.url.pathname === '/admin/navigation' ? 'bg-[#39918c] text-white' : 'text-gray-200 hover:bg-[#39918c]/50'}"
+			>
+				Navigation
 			</a>
 		</div>
 	</div>

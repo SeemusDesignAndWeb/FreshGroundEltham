@@ -47,6 +47,16 @@ export interface SiteImage {
 	category?: string; // Optional category (e.g., 'coffee', 'food', 'activities')
 }
 
+export interface NavigationItem {
+	path: string; // URL path (e.g., '/about')
+	label: string; // Display label (e.g., 'About Us')
+	hidden: boolean; // Whether to hide from navbar
+}
+
+export interface NavigationSettings {
+	items: NavigationItem[];
+}
+
 export interface Database {
 	activities: Activity[];
 	bookings: any[];
@@ -56,6 +66,7 @@ export interface Database {
 	activitiesSettings?: ActivitiesSettings;
 	bannerSettings?: BannerSettings;
 	images?: SiteImage[];
+	navigationSettings?: NavigationSettings;
 }
 
 function getDbPath(): string {
@@ -421,5 +432,36 @@ export function populateImagesFromOpeningTimes(): { added: number; skipped: numb
 	}
 	
 	return { added, skipped };
+}
+
+// Default navigation items
+const DEFAULT_NAVIGATION_ITEMS: NavigationItem[] = [
+	{ path: '/', label: 'Home', hidden: false },
+	{ path: '/about', label: 'About Us', hidden: false },
+	{ path: '/opening-times', label: 'Opening Times', hidden: false },
+	{ path: '/activities', label: 'Kids Activities', hidden: false },
+	{ path: '/donate', label: 'Donate', hidden: false },
+	{ path: '/contact', label: 'Contact Us', hidden: false }
+];
+
+export function getNavigationSettings(): NavigationSettings {
+	const db = readDatabase();
+	if (!db.navigationSettings || !db.navigationSettings.items) {
+		// Initialize with default items
+		const defaultSettings: NavigationSettings = {
+			items: DEFAULT_NAVIGATION_ITEMS.map(item => ({ ...item }))
+		};
+		// Save defaults to database
+		db.navigationSettings = defaultSettings;
+		writeDatabase(db);
+		return defaultSettings;
+	}
+	return db.navigationSettings;
+}
+
+export function updateNavigationSettings(settings: NavigationSettings): void {
+	const db = readDatabase();
+	db.navigationSettings = settings;
+	writeDatabase(db);
 }
 
