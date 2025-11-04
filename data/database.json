@@ -212,5 +212,39 @@
       "alt": "Richard and Damola",
       "category": "People"
     }
-  ]
+  ],
+  "navigationSettings": {
+    "items": [
+      {
+        "path": "/",
+        "label": "Home",
+        "hidden": false
+      },
+      {
+        "path": "/about",
+        "label": "About Us",
+        "hidden": false
+      },
+      {
+        "path": "/opening-times",
+        "label": "Opening Times",
+        "hidden": false
+      },
+      {
+        "path": "/activities",
+        "label": "Kids Activities",
+        "hidden": false
+      },
+      {
+        "path": "/donate",
+        "label": "Donate",
+        "hidden": false
+      },
+      {
+        "path": "/contact",
+        "label": "Contact Us",
+        "hidden": false
+      }
+    ]
+  }
 }

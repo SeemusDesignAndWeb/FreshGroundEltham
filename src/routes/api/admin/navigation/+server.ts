@@ -1,10 +1,10 @@
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import { getNavigationSettings, updateNavigationSettings } from '$lib/server/database';
-import { checkAdminAuth } from '$lib/server/auth';
 
 export const GET: RequestHandler = async ({ cookies }) => {
-	if (!checkAdminAuth(cookies)) {
+	// Check authentication
+	if (!cookies.get('admin_session')) {
 		return json({ error: 'Unauthorized' }, { status: 401 });
 	}
 	
@@ -13,7 +13,8 @@ export const GET: RequestHandler = async ({ cookies }) => {
 };
 
 export const POST: RequestHandler = async ({ request, cookies }) => {
-	if (!checkAdminAuth(cookies)) {
+	// Check authentication
+	if (!cookies.get('admin_session')) {
 		return json({ error: 'Unauthorized' }, { status: 401 });
 	}
 	
