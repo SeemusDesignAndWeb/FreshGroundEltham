@@ -1,49 +1,21 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import SEOHead from '$lib/components/SEOHead.svelte';
+	import { getPageBackground } from '$lib/utils/pageBackground';
 
 	let selectedImage = $state<string | null>(null);
-	let images = $state([
-		{
-			src: '/images/coffee-cup-hero.jpg',
-			alt: 'Fresh coffee cup',
-			category: 'coffee'
-		},
-		{
-			src: '/images/coffee-latte-art.jpg',
-			alt: 'Beautiful latte art',
-			category: 'coffee'
-		},
-		{
-			src: '/images/coffee-making.jpg',
-			alt: 'Coffee being prepared',
-			category: 'coffee'
-		},
-		{
-			src: '/images/pastries.jpg',
-			alt: 'Delicious pastries',
-			category: 'food'
-		},
-		{
-			src: '/images/coffee-beans-background.jpg',
-			alt: 'Coffee beans',
-			category: 'coffee'
-		},
-		{
-			src: '/images/coffeebeans.png',
-			alt: 'Coffee beans close up',
-			category: 'coffee'
-		}
-	]);
+	let images = $state<Array<{src: string; alt: string; category: string}>>([]);
+	let backgroundImage = $state('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1920&q=80');
 
 	let filteredImages = $state(images);
 	let selectedCategory = $state<string>('all');
 
-	const categories = [
-		{ id: 'all', label: 'All' },
-		{ id: 'coffee', label: 'Coffee' },
-		{ id: 'food', label: 'Food' }
-	];
+	// Get unique categories from loaded images
+	let categories = $derived(() => {
+		const uniqueCats = new Set(images.map(img => img.category).filter(cat => cat && cat !== ''));
+		const catArray = Array.from(uniqueCats).map(cat => ({ id: cat, label: cat.charAt(0).toUpperCase() + cat.slice(1) }));
+		return [{ id: 'all', label: 'All' }, ...catArray];
+	});
 
 	function filterImages(category: string) {
 		selectedCategory = category;
@@ -86,7 +58,43 @@
 		selectedImage = filteredImages[newIndex].src;
 	}
 
-	onMount(() => {
+	onMount(async () => {
+		// Load background image
+		backgroundImage = await getPageBackground('/gallery', backgroundImage);
+		
+		// Load gallery images from API
+		try {
+			const response = await fetch('/api/gallery');
+			if (response.ok) {
+				const data = await response.json();
+				images = data.images || [];
+				filteredImages = images; // Initialize filtered images
+			} else {
+				// Fallback to default images if API fails
+				images = [
+					{ src: '/images/coffee-cup-hero.jpg', alt: 'Fresh coffee cup', category: 'coffee' },
+					{ src: '/images/coffee-latte-art.jpg', alt: 'Beautiful latte art', category: 'coffee' },
+					{ src: '/images/coffee-making.jpg', alt: 'Coffee being prepared', category: 'coffee' },
+					{ src: '/images/pastries.jpg', alt: 'Delicious pastries', category: 'food' },
+					{ src: '/images/coffee-beans-background.jpg', alt: 'Coffee beans', category: 'coffee' },
+					{ src: '/images/coffeebeans.png', alt: 'Coffee beans close up', category: 'coffee' }
+				];
+				filteredImages = images;
+			}
+		} catch (error) {
+			console.error('Error loading gallery images:', error);
+			// Fallback to default images
+			images = [
+				{ src: '/images/coffee-cup-hero.jpg', alt: 'Fresh coffee cup', category: 'coffee' },
+				{ src: '/images/coffee-latte-art.jpg', alt: 'Beautiful latte art', category: 'coffee' },
+				{ src: '/images/coffee-making.jpg', alt: 'Coffee being prepared', category: 'coffee' },
+				{ src: '/images/pastries.jpg', alt: 'Delicious pastries', category: 'food' },
+				{ src: '/images/coffee-beans-background.jpg', alt: 'Coffee beans', category: 'coffee' },
+				{ src: '/images/coffeebeans.png', alt: 'Coffee beans close up', category: 'coffee' }
+			];
+			filteredImages = images;
+		}
+		
 		window.addEventListener('keydown', handleKeydown);
 		return () => {
 			window.removeEventListener('keydown', handleKeydown);
@@ -99,7 +107,7 @@
 
 <!-- Hero Section -->
 <div class="relative z-0">
-	<section class="relative bg-cover bg-center py-8 px-4 -mt-[120px] pt-[calc(120px+2rem)] min-h-[200px] flex items-center" style="background-image: url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1920&q=80');">
+	<section class="relative bg-cover bg-center py-8 px-4 -mt-[120px] pt-[calc(120px+2rem)] min-h-[200px] flex items-center" style="background-image: url('{backgroundImage}');">
 		<div class="absolute inset-0 bg-gradient-to-r from-[#39918c]/20 to-[#2f435a]/20 z-10"></div>
 		<div class="max-w-4xl mx-auto text-center relative z-20 text-white">
 			<h1 class="text-4xl md:text-5xl font-bold mb-4">Gallery</h1>
@@ -112,18 +120,20 @@
 <section class="py-16 px-4 bg-white">
 	<div class="max-w-7xl mx-auto">
 		<!-- Category Filter -->
-		<div class="flex justify-center gap-4 mb-12 flex-wrap">
-			{#each categories as category}
-				<button
-					onclick={() => filterImages(category.id)}
-					class="px-6 py-2 rounded-lg font-medium transition-all duration-200 {selectedCategory === category.id 
-						? 'bg-[#39918c] text-white shadow-lg' 
-						: 'bg-white text-[#39918c] border-2 border-[#39918c] hover:bg-[#39918c] hover:text-white'}"
-				>
-					{category.label}
-				</button>
-			{/each}
-		</div>
+		{#if categories().length > 1}
+			<div class="flex justify-center gap-4 mb-12 flex-wrap">
+				{#each categories() as category}
+					<button
+						onclick={() => filterImages(category.id)}
+						class="px-6 py-2 rounded-lg font-medium transition-all duration-200 {selectedCategory === category.id 
+							? 'bg-[#39918c] text-white shadow-lg' 
+							: 'bg-white text-[#39918c] border-2 border-[#39918c] hover:bg-[#39918c] hover:text-white'}"
+					>
+						{category.label}
+					</button>
+				{/each}
+			</div>
+		{/if}
 
 		<!-- Image Grid -->
 		<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">

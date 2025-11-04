@@ -2,6 +2,7 @@
 	import { onMount } from 'svelte';
 	import type { OpeningTimes } from '$lib/server/database';
 	import type { SiteImage } from '$lib/server/database';
+	import { notify } from '$lib/stores/notifications';
 
 	let openingTimes = $state<OpeningTimes | null>(null);
 	let loading = $state(true);
@@ -65,6 +66,12 @@
 	async function handleSave() {
 		if (!openingTimes) return;
 		
+		// Validate that background image is provided
+		if (!openingTimes.backgroundImage || openingTimes.backgroundImage.trim() === '') {
+			notify.error('Please select an image from the library or enter a custom URL for the background image.');
+			return;
+		}
+		
 		saving = true;
 		successMessage = '';
 
@@ -76,16 +83,13 @@
 			});
 
 			if (response.ok) {
-				successMessage = 'Opening times saved successfully!';
-				setTimeout(() => {
-					successMessage = '';
-				}, 3000);
+				notify.success('Opening times saved successfully!');
 			} else {
-				alert('Failed to save opening times. Please try again.');
+				notify.error('Failed to save opening times. Please try again.');
 			}
 		} catch (error) {
 			console.error('Error saving opening times:', error);
-			alert('Failed to save opening times. Please try again.');
+			notify.error('Failed to save opening times. Please try again.');
 		} finally {
 			saving = false;
 		}
@@ -107,12 +111,6 @@
 				<p class="text-gray-600">Loading...</p>
 			</div>
 		{:else if openingTimes}
-			{#if successMessage}
-				<div class="bg-green-50 border-2 border-green-500 rounded-lg p-4 mb-6">
-					<p class="text-green-700 font-semibold">{successMessage}</p>
-				</div>
-			{/if}
-
 			<div class="bg-white rounded-lg p-8 shadow-xl border-2 border-[#39918c] mb-8">
 				<form onsubmit={(e) => { e.preventDefault(); handleSave(); }} class="space-y-6">
 					<div>
@@ -155,10 +153,9 @@
 						<select 
 							id="backgroundImage"
 							bind:value={openingTimes.backgroundImage}
-							required
 							class="w-full px-4 py-2 border-2 border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#39918c]"
 						>
-							<option value="">Select an image...</option>
+							<option value="">Select an image from library...</option>
 							{#each images as img}
 								<option value={img.path}>{img.name} ({img.path})</option>
 							{/each}
@@ -166,6 +163,17 @@
 						<p class="text-sm text-gray-600 mt-1">
 							Select an image from the library, or <a href="/admin/images" class="text-[#39918c] hover:underline" target="_blank">add a new image</a>
 						</p>
+						<div class="mt-2">
+							<label for="backgroundImageUrl" class="block text-gray-700 font-medium mb-2 text-sm">Or enter a custom URL:</label>
+							<input 
+								id="backgroundImageUrl"
+								type="text" 
+								bind:value={openingTimes.backgroundImage}
+								placeholder="https://images.unsplash.com/photo-..."
+								class="w-full px-4 py-2 border-2 border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#39918c]"
+							/>
+							<p class="text-sm text-gray-600 mt-1">Enter a full URL for the background image (required if not selecting from library)</p>
+						</div>
 						{#if openingTimes.backgroundImage}
 							<div class="mt-2">
 								<img 
@@ -176,16 +184,6 @@
 								/>
 							</div>
 						{/if}
-						<div class="mt-2">
-							<label for="backgroundImageUrl" class="block text-gray-700 font-medium mb-2 text-sm">Or enter a custom URL:</label>
-							<input 
-								id="backgroundImageUrl"
-								type="text" 
-								bind:value={openingTimes.backgroundImage}
-								placeholder="https://images.unsplash.com/photo-..."
-								class="w-full px-4 py-2 border-2 border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#39918c]"
-							/>
-						</div>
 					</div>
 
 					<div>

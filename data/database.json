@@ -174,7 +174,7 @@
     "specialHours": "Extended Hours - Sunday 1pm"
   },
   "activitiesSettings": {
-    "hidden": false,
+    "hidden": true,
     "message": "No activities scheduled at the moment. Check back soon for upcoming kids activities!"
   },
   "bannerSettings": {
@@ -249,6 +249,39 @@
         "path": "/menu",
         "label": "Menu",
         "hidden": true
+      }
+    ]
+  },
+  "heroSliderSettings": {
+    "images": [
+      "/images/coffee-cup-hero.jpg",
+      "/images/coffee-making.jpg",
+      "/images/coffee-latte-art.jpg",
+      "/images/pastries.jpg",
+      "/images/coffee-beans-background.jpg"
+    ]
+  },
+  "gallerySettings": {
+    "images": [
+      {
+        "src": "/images/coffee-cup-hero.jpg",
+        "alt": "Fresh coffee cup",
+        "category": "coffee"
+      },
+      {
+        "src": "/images/coffee-making.jpg",
+        "alt": "Coffee being prepared",
+        "category": "coffee"
+      },
+      {
+        "src": "/images/pastries.jpg",
+        "alt": "Delicious pastries",
+        "category": "food"
+      },
+      {
+        "src": "/images/coffee-beans-background.jpg",
+        "alt": "Coffee beans",
+        "category": "coffee"
       }
     ]
   }

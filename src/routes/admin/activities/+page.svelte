@@ -3,6 +3,7 @@
 	import type { Activity } from '$lib/stores/cart';
 	import type { SiteImage } from '$lib/server/database';
 	import type { PageData } from './$types';
+	import { notify } from '$lib/stores/notifications';
 
 	let { data } = $props<PageData>();
 	let activities = $state<Activity[]>(data?.activities || []);
@@ -56,10 +57,10 @@
 			});
 			if (!response.ok) throw new Error('Failed to save settings');
 			showSettingsForm = false;
-			alert('Settings saved successfully!');
+			notify.success('Settings saved successfully!');
 		} catch (error) {
 			console.error('Error saving settings:', error);
-			alert('Failed to save settings. Please try again.');
+			notify.error('Failed to save settings. Please try again.');
 		}
 	}
 
@@ -129,7 +130,7 @@
 			editingId = null;
 		} catch (error) {
 			console.error('Error saving activity:', error);
-			alert('Failed to save activity. Please try again.');
+			notify.error('Failed to save activity. Please try again.');
 		}
 	}
 
@@ -422,12 +423,13 @@
 											});
 											if (response.ok) {
 												await loadActivities();
+												notify.success('Activity deleted successfully!');
 											} else {
-												alert('Failed to delete activity');
+												notify.error('Failed to delete activity');
 											}
 										} catch (error) {
 											console.error('Error deleting activity:', error);
-											alert('Failed to delete activity');
+											notify.error('Failed to delete activity');
 										}
 									}
 								}}

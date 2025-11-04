@@ -2,13 +2,7 @@
 	import { onMount } from 'svelte';
 	
 	let currentIndex = $state(0);
-	let images = [
-		'/images/coffee-cup-hero.jpg',
-		'/images/coffee-making.jpg',
-		'/images/coffee-latte-art.jpg',
-		'/images/pastries.jpg',
-		'/images/coffee-beans-background.jpg'
-	];
+	let images = $state<string[]>([]);
 	
 	let interval: ReturnType<typeof setInterval>;
 	
@@ -20,12 +14,45 @@
 	}
 	
 	function nextImage() {
-		currentIndex = (currentIndex + 1) % images.length;
+		if (images.length > 0) {
+			currentIndex = (currentIndex + 1) % images.length;
+		}
 	}
 	
-	onMount(() => {
-		// Change image every 5 seconds
-		interval = setInterval(nextImage, 5000);
+	onMount(async () => {
+		// Load hero slider images from API
+		try {
+			const response = await fetch('/api/hero-slider');
+			if (response.ok) {
+				const data = await response.json();
+				images = data.images || [];
+			} else {
+				// Fallback to default images if API fails
+				images = [
+					'/images/coffee-cup-hero.jpg',
+					'/images/coffee-making.jpg',
+					'/images/coffee-latte-art.jpg',
+					'/images/pastries.jpg',
+					'/images/coffee-beans-background.jpg'
+				];
+			}
+		} catch (error) {
+			console.error('Error loading hero slider images:', error);
+			// Fallback to default images
+			images = [
+				'/images/coffee-cup-hero.jpg',
+				'/images/coffee-making.jpg',
+				'/images/coffee-latte-art.jpg',
+				'/images/pastries.jpg',
+				'/images/coffee-beans-background.jpg'
+			];
+		}
+		
+		// Only start interval if we have images
+		if (images.length > 0) {
+			// Change image every 5 seconds
+			interval = setInterval(nextImage, 5000);
+		}
 		
 		return () => {
 			if (interval) {

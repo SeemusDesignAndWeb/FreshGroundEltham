@@ -77,7 +77,7 @@
 			editingMenuItemId = null;
 		} catch (error) {
 			console.error('Error saving menu item:', error);
-			alert('Failed to save menu item. Please try again.');
+			notify.error('Failed to save menu item. Please try again.');
 		}
 	}
 
@@ -400,12 +400,13 @@
 										});
 										if (response.ok) {
 											await loadMenuItems();
+											notify.success('Menu item deleted successfully!');
 										} else {
-											alert('Failed to delete menu item');
+											notify.error('Failed to delete menu item');
 										}
 									} catch (error) {
 										console.error('Error deleting menu item:', error);
-										alert('Failed to delete menu item');
+										notify.error('Failed to delete menu item');
 									}
 								}
 							}}

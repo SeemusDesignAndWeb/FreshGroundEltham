@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import type { Testimonial } from '$lib/server/database';
+	import { notify } from '$lib/stores/notifications';
 
 	let testimonials = $state<Testimonial[]>([]);
 	let editingTestimonialId = $state<string | null>(null);
@@ -71,7 +72,7 @@
 			editingTestimonialId = null;
 		} catch (error) {
 			console.error('Error saving testimonial:', error);
-			alert('Failed to save testimonial. Please try again.');
+			notify.error('Failed to save testimonial. Please try again.');
 		}
 	}
 
@@ -198,15 +199,16 @@
 											headers: { 'Content-Type': 'application/json' },
 											body: JSON.stringify({ id: testimonial.id })
 										});
-										if (response.ok) {
-											await loadTestimonials();
-										} else {
-											alert('Failed to delete testimonial');
+											if (response.ok) {
+												await loadTestimonials();
+												notify.success('Testimonial deleted successfully!');
+											} else {
+												notify.error('Failed to delete testimonial');
+											}
+										} catch (error) {
+											console.error('Error deleting testimonial:', error);
+											notify.error('Failed to delete testimonial');
 										}
-									} catch (error) {
-										console.error('Error deleting testimonial:', error);
-										alert('Failed to delete testimonial');
-									}
 								}
 							}}
 							class="flex-1 bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition-colors font-medium text-sm"
