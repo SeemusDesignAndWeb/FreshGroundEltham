@@ -53,7 +53,7 @@
 					In 1981, EGCC acquired the Methodist Church building on the corner of Haimo Road, which has since been developed to include additional rooms, a larger main hall, residential flats, and the Fresh Ground Coffee House. The church is part of the MissionLifeGrace (MLG) network, a group of independent churches sharing a common heart for God.
 				</p>
 				<p>
-					EGCC emphasizes a family atmosphere, with Life Groups meeting during the week to foster community and spiritual growth. The church is deeply committed to serving the local community through various activities and initiatives.
+					EGCC emphasises a family atmosphere, with Life Groups meeting during the week to foster community and spiritual growth. The church is deeply committed to serving the local community through various activities and initiatives.
 				</p>
 				<div class="mt-8 pt-6 border-t border-gray-200">
 					<h3 class="text-2xl font-bold text-[#39918c] mb-4">Community Activities</h3>

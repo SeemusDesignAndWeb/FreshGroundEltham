@@ -103,7 +103,7 @@
 			<div>
 				<h2 class="text-3xl font-bold text-[#39918c] mb-4">6. Data Retention</h2>
 				<p class="text-gray-700 mb-4">
-					We retain your personal information only for as long as necessary to fulfill the purposes outlined in this Privacy Statement, unless a longer retention period is required or permitted by law.
+					We retain your personal information only for as long as necessary to fulfil the purposes outlined in this Privacy Statement, unless a longer retention period is required or permitted by law.
 				</p>
 				<p class="text-gray-700">
 					Booking information is retained for administrative purposes and may be kept for up to 1 year for accounting and legal compliance.
