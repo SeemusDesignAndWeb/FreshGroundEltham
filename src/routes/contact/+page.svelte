@@ -4,12 +4,14 @@
 	let formSubmitted = $state(false);
 	let formError = $state<string | null>(null);
 	let isSubmitting = $state(false);
+	let formStartTime = $state(Date.now());
 	let formData = $state({
 		name: '',
 		email: '',
 		phone: '',
 		subject: '',
-		message: ''
+		message: '',
+		website: '' // Honeypot field - should remain empty
 	});
 
 	function handleImageError(event: Event) {
@@ -24,13 +26,19 @@
 		formError = null;
 		isSubmitting = true;
 
+		// Calculate form fill time
+		const formFillTime = Date.now() - formStartTime;
+
 		try {
 			const response = await fetch('/api/contact', {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json'
 				},
-				body: JSON.stringify(formData)
+				body: JSON.stringify({
+					...formData,
+					formFillTime // Include form fill time for spam detection
+				})
 			});
 
 			const result = await response.json();
@@ -43,8 +51,10 @@
 					email: '',
 					phone: '',
 					subject: '',
-					message: ''
+					message: '',
+					website: ''
 				};
+				formStartTime = Date.now(); // Reset timer for next submission
 			} else {
 				formError = result.message || 'Failed to send message. Please try again.';
 			}
@@ -135,7 +145,7 @@
 							</div>
 						{/if}
 
-						<form onsubmit={handleSubmit} class="space-y-6">
+						<form onsubmit={handleSubmit} class="space-y-6 relative">
 								<div>
 									<label for="name" class="block text-gray-700 font-medium mb-2">Your Name *</label>
 									<input 
@@ -186,9 +196,24 @@
 										bind:value={formData.message}
 										rows="5"
 										required
+										maxlength="2000"
 										class="w-full px-4 py-2 border-2 border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#39918c]"
 										placeholder="Your message..."
 									></textarea>
+									<p class="text-xs text-gray-500 mt-1">{formData.message.length}/2000 characters</p>
+								</div>
+
+								<!-- Honeypot field - hidden from users but visible to bots -->
+								<div style="position: absolute; left: -9999px; opacity: 0; pointer-events: none;" aria-hidden="true">
+									<label for="website">Website (leave blank)</label>
+									<input 
+										type="text" 
+										id="website"
+										name="website"
+										bind:value={formData.website}
+										tabindex="-1"
+										autocomplete="off"
+									/>
 								</div>
 
 								<button 
