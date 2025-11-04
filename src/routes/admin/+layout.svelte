@@ -2,6 +2,8 @@
 	import { page } from '$app/stores';
 	import { goto } from '$app/navigation';
 
+	let { children } = $props();
+
 	let showMobileMenu = $state(false);
 
 	async function handleLogout() {
@@ -13,11 +15,12 @@
 			goto('/admin/login');
 		}
 	}
+
 </script>
 
 <div class="admin-layout min-h-screen bg-gray-50">
 	<!-- Admin Navbar -->
-	<nav class="bg-[#2f435a] text-white shadow-lg">
+	<nav class="bg-[#2f435a] text-white shadow-lg relative z-50">
 		<div class="max-w-7xl mx-auto px-4 sm:px-6">
 			<div class="flex justify-between items-center h-16">
 				<!-- Logo and Navigation -->
@@ -26,7 +29,7 @@
 						Admin
 					</a>
 					<!-- Desktop Navigation -->
-					<div class="hidden lg:flex items-center gap-1 flex-1 overflow-x-auto">
+					<div class="hidden lg:flex items-center gap-2 flex-1 overflow-x-auto">
 						<a 
 							href="/admin/activities" 
 							class="px-4 py-2 rounded-lg transition-colors font-medium whitespace-nowrap {$page.url.pathname === '/admin/activities' ? 'bg-[#39918c] text-white' : 'text-gray-200 hover:bg-[#39918c]/30'}"
@@ -218,7 +221,7 @@
 
 	<!-- Page Content -->
 	<main>
-		<slot />
+		{@render children()}
 	</main>
 </div>
 
