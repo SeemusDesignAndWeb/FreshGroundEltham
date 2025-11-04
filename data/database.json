@@ -244,6 +244,11 @@
         "path": "/contact",
         "label": "Contact Us",
         "hidden": false
+      },
+      {
+        "path": "/menu",
+        "label": "Menu",
+        "hidden": true
       }
     ]
   }

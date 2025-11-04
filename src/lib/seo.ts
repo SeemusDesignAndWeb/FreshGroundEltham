@@ -18,7 +18,7 @@ export interface SEOData {
 }
 
 // Default site information
-const SITE_NAME = 'Fresh Ground Eltham';
+const SITE_NAME = 'Fresh Ground Coffee House - Eltham, London';
 const DEFAULT_OG_IMAGE = '/images/freshgroundadmin_320.png'; // Use PNG for Facebook compatibility
 const SITE_URL = 'https://www.freshgroundeltham.co.uk'; // Update with your actual domain
 

@@ -5,7 +5,7 @@
 	import SEOHead from '$lib/components/SEOHead.svelte';
 
 	let { data } = $props<PageData>();
-	let menuItems = $state<MenuItem[]>(data?.menuItems || []);
+	let menuItems = $state<MenuItem[]>([]);
 	let isMenuHidden = $state(false);
 
 	onMount(async () => {
@@ -17,6 +17,7 @@
 				const menuNavItem = navData.items?.find((item: any) => item.path === '/menu');
 				if (menuNavItem && menuNavItem.hidden) {
 					isMenuHidden = true;
+					menuItems = []; // Clear any menu items
 					return; // Don't load menu items if hidden
 				}
 			}

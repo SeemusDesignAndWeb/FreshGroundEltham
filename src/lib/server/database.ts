@@ -438,6 +438,7 @@ export function populateImagesFromOpeningTimes(): { added: number; skipped: numb
 const DEFAULT_NAVIGATION_ITEMS: NavigationItem[] = [
 	{ path: '/', label: 'Home', hidden: false },
 	{ path: '/about', label: 'About Us', hidden: false },
+	{ path: '/menu', label: 'Menu', hidden: false },
 	{ path: '/opening-times', label: 'Opening Times', hidden: false },
 	{ path: '/activities', label: 'Kids Activities', hidden: false },
 	{ path: '/donate', label: 'Donate', hidden: false },
@@ -456,6 +457,17 @@ export function getNavigationSettings(): NavigationSettings {
 		writeDatabase(db);
 		return defaultSettings;
 	}
+	
+	// Merge in any missing default items (for cases where new items are added to defaults)
+	const existingPaths = new Set(db.navigationSettings.items.map(item => item.path));
+	const missingItems = DEFAULT_NAVIGATION_ITEMS.filter(item => !existingPaths.has(item.path));
+	
+	if (missingItems.length > 0) {
+		// Add missing items to existing settings
+		db.navigationSettings.items.push(...missingItems.map(item => ({ ...item })));
+		writeDatabase(db);
+	}
+	
 	return db.navigationSettings;
 }
 
