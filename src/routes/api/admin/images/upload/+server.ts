@@ -36,9 +36,31 @@ export const POST: RequestHandler = async ({ request, cookies }) => {
 		}
 
 		// Ensure images directory exists
+		// Use the standard static/images directory
+		// This should work in both development and production
 		const imagesDir = join(process.cwd(), 'static', 'images');
+		
+		// Log for debugging (will appear in server logs)
+		console.log('Upload attempt:', {
+			cwd: process.cwd(),
+			targetDir: imagesDir,
+			dirExists: existsSync(imagesDir),
+			parentExists: existsSync(join(process.cwd(), 'static'))
+		});
+		
+		// Ensure the directory exists
 		if (!existsSync(imagesDir)) {
-			await mkdir(imagesDir, { recursive: true });
+			try {
+				await mkdir(imagesDir, { recursive: true });
+				console.log('Created images directory:', imagesDir);
+			} catch (mkdirError) {
+				console.error('Error creating images directory:', mkdirError);
+				const errorMsg = mkdirError instanceof Error ? mkdirError.message : String(mkdirError);
+				return json({ 
+					error: 'Failed to create images directory. The server may not have write permissions to the static folder.',
+					details: process.env.NODE_ENV === 'development' ? errorMsg : 'Please contact your hosting provider to ensure the static/images directory is writable.'
+				}, { status: 500 });
+			}
 		}
 
 		// Generate filename (sanitize original filename)
@@ -65,7 +87,16 @@ export const POST: RequestHandler = async ({ request, cookies }) => {
 		// Convert file to buffer and save
 		const arrayBuffer = await file.arrayBuffer();
 		const buffer = Buffer.from(arrayBuffer);
-		await writeFile(filepath, buffer);
+		
+		try {
+			await writeFile(filepath, buffer);
+		} catch (writeError) {
+			console.error('Error writing file:', writeError);
+			return json({ 
+				error: 'Failed to save image file. Please check server permissions.',
+				details: process.env.NODE_ENV === 'development' ? (writeError instanceof Error ? writeError.message : String(writeError)) : undefined
+			}, { status: 500 });
+		}
 
 		// Return the path that will be used in the app
 		const imagePath = `/images/${filename}`;
@@ -80,7 +111,16 @@ export const POST: RequestHandler = async ({ request, cookies }) => {
 		});
 	} catch (error) {
 		console.error('Error uploading image:', error);
-		return json({ error: 'Failed to upload image' }, { status: 500 });
+		const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+		console.error('Error details:', {
+			message: errorMessage,
+			stack: error instanceof Error ? error.stack : undefined,
+			cwd: process.cwd()
+		});
+		return json({ 
+			error: 'Failed to upload image',
+			details: process.env.NODE_ENV === 'development' ? errorMessage : undefined
+		}, { status: 500 });
 	}
 };
 

@@ -148,8 +148,10 @@
 			});
 
 			if (!response.ok) {
-				const error = await response.json();
-				throw new Error(error.error || 'Upload failed');
+				const errorData = await response.json();
+				const errorMsg = errorData.error || 'Upload failed';
+				const details = errorData.details ? ` (${errorData.details})` : '';
+				throw new Error(`${errorMsg}${details}`);
 			}
 
 			const data = await response.json();
@@ -163,7 +165,13 @@
 			notify.success('Image uploaded successfully!');
 		} catch (error) {
 			console.error('Error uploading file:', error);
-			notify.error(error instanceof Error ? error.message : 'Failed to upload image');
+			let errorMessage = 'Failed to upload image';
+			if (error instanceof Error) {
+				errorMessage = error.message;
+			} else if (typeof error === 'object' && error !== null && 'error' in error) {
+				errorMessage = String((error as any).error);
+			}
+			notify.error(errorMessage);
 			selectedFile = null;
 			uploadPreview = null;
 		} finally {

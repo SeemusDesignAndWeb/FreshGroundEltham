@@ -57,6 +57,10 @@ export interface NavigationSettings {
 	items: NavigationItem[];
 }
 
+export interface PageBackgroundImages {
+	[path: string]: string; // path -> image URL
+}
+
 export interface Database {
 	activities: Activity[];
 	bookings: any[];
@@ -67,6 +71,7 @@ export interface Database {
 	bannerSettings?: BannerSettings;
 	images?: SiteImage[];
 	navigationSettings?: NavigationSettings;
+	pageBackgrounds?: PageBackgroundImages;
 }
 
 function getDbPath(): string {
@@ -475,5 +480,21 @@ export function updateNavigationSettings(settings: NavigationSettings): void {
 	const db = readDatabase();
 	db.navigationSettings = settings;
 	writeDatabase(db);
+}
+
+export function getPageBackgroundImages(): PageBackgroundImages {
+	const db = readDatabase();
+	return db.pageBackgrounds || {};
+}
+
+export function updatePageBackgroundImages(backgrounds: PageBackgroundImages): void {
+	const db = readDatabase();
+	db.pageBackgrounds = backgrounds;
+	writeDatabase(db);
+}
+
+export function getPageBackgroundImage(path: string): string | null {
+	const backgrounds = getPageBackgroundImages();
+	return backgrounds[path] || null;
 }
 
