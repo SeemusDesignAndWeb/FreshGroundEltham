@@ -168,7 +168,7 @@
 								class="absolute inset-0 bg-cover bg-center"
 								style="background-image: url('{openingTimes.backgroundImage}');"
 							></div>
-							<div class="absolute inset-0 bg-gradient-to-r from-[#39918c]/70 to-[#2f435a]/70"></div>
+							<div class="absolute inset-0 bg-gradient-to-r from-[#39918c]/20 to-[#2f435a]/20"></div>
 							<div class="absolute inset-0 flex items-center justify-center text-center text-white px-4">
 								<div>
 									<div class="text-2xl font-bold mb-2 drop-shadow-lg">{openingTimes.days}</div>

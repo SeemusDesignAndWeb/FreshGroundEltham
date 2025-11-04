@@ -1,4 +1,6 @@
 <script lang="ts">
+	import SEOHead from '$lib/components/SEOHead.svelte';
+	
 	function handleImageError(event: Event) {
 		const img = event.target as HTMLImageElement;
 		if (img) {
@@ -7,15 +9,12 @@
 	}
 </script>
 
-<svelte:head>
-	<title>About Us - Fresh Ground Eltham</title>
-	<meta name="description" content="Learn about Fresh Ground Eltham - a community café run by Eltham Green Community Church, offering quality coffee, tea, and food at accessible prices." />
-</svelte:head>
+<SEOHead />
 
 <!-- Hero Section -->
 <div class="relative z-0">
 	<section class="relative bg-cover bg-center py-8 px-4 -mt-[120px] pt-[calc(120px+2rem)] min-h-[200px] flex items-center" style="background-image: url('https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=1920&q=80');">
-		<div class="absolute inset-0 bg-gradient-to-r from-[#39918c]/80 to-[#2f435a]/80 z-10"></div>
+		<div class="absolute inset-0 bg-gradient-to-r from-[#39918c]/20 to-[#2f435a]/20 z-10"></div>
 		<div class="max-w-4xl mx-auto text-center relative z-20 text-white">
 			<h1 class="text-4xl md:text-5xl font-bold mb-4">About Fresh Ground</h1>
 			<p class="text-xl text-gray-100">A welcoming community café for everyone</p>

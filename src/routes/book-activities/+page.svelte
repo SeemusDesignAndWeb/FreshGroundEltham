@@ -46,7 +46,7 @@
 <!-- Hero Section -->
 <div class="relative z-0">
 	<section class="relative bg-cover bg-center py-8 px-4 -mt-[120px] pt-[calc(120px+2rem)] min-h-[200px] flex items-center" style="background-image: url('https://images.unsplash.com/photo-1516627145497-ae6968895b74?w=1920&q=80');">
-		<div class="absolute inset-0 bg-gradient-to-r from-[#39918c]/80 to-[#2f435a]/80 z-10"></div>
+		<div class="absolute inset-0 bg-gradient-to-r from-[#39918c]/20 to-[#2f435a]/20 z-10"></div>
 		<div class="max-w-4xl mx-auto text-center relative z-20 text-white">
 			<h1 class="text-4xl md:text-5xl font-bold mb-4">Kids Activities</h1>
 			<p class="text-xl text-gray-100">Book activities for children during half term and school holidays</p>
@@ -69,7 +69,7 @@
 			<div class="bg-[#d0b49f] rounded-lg p-8 shadow-lg mb-8">
 				<h2 class="text-3xl font-bold text-[#39918c] mb-6 text-center">Kids Activities Booking Form</h2>
 				<p class="text-gray-700 mb-8 text-center">
-					We offer a variety of kids activities during half term and school holidays. Please fill out the form below to book a space for your child. For immediate inquiries, call us at <a href="tel:07927674097" class="text-[#39918c] hover:underline font-semibold">07927 674097</a>.
+					We offer a variety of kids activities during half term and school holidays. Please fill out the form below to book a space for your child.
 				</p>
 				
 				<form onsubmit={handleSubmit} class="space-y-6">
@@ -172,9 +172,9 @@
 		<!-- Contact Info -->
 		<div class="bg-gray-100 rounded-lg p-6 text-center">
 			<h3 class="text-xl font-bold text-[#39918c] mb-4">Need Immediate Assistance?</h3>
-			<p class="text-gray-700 mb-2">Call us directly:</p>
-			<a href="tel:07927674097" class="text-2xl font-bold text-[#39918c] hover:underline">
-				07927 674097
+			<p class="text-gray-700 mb-2">Please contact us via email:</p>
+			<a href="mailto:coffeehouse@freshgroundeltham.co.uk" class="text-[#39918c] hover:underline font-semibold">
+				coffeehouse@freshgroundeltham.co.uk
 			</a>
 		</div>
 	</div>

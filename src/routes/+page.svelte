@@ -1,6 +1,7 @@
 <script lang="ts">
 	import HeroSlider from './HeroSlider.svelte';
 	import TestimonialCarousel from './TestimonialCarousel.svelte';
+	import SEOHead from '$lib/components/SEOHead.svelte';
 	
 	function handleImageError(event: Event) {
 		const img = event.target as HTMLImageElement;
@@ -21,10 +22,7 @@
 	}
 </script>
 
-<svelte:head>
-	<title>Fresh Ground Eltham - Community Café</title>
-	<meta name="description" content="Fresh Ground Eltham - A welcoming community café offering quality coffee, tea, and food at accessible prices. Run by Eltham Green Community Church." />
-</svelte:head>
+<SEOHead />
 
 <!-- Hero Slider Section -->
 <div class="relative z-0">

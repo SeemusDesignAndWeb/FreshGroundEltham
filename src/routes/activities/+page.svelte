@@ -4,6 +4,7 @@
 	import { goto } from '$app/navigation';
 	import type { Activity } from '$lib/stores/cart';
 	import type { PageData } from './$types';
+	import SEOHead from '$lib/components/SEOHead.svelte';
 
 	let { data } = $props<PageData>();
 	let activities = $state<Activity[]>(data?.activities || []);
@@ -51,15 +52,12 @@
 	}
 </script>
 
-<svelte:head>
-	<title>Kids Activities - Fresh Ground Eltham</title>
-	<meta name="description" content="Book kids activities at Fresh Ground Eltham during half term and school holidays" />
-</svelte:head>
+<SEOHead />
 
 <!-- Hero Section -->
 <div class="relative z-0">
 	<section class="relative bg-cover bg-center py-8 px-4 -mt-[120px] pt-[calc(120px+2rem)] min-h-[200px] flex items-center" style="background-image: url('https://images.unsplash.com/photo-1516627145497-ae6968895b74?w=1920&q=80');">
-		<div class="absolute inset-0 bg-gradient-to-r from-[#39918c]/80 to-[#2f435a]/80 z-10"></div>
+		<div class="absolute inset-0 bg-gradient-to-r from-[#39918c]/20 to-[#2f435a]/20 z-10"></div>
 		<div class="max-w-4xl mx-auto text-center relative z-20 text-white">
 			<h1 class="text-4xl md:text-5xl font-bold mb-4">Kids Activities</h1>
 			<p class="text-xl text-gray-100">Book activities for children during half term and school holidays</p>

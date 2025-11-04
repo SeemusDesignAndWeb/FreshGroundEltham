@@ -41,9 +41,8 @@
 					<p class="font-semibold">Fresh Ground Eltham</p>
 					<p>542 Westhorne Avenue</p>
 					<p>Eltham, London SE9 6DH</p>
-					<p class="mt-4">Tel: <a href="tel:07927674097" class="hover:text-white">07927 674097</a></p>
 					<p class="mt-4">
-						<a href="mailto:info@freshgroundeltham.co.uk" class="hover:text-white underline">Email Us</a>
+						<a href="mailto:coffeehouse@freshgroundeltham.co.uk" class="hover:text-white underline">Email Us</a>
 					</p>
 				</div>
 			</div>

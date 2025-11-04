@@ -35,7 +35,7 @@
 	}
 </script>
 
-	<header class="sticky top-0 z-50 pointer-events-none transition-all duration-300 w-full">
+	<header class="sticky top-0 z-[100] pointer-events-none transition-all duration-300 w-full">
 		<!-- Top bar with social links and cart - always blue -->
 		<div class="bg-[#2f435a] py-2 px-4 border-b border-[#39918c]/30 w-full">
 			<div class="max-w-7xl mx-auto flex justify-between items-center">
