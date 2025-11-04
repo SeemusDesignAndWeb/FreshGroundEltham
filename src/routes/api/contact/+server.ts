@@ -198,7 +198,7 @@ export const POST: RequestHandler = async ({ request }) => {
 
 		// Get site URL for logo
 		const siteUrl = request.headers.get('origin') || 'https://freshgroundeltham.co.uk';
-		const logoUrl = `${siteUrl}/images/freshgroundlogowhite.svg`;
+		const logoUrl = `${siteUrl}/images/freshgroundadmin_320.png`;
 
 		// Send email to Fresh Ground Eltham
 		const emailResult = await resend.emails.send({
