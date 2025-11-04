@@ -40,6 +40,10 @@ export const POST: RequestHandler = async ({ request }) => {
 			);
 		}
 
+		// Get site URL for logo
+		const siteUrl = request.headers.get('origin') || 'https://freshgroundeltham.co.uk';
+		const logoUrl = `${siteUrl}/images/freshgroundadmin_320.png`;
+
 		// Send email to Fresh Ground Eltham
 		const emailResult = await resend.emails.send({
 			from: RESEND_FROM_EMAIL,
@@ -51,18 +55,21 @@ export const POST: RequestHandler = async ({ request }) => {
 				<html>
 				<head>
 					<style>
-						body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+						body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; margin: 0; padding: 0; }
 						.container { max-width: 600px; margin: 0 auto; padding: 20px; }
-						.header { background-color: #39918c; color: white; padding: 20px; border-radius: 5px 5px 0 0; }
+						.header { background-color: #d0b49f; color: #333; padding: 30px 20px; border-radius: 5px 5px 0 0; text-align: center; }
+						.logo { max-width: 200px; height: auto; margin-bottom: 15px; }
+						.header h1 { margin: 0; color: #2f435a; font-size: 24px; }
 						.content { background-color: #f9f9f9; padding: 20px; border: 1px solid #ddd; }
 						.field { margin-bottom: 15px; }
-						.label { font-weight: bold; color: #39918c; }
-						.message-box { background-color: white; padding: 15px; border-left: 4px solid #39918c; margin-top: 10px; }
+						.label { font-weight: bold; color: #ab6b51; }
+						.message-box { background-color: white; padding: 15px; border-left: 4px solid #ab6b51; margin-top: 10px; }
 					</style>
 				</head>
 				<body>
 					<div class="container">
 						<div class="header">
+							<img src="${logoUrl}" alt="Fresh Ground Eltham" class="logo" />
 							<h1>New Contact Form Submission</h1>
 						</div>
 						<div class="content">
@@ -70,7 +77,7 @@ export const POST: RequestHandler = async ({ request }) => {
 								<span class="label">Name:</span> ${name}
 							</div>
 							<div class="field">
-								<span class="label">Email:</span> <a href="mailto:${email}">${email}</a>
+								<span class="label">Email:</span> <a href="mailto:${email}" style="color: #ab6b51;">${email}</a>
 							</div>
 							${phone ? `
 							<div class="field">
@@ -115,15 +122,19 @@ ${message}
 					<html>
 					<head>
 						<style>
-							body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+							body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; margin: 0; padding: 0; }
 							.container { max-width: 600px; margin: 0 auto; padding: 20px; }
-							.header { background-color: #39918c; color: white; padding: 20px; text-align: center; border-radius: 5px 5px 0 0; }
+							.header { background-color: #d0b49f; color: #333; padding: 30px 20px; text-align: center; border-radius: 5px 5px 0 0; }
+							.logo { max-width: 200px; height: auto; margin-bottom: 15px; }
+							.header h1 { margin: 0; color: #2f435a; font-size: 24px; }
 							.content { background-color: #f9f9f9; padding: 20px; border: 1px solid #ddd; }
+							.footer { text-align: center; padding-top: 20px; margin-top: 20px; border-top: 2px solid #d0b49f; color: #666; font-size: 14px; }
 						</style>
 					</head>
 					<body>
 						<div class="container">
 							<div class="header">
+								<img src="${logoUrl}" alt="Fresh Ground Eltham" class="logo" />
 								<h1>Thank You for Contacting Us!</h1>
 							</div>
 							<div class="content">
@@ -133,6 +144,11 @@ ${message}
 								<p>${subject}</p>
 								<p>If you have any urgent questions, please feel free to contact us.</p>
 								<p>Best regards,<br>The Fresh Ground Eltham Team</p>
+								<div class="footer">
+									<p>Fresh Ground Eltham<br>
+									542 Westhorne Avenue, Eltham, London SE9 6DH<br>
+									<a href="mailto:coffeehouse@freshgroundeltham.co.uk" style="color: #ab6b51;">coffeehouse@freshgroundeltham.co.uk</a></p>
+								</div>
 							</div>
 						</div>
 					</body>
