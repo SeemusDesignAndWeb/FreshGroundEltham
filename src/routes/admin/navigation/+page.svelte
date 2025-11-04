@@ -6,6 +6,8 @@
 	let navigationItems = $state<NavigationItem[]>([]);
 	let isSaving = $state(false);
 	let isLoading = $state(true);
+	let draggedIndex = $state<number | null>(null);
+	let dragOverIndex = $state<number | null>(null);
 
 	onMount(async () => {
 		try {
@@ -51,6 +53,40 @@
 	function toggleHidden(index: number) {
 		navigationItems[index].hidden = !navigationItems[index].hidden;
 	}
+
+	function handleDragStart(index: number) {
+		draggedIndex = index;
+	}
+
+	function handleDragEnd() {
+		draggedIndex = null;
+		dragOverIndex = null;
+	}
+
+	function handleDragOver(e: DragEvent, index: number) {
+		e.preventDefault();
+		if (draggedIndex === null || draggedIndex === index) return;
+		dragOverIndex = index;
+	}
+
+	function handleDragLeave() {
+		dragOverIndex = null;
+	}
+
+	function handleDrop(e: DragEvent, index: number) {
+		e.preventDefault();
+		if (draggedIndex === null || draggedIndex === index) return;
+
+		// Create a new array with the reordered items
+		const items = [...navigationItems];
+		const draggedItem = items[draggedIndex];
+		items.splice(draggedIndex, 1);
+		items.splice(index, 0, draggedItem);
+		
+		navigationItems = items;
+		draggedIndex = null;
+		dragOverIndex = null;
+	}
 </script>
 
 <svelte:head>
@@ -73,10 +109,24 @@
 					<!-- Navigation Items List -->
 					<div class="space-y-4">
 						<h2 class="text-2xl font-bold text-[#39918c] mb-4">Navigation Items</h2>
-						<p class="text-gray-600 mb-6">Toggle visibility for each page in the navigation menu.</p>
+						<p class="text-gray-600 mb-6">Drag to reorder, toggle visibility for each page in the navigation menu.</p>
 						
 						{#each navigationItems as item, index}
-							<div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg border border-gray-200 hover:border-[#39918c] transition-colors">
+							<div 
+								class="flex items-center gap-3 p-4 rounded-lg border-2 transition-all {draggedIndex === index ? 'opacity-50 border-dashed border-[#39918c]' : dragOverIndex === index ? 'border-[#39918c] bg-[#39918c]/10' : 'bg-gray-50 border-gray-200 hover:border-[#39918c]'}"
+								draggable="true"
+								ondragstart={() => handleDragStart(index)}
+								ondragend={handleDragEnd}
+								ondragover={(e) => handleDragOver(e, index)}
+								ondragleave={handleDragLeave}
+								ondrop={(e) => handleDrop(e, index)}
+							>
+								<!-- Drag Handle -->
+								<div class="cursor-grab active:cursor-grabbing text-gray-400 hover:text-[#39918c]">
+									<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8h16M4 16h16" />
+									</svg>
+								</div>
 								<div class="flex-1">
 									<div class="flex items-center gap-3">
 										<span class="text-lg font-medium text-gray-700">{item.label}</span>
@@ -116,11 +166,12 @@
 
 			<!-- Info Box -->
 			<div class="bg-gray-50 rounded-lg p-6 border border-gray-200">
-				<h3 class="text-xl font-bold text-[#39918c] mb-3">About Navigation Visibility</h3>
+				<h3 class="text-xl font-bold text-[#39918c] mb-3">About Navigation Settings</h3>
 				<ul class="space-y-2 text-gray-600">
+					<li>• <strong>Drag and drop</strong> to reorder navigation menu items</li>
+					<li>• <strong>Toggle visibility</strong> to show/hide pages from the menu</li>
 					<li>• Hidden pages will not appear in the main navigation menu</li>
-					<li>• Pages are still accessible via direct URL</li>
-					<li>• Use this to temporarily hide pages without deleting them</li>
+					<li>• Pages are still accessible via direct URL even when hidden</li>
 					<li>• Changes take effect immediately after saving</li>
 				</ul>
 			</div>

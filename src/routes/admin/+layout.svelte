@@ -1,10 +1,12 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 	import { goto } from '$app/navigation';
+	import { onMount } from 'svelte';
 
 	let { children } = $props();
 
 	let showMobileMenu = $state(false);
+	let openDropdown = $state<string | null>(null);
 
 	async function handleLogout() {
 		try {
@@ -16,6 +18,60 @@
 		}
 	}
 
+	function toggleDropdown(name: string) {
+		openDropdown = openDropdown === name ? null : name;
+	}
+
+	// Close dropdown when clicking outside
+	onMount(() => {
+		const handleClick = (e: MouseEvent) => {
+			const target = e.target as HTMLElement;
+			// If click is outside any dropdown button or menu, close all dropdowns
+			if (!target.closest('.dropdown-container')) {
+				openDropdown = null;
+			}
+		};
+
+		document.addEventListener('click', handleClick);
+		return () => document.removeEventListener('click', handleClick);
+	});
+
+	// Define navigation categories
+	const navCategories = [
+		{
+			name: 'Content',
+			key: 'content',
+			items: [
+				{ path: '/admin/activities', label: 'Activities' },
+				{ path: '/admin/testimonials', label: 'Testimonials' },
+				{ path: '/admin/menu', label: 'Menu' },
+				{ path: '/admin/opening-times', label: 'Opening Times' }
+			]
+		},
+		{
+			name: 'Design',
+			key: 'design',
+			items: [
+				{ path: '/admin/images', label: 'Images' },
+				{ path: '/admin/page-backgrounds', label: 'Page Backgrounds' },
+				{ path: '/admin/hero-slider', label: 'Hero Slider' },
+				{ path: '/admin/gallery', label: 'Gallery' }
+			]
+		},
+		{
+			name: 'Settings',
+			key: 'settings',
+			items: [
+				{ path: '/admin/banner', label: 'Banner' },
+				{ path: '/admin/navigation', label: 'Navigation' }
+			]
+		}
+	];
+
+	// Check if current page is in a category
+	function isCategoryActive(items: Array<{ path: string; label: string }>) {
+		return items.some(item => $page.url.pathname === item.path);
+	}
 </script>
 
 <div class="admin-layout min-h-screen bg-gray-50">
@@ -29,67 +85,40 @@
 						Admin
 					</a>
 					<!-- Desktop Navigation -->
-					<div class="hidden lg:flex items-center gap-2 flex-1 overflow-x-auto">
-						<a 
-							href="/admin/activities" 
-							class="px-4 py-2 rounded-lg transition-colors font-medium whitespace-nowrap {$page.url.pathname === '/admin/activities' ? 'bg-[#39918c] text-white' : 'text-gray-200 hover:bg-[#39918c]/30'}"
-						>
-							Activities
-						</a>
-						<a 
-							href="/admin/testimonials" 
-							class="px-4 py-2 rounded-lg transition-colors font-medium whitespace-nowrap {$page.url.pathname === '/admin/testimonials' ? 'bg-[#39918c] text-white' : 'text-gray-200 hover:bg-[#39918c]/30'}"
-						>
-							Testimonials
-						</a>
-						<a 
-							href="/admin/menu" 
-							class="px-4 py-2 rounded-lg transition-colors font-medium whitespace-nowrap {$page.url.pathname === '/admin/menu' ? 'bg-[#39918c] text-white' : 'text-gray-200 hover:bg-[#39918c]/30'}"
-						>
-							Menu
-						</a>
-						<a 
-							href="/admin/opening-times" 
-							class="px-4 py-2 rounded-lg transition-colors font-medium whitespace-nowrap {$page.url.pathname === '/admin/opening-times' ? 'bg-[#39918c] text-white' : 'text-gray-200 hover:bg-[#39918c]/30'}"
-						>
-							Opening Times
-						</a>
-						<a 
-							href="/admin/images" 
-							class="px-4 py-2 rounded-lg transition-colors font-medium whitespace-nowrap {$page.url.pathname === '/admin/images' ? 'bg-[#39918c] text-white' : 'text-gray-200 hover:bg-[#39918c]/30'}"
-						>
-							Images
-						</a>
-						<a 
-							href="/admin/page-backgrounds" 
-							class="px-4 py-2 rounded-lg transition-colors font-medium whitespace-nowrap {$page.url.pathname === '/admin/page-backgrounds' ? 'bg-[#39918c] text-white' : 'text-gray-200 hover:bg-[#39918c]/30'}"
-						>
-							Page Backgrounds
-						</a>
-						<a 
-							href="/admin/hero-slider" 
-							class="px-4 py-2 rounded-lg transition-colors font-medium whitespace-nowrap {$page.url.pathname === '/admin/hero-slider' ? 'bg-[#39918c] text-white' : 'text-gray-200 hover:bg-[#39918c]/30'}"
-						>
-							Hero Slider
-						</a>
-						<a 
-							href="/admin/gallery" 
-							class="px-4 py-2 rounded-lg transition-colors font-medium whitespace-nowrap {$page.url.pathname === '/admin/gallery' ? 'bg-[#39918c] text-white' : 'text-gray-200 hover:bg-[#39918c]/30'}"
-						>
-							Gallery
-						</a>
-						<a 
-							href="/admin/banner" 
-							class="px-4 py-2 rounded-lg transition-colors font-medium whitespace-nowrap {$page.url.pathname === '/admin/banner' ? 'bg-[#39918c] text-white' : 'text-gray-200 hover:bg-[#39918c]/30'}"
-						>
-							Banner
-						</a>
-						<a 
-							href="/admin/navigation" 
-							class="px-4 py-2 rounded-lg transition-colors font-medium whitespace-nowrap {$page.url.pathname === '/admin/navigation' ? 'bg-[#39918c] text-white' : 'text-gray-200 hover:bg-[#39918c]/30'}"
-						>
-							Navigation
-						</a>
+					<div class="hidden lg:flex items-center gap-3 flex-1">
+						{#each navCategories as category}
+							<div class="relative dropdown-container">
+								<button
+									type="button"
+									onclick={() => toggleDropdown(category.key)}
+									class="px-4 py-2 rounded-lg font-medium whitespace-nowrap transition-all flex items-center gap-2 {isCategoryActive(category.items) ? 'bg-[#39918c] text-white' : 'text-gray-200 hover:bg-[#39918c]/30'}"
+								>
+									{category.name}
+									<svg 
+										class="w-4 h-4 transition-transform {openDropdown === category.key ? 'rotate-180' : ''}" 
+										fill="none" 
+										stroke="currentColor" 
+										viewBox="0 0 24 24"
+									>
+										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+									</svg>
+								</button>
+
+								{#if openDropdown === category.key}
+									<div class="absolute left-0 mt-2 w-48 bg-white rounded-lg shadow-xl border border-gray-200 overflow-hidden z-50">
+										{#each category.items as item}
+											<a
+												href={item.path}
+												class="block px-4 py-3 text-sm text-gray-700 hover:bg-[#39918c] hover:text-white transition-colors {$page.url.pathname === item.path ? 'bg-[#39918c]/10 font-semibold' : ''}"
+												onclick={() => openDropdown = null}
+											>
+												{item.label}
+											</a>
+										{/each}
+									</div>
+								{/if}
+							</div>
+						{/each}
 					</div>
 				</div>
 				
@@ -136,85 +165,20 @@
 		</button>
 		{#if showMobileMenu}
 			<div class="px-6 py-3 flex flex-col gap-2 border-t border-[#39918c]/20">
-				<div class="mb-2">
-					<p class="text-xs uppercase text-gray-400 font-semibold mb-2 px-2">Content</p>
-					<a 
-						href="/admin/activities" 
-						onclick={() => showMobileMenu = false}
-						class="block px-4 py-2.5 rounded-lg transition-colors {$page.url.pathname === '/admin/activities' ? 'bg-[#39918c] text-white' : 'text-gray-200 hover:bg-[#39918c]/30'}"
-					>
-						Activities
-					</a>
-					<a 
-						href="/admin/testimonials" 
-						onclick={() => showMobileMenu = false}
-						class="block px-4 py-2.5 rounded-lg transition-colors {$page.url.pathname === '/admin/testimonials' ? 'bg-[#39918c] text-white' : 'text-gray-200 hover:bg-[#39918c]/30'}"
-					>
-						Testimonials
-					</a>
-					<a 
-						href="/admin/menu" 
-						onclick={() => showMobileMenu = false}
-						class="block px-4 py-2.5 rounded-lg transition-colors {$page.url.pathname === '/admin/menu' ? 'bg-[#39918c] text-white' : 'text-gray-200 hover:bg-[#39918c]/30'}"
-					>
-						Menu
-					</a>
-					<a 
-						href="/admin/opening-times" 
-						onclick={() => showMobileMenu = false}
-						class="block px-4 py-2.5 rounded-lg transition-colors {$page.url.pathname === '/admin/opening-times' ? 'bg-[#39918c] text-white' : 'text-gray-200 hover:bg-[#39918c]/30'}"
-					>
-						Opening Times
-					</a>
-				</div>
-				<div class="mb-2">
-					<p class="text-xs uppercase text-gray-400 font-semibold mb-2 px-2">Design</p>
-					<a 
-						href="/admin/images" 
-						onclick={() => showMobileMenu = false}
-						class="block px-4 py-2.5 rounded-lg transition-colors {$page.url.pathname === '/admin/images' ? 'bg-[#39918c] text-white' : 'text-gray-200 hover:bg-[#39918c]/30'}"
-					>
-						Images
-					</a>
-					<a 
-						href="/admin/page-backgrounds" 
-						onclick={() => showMobileMenu = false}
-						class="block px-4 py-2.5 rounded-lg transition-colors {$page.url.pathname === '/admin/page-backgrounds' ? 'bg-[#39918c] text-white' : 'text-gray-200 hover:bg-[#39918c]/30'}"
-					>
-						Page Backgrounds
-					</a>
-					<a 
-						href="/admin/hero-slider" 
-						onclick={() => showMobileMenu = false}
-						class="block px-4 py-2.5 rounded-lg transition-colors {$page.url.pathname === '/admin/hero-slider' ? 'bg-[#39918c] text-white' : 'text-gray-200 hover:bg-[#39918c]/30'}"
-					>
-						Hero Slider
-					</a>
-					<a 
-						href="/admin/gallery" 
-						onclick={() => showMobileMenu = false}
-						class="block px-4 py-2.5 rounded-lg transition-colors {$page.url.pathname === '/admin/gallery' ? 'bg-[#39918c] text-white' : 'text-gray-200 hover:bg-[#39918c]/30'}"
-					>
-						Gallery
-					</a>
-				</div>
-				<div class="mb-2">
-					<p class="text-xs uppercase text-gray-400 font-semibold mb-2 px-2">Settings</p>
-					<a 
-						href="/admin/banner" 
-						onclick={() => showMobileMenu = false}
-						class="block px-4 py-2.5 rounded-lg transition-colors {$page.url.pathname === '/admin/banner' ? 'bg-[#39918c] text-white' : 'text-gray-200 hover:bg-[#39918c]/30'}"
-					>
-						Banner
-					</a>
-					<a 
-						href="/admin/navigation" 
-						onclick={() => showMobileMenu = false}
-						class="block px-4 py-2.5 rounded-lg transition-colors {$page.url.pathname === '/admin/navigation' ? 'bg-[#39918c] text-white' : 'text-gray-200 hover:bg-[#39918c]/30'}"
-					>
-						Navigation
-					</a>
-				</div>
+				{#each navCategories as category}
+					<div class="mb-2">
+						<p class="text-xs uppercase text-gray-400 font-semibold mb-2 px-2">{category.name}</p>
+						{#each category.items as item}
+							<a 
+								href={item.path}
+								onclick={() => showMobileMenu = false}
+								class="block px-4 py-2.5 rounded-lg transition-colors {$page.url.pathname === item.path ? 'bg-[#39918c] text-white' : 'text-gray-200 hover:bg-[#39918c]/30'}"
+							>
+								{item.label}
+							</a>
+						{/each}
+					</div>
+				{/each}
 			</div>
 		{/if}
 	</div>

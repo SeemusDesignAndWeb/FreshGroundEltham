@@ -95,12 +95,13 @@
 			</div>
 		{:else}
 			<div class="bg-white rounded-lg p-8 shadow-xl border-2 border-[#39918c] mb-8">
-				<form onsubmit={(e) => { e.preventDefault(); handleSave(); }} class="space-y-8">
+				<form onsubmit={(e) => { e.preventDefault(); handleSave(); }}>
+					<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 					{#each pages as page}
-						<div class="border-b border-gray-200 pb-6 last:border-b-0">
-							<h2 class="text-2xl font-bold text-[#39918c] mb-4">{page.label}</h2>
+						<div class="border border-gray-300 rounded-lg p-4 bg-gray-50">
+							<h2 class="text-xl font-bold text-[#39918c] mb-4">{page.label}</h2>
 							
-							<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+							<div class="space-y-4">
 								<!-- Image Selector -->
 								<div>
 									<label for="bg-{page.path}" class="block text-gray-700 font-medium mb-2">
@@ -153,9 +154,10 @@
 							</div>
 						</div>
 					{/each}
+					</div>
 
 					<!-- Save Button -->
-					<div class="flex gap-4 pt-6 border-t border-gray-200">
+					<div class="flex gap-4 pt-6 mt-6 border-t border-gray-200">
 						<button
 							type="submit"
 							disabled={isSaving}

@@ -108,7 +108,7 @@
 						</div>
 						<p class="text-gray-600 mb-6">Select images from your library or enter custom URLs. Images will rotate every 5 seconds.</p>
 						
-						<div class="space-y-4">
+						<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
 							{#each heroImages as image, index}
 								<div class="border border-gray-300 rounded-lg p-4 bg-gray-50">
 									<div class="flex gap-4 items-start">

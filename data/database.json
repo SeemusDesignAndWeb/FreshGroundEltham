@@ -236,9 +236,9 @@
         "hidden": false
       },
       {
-        "path": "/donate",
-        "label": "Donate",
-        "hidden": false
+        "path": "/menu",
+        "label": "Menu",
+        "hidden": true
       },
       {
         "path": "/contact",
@@ -246,9 +246,9 @@
         "hidden": false
       },
       {
-        "path": "/menu",
-        "label": "Menu",
-        "hidden": true
+        "path": "/donate",
+        "label": "Donate",
+        "hidden": false
       }
     ]
   },
