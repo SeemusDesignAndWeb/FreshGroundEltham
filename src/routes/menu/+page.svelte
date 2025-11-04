@@ -6,16 +6,35 @@
 
 	let { data } = $props<PageData>();
 	let menuItems = $state<MenuItem[]>(data?.menuItems || []);
+	let isMenuHidden = $state(false);
 
 	onMount(async () => {
+		// Check if menu is hidden in navigation
 		try {
-			const response = await fetch('/api/menu');
-			if (response.ok) {
-				const result = await response.json();
-				menuItems = result.menuItems || [];
+			const navResponse = await fetch('/api/navigation');
+			if (navResponse.ok) {
+				const navData = await navResponse.json();
+				const menuNavItem = navData.items?.find((item: any) => item.path === '/menu');
+				if (menuNavItem && menuNavItem.hidden) {
+					isMenuHidden = true;
+					return; // Don't load menu items if hidden
+				}
 			}
 		} catch (error) {
-			console.error('Error loading menu:', error);
+			console.error('Error loading navigation:', error);
+		}
+
+		// Load menu items only if menu is not hidden
+		if (!isMenuHidden) {
+			try {
+				const response = await fetch('/api/menu');
+				if (response.ok) {
+					const result = await response.json();
+					menuItems = result.menuItems || [];
+				}
+			} catch (error) {
+				console.error('Error loading menu:', error);
+			}
 		}
 	});
 
@@ -56,7 +75,11 @@
 <!-- Menu Section -->
 <section class="py-16 px-4 bg-white">
 	<div class="max-w-6xl mx-auto">
-		{#if Object.keys(groupedMenu).length > 0}
+		{#if isMenuHidden}
+			<div class="text-center py-12">
+				<p class="text-xl text-gray-600 mb-4">We are updating our menu, come back soon</p>
+			</div>
+		{:else if Object.keys(groupedMenu).length > 0}
 			{#each Object.entries(groupedMenu) as [category, items]}
 				<div class="mb-12">
 					<h2 class="text-4xl font-bold text-[#39918c] mb-6 text-center">{category}</h2>
