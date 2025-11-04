@@ -19,7 +19,7 @@
 <section class="py-16 px-4 bg-white">
 	<div class="max-w-4xl mx-auto">
 		<div class="prose max-w-none space-y-8">
-			<div class="bg-[#d0b49f] rounded-lg p-8 mb-8">
+			<div class="bg-white rounded-lg p-8 mb-8">
 				<p class="text-lg text-gray-700 mb-4">
 					<strong>Last Updated:</strong> {new Date().toLocaleDateString('en-GB', { year: 'numeric', month: 'long', day: 'numeric' })}
 				</p>
@@ -34,7 +34,7 @@
 					Cookies are small text files that are placed on your computer or mobile device when you visit a website. They are widely used to make websites work more efficiently and provide information to website owners.
 				</p>
 				<p class="text-gray-700">
-					Cookies allow a website to remember your actions and preferences (such as login details, language, font size, and other display preferences) over a period of time, so you don't have to keep re-entering them whenever you come back to the site or browse from one page to another.
+					Cookies allow a website to remember your actions and preferences (such as shopping cart contents, language, font size, and other display preferences) over a period of time, so you don't have to keep re-entering them whenever you come back to the site or browse from one page to another.
 				</p>
 			</div>
 
@@ -62,12 +62,12 @@
 					<div>
 						<h3 class="text-xl font-semibold text-[#39918c] mb-2">Functionality Cookies</h3>
 						<p class="text-gray-700 mb-2">
-							These cookies allow the website to remember choices you make (such as your username, language, or region) and provide enhanced, more personalised features:
+							These cookies allow the website to remember choices you make and provide enhanced features:
 						</p>
 						<ul class="list-disc pl-6 space-y-2 text-gray-700">
-							<li>Remembering your login status</li>
 							<li>Storing booking information during checkout</li>
 							<li>Remembering your preferences for display settings</li>
+							<li>Maintaining your shopping cart contents</li>
 						</ul>
 					</div>
 
@@ -108,7 +108,7 @@
 				<div class="bg-white border-2 border-[#39918c] rounded-lg p-6">
 					<table class="w-full text-gray-700">
 						<thead>
-							<tr class="bg-[#d0b49f]">
+							<tr class="bg-white">
 								<th class="p-3 text-left font-semibold">Cookie Name</th>
 								<th class="p-3 text-left font-semibold">Purpose</th>
 								<th class="p-3 text-left font-semibold">Duration</th>
@@ -119,11 +119,6 @@
 								<td class="p-3">Session cookies</td>
 								<td class="p-3">Maintain user session and shopping cart</td>
 								<td class="p-3">Session (deleted when browser closes)</td>
-							</tr>
-							<tr>
-								<td class="p-3">Admin session</td>
-								<td class="p-3">Admin authentication</td>
-								<td class="p-3">24 hours</td>
 							</tr>
 							<tr>
 								<td class="p-3">Booking data</td>
@@ -192,7 +187,7 @@
 				<p class="text-gray-700 mb-4">
 					If you have any questions about our use of cookies, please contact us:
 				</p>
-				<div class="bg-[#d0b49f] rounded-lg p-6">
+				<div class="bg-white rounded-lg p-6">
 					<p class="text-gray-700 mb-2"><strong>Fresh Ground Eltham</strong></p>
 					<p class="text-gray-700 mb-2">Email: <a href="mailto:coffeehouse@freshgroundeltham.co.uk" class="text-[#39918c] hover:underline">coffeehouse@freshgroundeltham.co.uk</a></p>
 				</div>

@@ -75,3 +75,16 @@ button:focus:not(:focus-visible) {
 	width: 1px;
 	white-space: nowrap;
 }
+
+/* Card hover blur effect */
+.card-hover-blur {
+	transition: all 0.3s ease;
+	position: relative;
+	filter: drop-shadow(0 4px 8px rgba(171, 107, 81, 0.1));
+}
+
+.card-hover-blur:hover {
+	filter: drop-shadow(0 12px 24px rgba(171, 107, 81, 0.4));
+	box-shadow: 0 15px 35px rgba(139, 87, 66, 0.3), 0 0 25px rgba(139, 87, 66, 0.2);
+	transform: translateY(-3px) scale(1.01);
+}

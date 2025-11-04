@@ -66,7 +66,7 @@
 				<p class="text-gray-700">Your booking request has been submitted. We'll be in touch soon.</p>
 			</div>
 		{:else}
-			<div class="bg-[#d0b49f] rounded-lg p-8 shadow-lg mb-8">
+			<div class="bg-white rounded-lg p-8 shadow-lg mb-8">
 				<h2 class="text-3xl font-bold text-[#39918c] mb-6 text-center">Kids Activities Booking Form</h2>
 				<p class="text-gray-700 mb-8 text-center">
 					We offer a variety of kids activities during half term and school holidays. Please fill out the form below to book a space for your child.

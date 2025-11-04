@@ -1,15 +1,30 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import type { OpeningTimes } from '$lib/server/database';
+	import type { SiteImage } from '$lib/server/database';
 
 	let openingTimes = $state<OpeningTimes | null>(null);
 	let loading = $state(true);
 	let saving = $state(false);
 	let successMessage = $state('');
+	let images = $state<SiteImage[]>([]);
 
 	onMount(async () => {
 		await loadOpeningTimes();
+		await loadImages();
 	});
+
+	async function loadImages() {
+		try {
+			const response = await fetch('/api/admin/images');
+			if (response.ok) {
+				const data = await response.json();
+				images = data.images || [];
+			}
+		} catch (error) {
+			console.error('Error loading images:', error);
+		}
+	}
 
 	async function loadOpeningTimes() {
 		try {
@@ -98,7 +113,7 @@
 				</div>
 			{/if}
 
-			<div class="bg-[#d0b49f] rounded-lg p-8 shadow-xl border-2 border-[#39918c] mb-8">
+			<div class="bg-white rounded-lg p-8 shadow-xl border-2 border-[#39918c] mb-8">
 				<form onsubmit={(e) => { e.preventDefault(); handleSave(); }} class="space-y-6">
 					<div>
 						<label for="days" class="block text-gray-700 font-medium mb-2">Days *</label>
@@ -136,16 +151,41 @@
 					</div>
 
 					<div>
-						<label for="backgroundImage" class="block text-gray-700 font-medium mb-2">Background Image URL *</label>
-						<input 
+						<label for="backgroundImage" class="block text-gray-700 font-medium mb-2">Background Image *</label>
+						<select 
 							id="backgroundImage"
-							type="text" 
 							bind:value={openingTimes.backgroundImage}
 							required
-							placeholder="https://images.unsplash.com/photo-..."
 							class="w-full px-4 py-2 border-2 border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#39918c]"
-						/>
-						<p class="text-sm text-gray-600 mt-1">Enter a full URL to an image for the background</p>
+						>
+							<option value="">Select an image...</option>
+							{#each images as img}
+								<option value={img.path}>{img.name} ({img.path})</option>
+							{/each}
+						</select>
+						<p class="text-sm text-gray-600 mt-1">
+							Select an image from the library, or <a href="/admin/images" class="text-[#39918c] hover:underline" target="_blank">add a new image</a>
+						</p>
+						{#if openingTimes.backgroundImage}
+							<div class="mt-2">
+								<img 
+									src={openingTimes.backgroundImage} 
+									alt="Preview"
+									class="max-w-full max-h-32 object-contain border border-gray-300 rounded"
+									onerror={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+								/>
+							</div>
+						{/if}
+						<div class="mt-2">
+							<label for="backgroundImageUrl" class="block text-gray-700 font-medium mb-2 text-sm">Or enter a custom URL:</label>
+							<input 
+								id="backgroundImageUrl"
+								type="text" 
+								bind:value={openingTimes.backgroundImage}
+								placeholder="https://images.unsplash.com/photo-..."
+								class="w-full px-4 py-2 border-2 border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#39918c]"
+							/>
+						</div>
 					</div>
 
 					<div>

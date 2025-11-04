@@ -9,6 +9,7 @@ export interface Activity {
 	time: string;
 	price: number;
 	capacity: number;
+	emailInformation?: string; // Information to be emailed to customers (not displayed on front end)
 }
 
 export interface CartItem extends Activity {

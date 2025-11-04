@@ -28,7 +28,7 @@
 		<h2 class="text-3xl font-bold text-[#39918c] mb-6 text-center">Our Mission</h2>
 		<div class="space-y-4 text-gray-700 text-lg">
 			<p>
-				Fresh Ground is a welcoming community café offering quality food and beverages at accessible prices. We're run by <strong>Eltham Green Community Church</strong> and strive to create a safe and enjoyable environment for all ages.
+				Fresh Ground is a welcoming community café offering quality food and beverages at accessible prices. We're run by <a href="https://www.egcc.co.uk" target="_blank" rel="noopener noreferrer" class="text-[#39918c] hover:underline font-semibold">Eltham Green Community Church</a> and strive to create a safe and enjoyable environment for all ages.
 			</p>
 			<p>
 				Our mission is to serve as a hub for the community, bringing people together over great coffee, delicious food, and friendly conversation. We believe everyone deserves access to quality food and drink, regardless of their circumstances.
@@ -41,13 +41,13 @@
 </section>
 
 <!-- Eltham Green Community Church Section -->
-<section class="py-16 px-4 bg-[#d0b49f]">
+<section class="py-16 px-4 bg-white">
 	<div class="max-w-4xl mx-auto">
 		<h2 class="text-3xl font-bold text-[#39918c] mb-8 text-center">Eltham Green Community Church</h2>
 		<div class="bg-white rounded-lg p-8 shadow-lg">
 			<div class="space-y-6 text-gray-700">
 				<p>
-					Fresh Ground is run by <strong>Eltham Green Community Church (EGCC)</strong>, a welcoming and diverse Christian community located in Eltham, Royal Greenwich, London. Established in 1975 as Eltham Green Fellowship, the church began as a house church and has grown into a vibrant congregation.
+					Fresh Ground is run by <a href="https://www.egcc.co.uk" target="_blank" rel="noopener noreferrer" class="text-[#39918c] hover:underline font-semibold">Eltham Green Community Church (EGCC)</a>, a welcoming and diverse Christian community located in Eltham, Royal Greenwich, London. Established in 1975 as Eltham Green Fellowship, the church began as a house church and has grown into a vibrant congregation.
 				</p>
 				<p>
 					In 1981, EGCC acquired the Methodist Church building on the corner of Haimo Road, which has since been developed to include additional rooms, a larger main hall, residential flats, and the Fresh Ground Coffee House. The church is part of the MissionLifeGrace (MLG) network, a group of independent churches sharing a common heart for God.
@@ -92,7 +92,7 @@
 <section class="py-16 px-4 bg-white">
 	<div class="max-w-4xl mx-auto">
 		<h2 class="text-3xl font-bold text-[#39918c] mb-6 text-center">Community Focus</h2>
-		<div class="bg-[#d0b49f] rounded-lg p-8">
+		<div class="bg-white rounded-lg p-8">
 			<p class="text-gray-700 text-lg mb-4">
 				At Fresh Ground, we're more than just a café - we're a community space where people can come together, connect, and feel welcome.
 			</p>

@@ -1,12 +1,16 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import type { Activity } from '$lib/stores/cart';
+	import type { SiteImage } from '$lib/server/database';
 	import type { PageData } from './$types';
 
 	let { data } = $props<PageData>();
 	let activities = $state<Activity[]>(data?.activities || []);
 	let editingId = $state<string | null>(null);
 	let showAddForm = $state(false);
+	let settings = $state<{ hidden: boolean; message: string }>(data?.settings || { hidden: false, message: 'No activities scheduled at the moment. Check back soon for upcoming kids activities!' });
+	let showSettingsForm = $state(false);
+	let images = $state<SiteImage[]>([]);
 	let formData = $state<Partial<Activity>>({
 		title: '',
 		description: '',
@@ -14,7 +18,8 @@
 		date: '',
 		time: '',
 		price: 0,
-		capacity: 0
+		capacity: 0,
+		emailInformation: ''
 	});
 
 	async function loadActivities() {
@@ -23,14 +28,44 @@
 			if (response.ok) {
 				const data = await response.json();
 				activities = data.activities || [];
+				settings = data.settings || { hidden: false, message: 'No activities scheduled at the moment. Check back soon for upcoming kids activities!' };
 			}
 		} catch (error) {
 			console.error('Error loading activities:', error);
 		}
 	}
 
+	async function loadImages() {
+		try {
+			const response = await fetch('/api/admin/images');
+			if (response.ok) {
+				const data = await response.json();
+				images = data.images || [];
+			}
+		} catch (error) {
+			console.error('Error loading images:', error);
+		}
+	}
+
+	async function handleSaveSettings() {
+		try {
+			const response = await fetch('/api/admin/activities', {
+				method: 'PATCH',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify(settings)
+			});
+			if (!response.ok) throw new Error('Failed to save settings');
+			showSettingsForm = false;
+			alert('Settings saved successfully!');
+		} catch (error) {
+			console.error('Error saving settings:', error);
+			alert('Failed to save settings. Please try again.');
+		}
+	}
+
 	onMount(() => {
 		loadActivities();
+		loadImages();
 	});
 
 	function handleImageError(event: Event) {
@@ -54,7 +89,8 @@
 			date: '',
 			time: '',
 			price: 0,
-			capacity: 0
+			capacity: 0,
+			emailInformation: ''
 		};
 		editingId = null;
 		showAddForm = true;
@@ -78,7 +114,8 @@
 					date: formData.date || '',
 					time: formData.time || '',
 					price: formData.price || 0,
-					capacity: formData.capacity || 0
+					capacity: formData.capacity || 0,
+					emailInformation: formData.emailInformation || ''
 				};
 				const response = await fetch('/api/admin/activities', {
 					method: 'POST',
@@ -106,7 +143,8 @@
 			date: '',
 			time: '',
 			price: 0,
-			capacity: 0
+			capacity: 0,
+			emailInformation: ''
 		};
 	}
 
@@ -138,16 +176,75 @@
 	<div class="max-w-7xl mx-auto">
 		<div class="flex justify-between items-center mb-8">
 			<h1 class="text-4xl font-bold text-[#39918c]">Kids Activities</h1>
-			<button 
-				onclick={handleAdd}
-				class="bg-[#39918c] text-white px-6 py-3 rounded hover:bg-[#ab6b51] transition-colors font-medium"
-			>
-				+ Add New Activity
-			</button>
+			<div class="flex gap-4">
+				<button 
+					onclick={() => showSettingsForm = !showSettingsForm}
+					class="bg-[#2f435a] text-white px-6 py-3 rounded hover:bg-[#1e2d3f] transition-colors font-medium"
+				>
+					⚙️ Settings
+				</button>
+				<button 
+					onclick={handleAdd}
+					class="bg-[#39918c] text-white px-6 py-3 rounded hover:bg-[#ab6b51] transition-colors font-medium"
+				>
+					+ Add New Activity
+				</button>
+			</div>
 		</div>
 
+		{#if showSettingsForm}
+			<div class="bg-white rounded-lg p-8 shadow-xl border-2 border-[#39918c] mb-8">
+				<h2 class="text-2xl font-bold text-[#39918c] mb-6">Activities Settings</h2>
+				
+				<div class="space-y-6">
+					<div>
+						<label class="flex items-center gap-3 cursor-pointer">
+							<input 
+								type="checkbox" 
+								bind:checked={settings.hidden}
+								class="w-5 h-5 text-[#39918c] rounded focus:ring-2 focus:ring-[#39918c]"
+							/>
+							<span class="text-lg font-medium text-gray-700">Hide activities and show message instead</span>
+						</label>
+						<p class="text-sm text-gray-600 mt-2 ml-8">
+							When enabled, visitors will see your custom message instead of the activities list.
+						</p>
+					</div>
+
+					<div>
+						<label for="message" class="block text-gray-700 font-medium mb-2">Message to Display</label>
+						<textarea 
+							id="message"
+							bind:value={settings.message}
+							rows="4"
+							class="w-full px-4 py-2 border-2 border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#39918c]"
+							placeholder="Enter your message here..."
+						></textarea>
+						<p class="text-sm text-gray-600 mt-2">
+							This message will be shown when activities are hidden.
+						</p>
+					</div>
+
+					<div class="flex gap-4">
+						<button 
+							onclick={handleSaveSettings}
+							class="bg-[#39918c] text-white px-6 py-3 rounded hover:bg-[#ab6b51] transition-colors font-medium"
+						>
+							Save Settings
+						</button>
+						<button 
+							onclick={() => showSettingsForm = false}
+							class="bg-gray-300 text-gray-700 px-6 py-3 rounded hover:bg-gray-400 transition-colors font-medium"
+						>
+							Cancel
+						</button>
+					</div>
+				</div>
+			</div>
+		{/if}
+
 		{#if showAddForm}
-			<div class="bg-[#d0b49f] rounded-lg p-8 shadow-xl border-2 border-[#39918c] mb-8">
+			<div class="bg-white rounded-lg p-8 shadow-xl border-2 border-[#39918c] mb-8">
 				<h2 class="text-2xl font-bold text-[#39918c] mb-6">
 					{editingId ? 'Edit Activity' : 'Add New Activity'}
 				</h2>
@@ -165,14 +262,31 @@
 							/>
 						</div>
 						<div>
-							<label for="image" class="block text-gray-700 font-medium mb-2">Image URL</label>
-							<input 
+							<label for="image" class="block text-gray-700 font-medium mb-2">Image *</label>
+							<select 
 								id="image"
-								type="text" 
 								bind:value={formData.image}
-								placeholder="/images/pastries.jpg"
+								required
 								class="w-full px-4 py-2 border-2 border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#39918c]"
-							/>
+							>
+								<option value="">Select an image...</option>
+								{#each images as img}
+									<option value={img.path}>{img.name} ({img.path})</option>
+								{/each}
+							</select>
+							<p class="text-sm text-gray-600 mt-1">
+								Can't find the image you need? <a href="/admin/images" class="text-[#39918c] hover:underline" target="_blank">Add it to the image library</a>
+							</p>
+							{#if formData.image}
+								<div class="mt-2">
+									<img 
+										src={formData.image} 
+										alt="Preview"
+										class="max-w-full max-h-32 object-contain border border-gray-300 rounded"
+										onerror={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+									/>
+								</div>
+							{/if}
 						</div>
 					</div>
 
@@ -234,6 +348,20 @@
 						/>
 					</div>
 
+					<div>
+						<label for="emailInformation" class="block text-gray-700 font-medium mb-2">Email Information (for customers)</label>
+						<textarea 
+							id="emailInformation"
+							bind:value={formData.emailInformation}
+							rows="4"
+							class="w-full px-4 py-2 border-2 border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#39918c]"
+							placeholder="This information will be included in booking confirmation emails but will not be displayed on the website..."
+						></textarea>
+						<p class="text-sm text-gray-600 mt-2">
+							This information will be emailed to customers when they book this activity. It will not be displayed on the public website.
+						</p>
+					</div>
+
 					<div class="flex gap-4">
 						<button 
 							type="submit"
@@ -255,7 +383,7 @@
 
 		<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 			{#each activities as activity (activity.id)}
-				<div class="bg-[#d0b49f] rounded-lg overflow-hidden shadow-lg border-2 border-[#39918c]">
+				<div class="bg-white rounded-lg overflow-hidden shadow-lg border-2 border-[#39918c]">
 					<div class="relative h-40 overflow-hidden">
 						<img 
 							src={activity.image} 
@@ -314,7 +442,7 @@
 		</div>
 
 		{#if activities.length === 0}
-			<div class="text-center py-12 bg-[#d0b49f] rounded-lg">
+			<div class="text-center py-12 bg-white rounded-lg">
 				<p class="text-xl text-gray-700">No activities yet. Add your first activity above!</p>
 			</div>
 		{/if}

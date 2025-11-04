@@ -47,6 +47,18 @@
 						>
 							Opening Times
 						</a>
+						<a 
+							href="/admin/banner" 
+							class="px-3 py-2 rounded transition-colors {$page.url.pathname === '/admin/banner' ? 'bg-[#39918c] text-white' : 'text-gray-200 hover:bg-[#39918c]/50'}"
+						>
+							Banner
+						</a>
+						<a 
+							href="/admin/images" 
+							class="px-3 py-2 rounded transition-colors {$page.url.pathname === '/admin/images' ? 'bg-[#39918c] text-white' : 'text-gray-200 hover:bg-[#39918c]/50'}"
+						>
+							Images
+						</a>
 					</div>
 				</div>
 				<div class="flex items-center gap-4">
@@ -90,6 +102,18 @@
 				class="px-3 py-2 rounded transition-colors {$page.url.pathname === '/admin/opening-times' ? 'bg-[#39918c] text-white' : 'text-gray-200 hover:bg-[#39918c]/50'}"
 			>
 				Opening Times
+			</a>
+			<a 
+				href="/admin/banner" 
+				class="px-3 py-2 rounded transition-colors {$page.url.pathname === '/admin/banner' ? 'bg-[#39918c] text-white' : 'text-gray-200 hover:bg-[#39918c]/50'}"
+			>
+				Banner
+			</a>
+			<a 
+				href="/admin/images" 
+				class="px-3 py-2 rounded transition-colors {$page.url.pathname === '/admin/images' ? 'bg-[#39918c] text-white' : 'text-gray-200 hover:bg-[#39918c]/50'}"
+			>
+				Images
 			</a>
 		</div>
 	</div>

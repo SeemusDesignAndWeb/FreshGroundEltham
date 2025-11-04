@@ -19,7 +19,7 @@
 <section class="py-16 px-4 bg-white">
 	<div class="max-w-4xl mx-auto">
 		<div class="prose max-w-none space-y-8">
-			<div class="bg-[#d0b49f] rounded-lg p-8 mb-8">
+			<div class="bg-white rounded-lg p-8 mb-8">
 				<p class="text-lg text-gray-700 mb-4">
 					<strong>Last Updated:</strong> {new Date().toLocaleDateString('en-GB', { year: 'numeric', month: 'long', day: 'numeric' })}
 				</p>
@@ -129,9 +129,9 @@
 				<p class="text-gray-700 mb-4">
 					If you have any questions about this Privacy Statement or our data practices, please contact us:
 				</p>
-				<div class="bg-[#d0b49f] rounded-lg p-6">
+				<div class="bg-white rounded-lg p-6">
 					<p class="text-gray-700 mb-2"><strong>Fresh Ground Eltham</strong></p>
-					<p class="text-gray-700 mb-2">Run by Eltham Green Community Church</p>
+					<p class="text-gray-700 mb-2">Run by <a href="https://www.egcc.co.uk" target="_blank" rel="noopener noreferrer" class="text-[#39918c] hover:underline font-semibold">Eltham Green Community Church</a></p>
 					<p class="text-gray-700 mb-2">Email: <a href="mailto:coffeehouse@freshgroundeltham.co.uk" class="text-[#39918c] hover:underline">coffeehouse@freshgroundeltham.co.uk</a></p>
 					<p class="text-gray-700">
 						For data protection inquiries, please include "Data Protection" in your subject line.

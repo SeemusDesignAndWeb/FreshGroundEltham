@@ -4,7 +4,9 @@ import {
 	getActivities, 
 	addActivity, 
 	updateActivity, 
-	removeActivity 
+	removeActivity,
+	getActivitiesSettings,
+	updateActivitiesSettings
 } from '$lib/server/database';
 import type { Activity } from '$lib/stores/cart';
 
@@ -15,7 +17,8 @@ export const GET: RequestHandler = async ({ cookies }) => {
 	}
 
 	const activities = getActivities();
-	return json({ activities });
+	const settings = getActivitiesSettings();
+	return json({ activities, settings });
 };
 
 export const POST: RequestHandler = async ({ request, cookies }) => {
@@ -66,6 +69,21 @@ export const DELETE: RequestHandler = async ({ request, cookies }) => {
 		return json({ success: true });
 	} catch (error) {
 		return json({ error: 'Failed to delete activity' }, { status: 500 });
+	}
+};
+
+export const PATCH: RequestHandler = async ({ request, cookies }) => {
+	// Check authentication
+	if (!cookies.get('admin_session')) {
+		return json({ error: 'Unauthorized' }, { status: 401 });
+	}
+
+	try {
+		const settings = await request.json();
+		updateActivitiesSettings(settings);
+		return json({ success: true });
+	} catch (error) {
+		return json({ error: 'Failed to update settings' }, { status: 500 });
 	}
 };
 

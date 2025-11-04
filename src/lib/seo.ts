@@ -18,7 +18,7 @@ export const seoData: Record<string, SEOData> = {
 		keywords: 'community café, coffee shop Eltham, Fresh Ground, Eltham Green Community Church, family café, affordable coffee, community space London',
 		ogTitle: 'Fresh Ground Eltham - Community Café',
 		ogDescription: 'A welcoming community café offering quality coffee, tea, and food at accessible prices. Family-friendly space in Eltham, London.',
-		ogImage: '/images/freshgroundadmin_320.png',
+		ogImage: '/images/freshgroundlogowhite.svg',
 		ogType: 'website',
 		twitterCard: 'summary_large_image'
 	},
@@ -150,7 +150,7 @@ export function getSEOData(path: string): SEOData {
 export function generateSEOHead(seo: SEOData, url?: string) {
 	const siteUrl = typeof window !== 'undefined' ? window.location.origin : '';
 	const fullUrl = url ? `${siteUrl}${url}` : siteUrl;
-	const ogImage = seo.ogImage ? `${siteUrl}${seo.ogImage}` : `${siteUrl}/images/freshgroundadmin_320.png`;
+	const ogImage = seo.ogImage ? `${siteUrl}${seo.ogImage}` : `${siteUrl}/images/freshgroundlogowhite.svg`;
 	
 	return {
 		title: seo.title,

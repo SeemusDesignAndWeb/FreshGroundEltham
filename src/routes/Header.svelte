@@ -3,14 +3,39 @@
 	import { onMount } from 'svelte';
 	import { cart } from '$lib/stores/cart';
 	import { goto } from '$app/navigation';
+	import BannerIcon from '$lib/components/BannerIcon.svelte';
 	
 	let mobileMenuOpen = $state(false);
 	let bookingsCount = $state(0);
 	let isScrolled = $state(false);
+	let bannerMessage = $state('');
+	let bannerEnabled = $state(false);
+	let bannerIcon = $state('');
+	let bannerEndIcon = $state('');
 	
 	let cartCount = $derived($cart.reduce((sum, item) => sum + item.quantity, 0));
 	
 	onMount(() => {
+		// Load banner message
+		fetch('/api/banner')
+			.then(response => {
+				if (response.ok) {
+					return response.json();
+				}
+			})
+			.then(data => {
+				if (data) {
+					bannerMessage = data.message || '';
+					bannerEnabled = data.enabled || false;
+					bannerIcon = data.icon || 'none';
+					bannerEndIcon = data.endIcon || data.icon || 'none';
+				}
+			})
+			.catch(error => {
+				console.error('Error loading banner:', error);
+			});
+
+		// Handle scroll
 		const handleScroll = () => {
 			isScrolled = window.scrollY > 50;
 		};
@@ -36,10 +61,10 @@
 </script>
 
 	<header class="sticky top-0 z-[100] pointer-events-none transition-all duration-300 w-full">
-		<!-- Top bar with social links and cart - always blue -->
-		<div class="bg-[#2f435a] py-2 px-4 border-b border-[#39918c]/30 w-full">
-			<div class="max-w-7xl mx-auto flex justify-between items-center">
-				<div class="flex items-center gap-4">
+		<!-- Top bar with social links and cart - bronze when banner is enabled, blue otherwise -->
+		<div class="py-2 px-4 border-b w-full transition-colors duration-300 {bannerEnabled && bannerMessage ? 'bg-[#ab6b51] border-[#d0b49f]/30' : 'bg-[#2f435a] border-[#39918c]/30'}">
+			<div class="max-w-7xl mx-auto flex justify-between items-center gap-4">
+				<div class="flex items-center gap-4 pointer-events-auto">
 					<a href="https://www.facebook.com/freshgroundeltham" target="_blank" rel="noopener noreferrer" class="text-white hover:text-[#39918c] transition-colors" aria-label="Facebook">
 						<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
 							<path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
@@ -51,22 +76,38 @@
 						</svg>
 					</a>
 				</div>
-					<div class="flex items-center gap-4">
-						{#if cartCount > 0}
-							<button 
-								onclick={() => goto('/cart')}
-								class="relative flex items-center gap-1 text-white hover:text-[#39918c] transition-colors pointer-events-auto"
-								aria-label="View cart"
-							>
-								<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
-								</svg>
-								<span class="absolute -top-2 -right-2 bg-[#39918c] text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
-									{cartCount}
-								</span>
-							</button>
-						{/if}
+				
+				<!-- Banner Message -->
+				{#if bannerEnabled && bannerMessage}
+					<div class="flex-1 text-right pointer-events-auto">
+						<p class="text-white text-md font-medium inline-flex items-center gap-1.5">
+							{#if bannerIcon && bannerIcon !== 'none'}
+								<BannerIcon icon={bannerIcon} size={16} />
+							{/if}
+							{bannerMessage}
+							{#if bannerEndIcon && bannerEndIcon !== 'none'}
+								<BannerIcon icon={bannerEndIcon} size={16} />
+							{/if}
+						</p>
 					</div>
+				{/if}
+				
+				<div class="flex items-center gap-4 ml-auto">
+					{#if cartCount > 0}
+						<button 
+							onclick={() => goto('/cart')}
+							class="relative flex items-center gap-1 text-white hover:text-[#39918c] transition-colors pointer-events-auto"
+							aria-label="View cart"
+						>
+							<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
+							</svg>
+							<span class="absolute -top-2 -right-2 bg-[#39918c] text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+								{cartCount}
+							</span>
+						</button>
+					{/if}
+				</div>
 			</div>
 		</div>
 
@@ -75,7 +116,7 @@
 		<div class="max-w-7xl mx-auto flex justify-between items-center">
 			<a href="/" class="flex items-center">
 				<img
-					src="/images/freshgroundadmin_320.png"
+					src="/images/freshgroundlogowhite.svg"
 					alt="Fresh Ground Eltham Logo"
 					class="h-12 w-auto"
 					onerror={handleImageError}

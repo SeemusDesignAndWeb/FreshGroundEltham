@@ -6,7 +6,8 @@ export const load: PageServerLoad = async ({ fetch }) => {
 		if (response.ok) {
 			const data = await response.json();
 			return {
-				activities: data.activities || []
+				activities: data.activities || [],
+				settings: data.settings || { hidden: false, message: 'No activities scheduled at the moment. Check back soon for upcoming kids activities!' }
 			};
 		}
 	} catch (error) {
@@ -14,7 +15,8 @@ export const load: PageServerLoad = async ({ fetch }) => {
 	}
 
 	return {
-		activities: []
+		activities: [],
+		settings: { hidden: false, message: 'No activities scheduled at the moment. Check back soon for upcoming kids activities!' }
 	};
 };
 

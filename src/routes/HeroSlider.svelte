@@ -53,9 +53,17 @@
 	<!-- Content overlay -->
 	<div class="absolute inset-0 z-30 flex items-center justify-center">
 		<div class="text-center text-white px-4 max-w-4xl mx-auto">
-			<h1 class="text-5xl md:text-6xl font-bold mb-4">Fresh Ground Coffee House</h1>
-			<p class="text-xl md:text-2xl text-gray-100 mb-2">A community café run by Eltham Green Community Church</p>
-			<p class="text-lg md:text-xl text-gray-200">Quality coffee, delicious food, and a warm welcome for everyone</p>
+			<div class="mb-6 flex justify-center">
+				<img
+					src="/images/freshgroundlogowhite.svg"
+					alt="Fresh Ground Eltham Logo"
+					class="h-20 md:h-24 w-auto"
+					onerror={handleImageError}
+				/>
+			</div>
+	
+			<h1 class="text-5xl md:text-6xl font-bold mb-4">A community café serving the best coffee in Eltham</h1>
+			<p class="text-lg md:text-xl text-gray-200">Run by <a href="https://www.egcc.co.uk" target="_blank" rel="noopener noreferrer" class="text-white hover:text-gray-200">Eltham Green Community Church</a></p>
 		</div>
 	</div>
 	

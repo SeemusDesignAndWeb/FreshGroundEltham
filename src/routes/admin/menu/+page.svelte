@@ -116,7 +116,7 @@
 		</div>
 
 		{#if showMenuItemForm}
-			<div class="bg-[#d0b49f] rounded-lg p-8 shadow-xl border-2 border-[#39918c] mb-8">
+			<div class="bg-white rounded-lg p-8 shadow-xl border-2 border-[#39918c] mb-8">
 				<h2 class="text-2xl font-bold text-[#39918c] mb-6">
 					{editingMenuItemId ? 'Edit Menu Item' : 'Add New Menu Item'}
 				</h2>
@@ -244,7 +244,7 @@
 		</div>
 
 		{#if menuItems.length === 0}
-			<div class="text-center py-12 bg-[#d0b49f] rounded-lg">
+			<div class="text-center py-12 bg-white rounded-lg">
 				<p class="text-xl text-gray-700">No menu items yet. Add your first menu item above!</p>
 			</div>
 		{/if}

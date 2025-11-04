@@ -4,13 +4,15 @@
 	let activitiesCount = $state(0);
 	let testimonialsCount = $state(0);
 	let menuItemsCount = $state(0);
+	let imagesCount = $state(0);
 
 	onMount(async () => {
 		try {
-			const [activitiesRes, testimonialsRes, menuRes] = await Promise.all([
+			const [activitiesRes, testimonialsRes, menuRes, imagesRes] = await Promise.all([
 				fetch('/api/admin/activities'),
 				fetch('/api/admin/testimonials'),
-				fetch('/api/admin/menu')
+				fetch('/api/admin/menu'),
+				fetch('/api/admin/images')
 			]);
 
 			if (activitiesRes.ok) {
@@ -24,6 +26,10 @@
 			if (menuRes.ok) {
 				const data = await menuRes.json();
 				menuItemsCount = data.menuItems?.length || 0;
+			}
+			if (imagesRes.ok) {
+				const data = await imagesRes.json();
+				imagesCount = data.images?.length || 0;
 			}
 		} catch (error) {
 			console.error('Error loading dashboard data:', error);
@@ -83,6 +89,27 @@
 					</svg>
 				</div>
 				<p class="text-gray-600">Manage opening hours</p>
+			</a>
+
+			<a href="/admin/banner" class="bg-white rounded-lg p-6 shadow-lg border-2 border-[#39918c] hover:shadow-xl transition-shadow">
+				<div class="flex items-center justify-between mb-4">
+					<h2 class="text-2xl font-bold text-[#39918c]">Banner Message</h2>
+					<svg class="w-8 h-8 text-[#39918c]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"/>
+					</svg>
+				</div>
+				<p class="text-gray-600">Edit top banner message</p>
+			</a>
+
+			<a href="/admin/images" class="bg-white rounded-lg p-6 shadow-lg border-2 border-[#39918c] hover:shadow-xl transition-shadow">
+				<div class="flex items-center justify-between mb-4">
+					<h2 class="text-2xl font-bold text-[#39918c]">Images</h2>
+					<svg class="w-8 h-8 text-[#39918c]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+					</svg>
+				</div>
+				<p class="text-4xl font-bold text-gray-700 mb-2">{imagesCount}</p>
+				<p class="text-gray-600">Site images library</p>
 			</a>
 		</div>
 	</div>

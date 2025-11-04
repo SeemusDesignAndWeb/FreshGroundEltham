@@ -120,7 +120,7 @@
 					onclick={() => filterImages(category.id)}
 					class="px-6 py-2 rounded-lg font-medium transition-all duration-200 {selectedCategory === category.id 
 						? 'bg-[#39918c] text-white shadow-lg' 
-						: 'bg-[#d0b49f] text-[#39918c] hover:bg-[#39918c] hover:text-white'}"
+						: 'bg-white text-[#39918c] border-2 border-[#39918c] hover:bg-[#39918c] hover:text-white'}"
 				>
 					{category.label}
 				</button>
@@ -131,7 +131,7 @@
 		<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
 			{#each filteredImages as image}
 				<div 
-					class="group relative overflow-hidden rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer bg-[#d0b49f] aspect-square"
+					class="group relative overflow-hidden rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer bg-gray-100 aspect-square"
 					onclick={() => openModal(image.src)}
 					role="button"
 					tabindex="0"

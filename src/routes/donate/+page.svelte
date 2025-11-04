@@ -26,11 +26,11 @@
 <!-- Donate Section -->
 <section class="py-16 px-4 bg-white">
 	<div class="max-w-4xl mx-auto">
-		<div class="bg-[#d0b49f] rounded-lg p-8 shadow-lg mb-8">
+		<div class="bg-white rounded-lg p-8 shadow-lg mb-8">
 			<h2 class="text-3xl font-bold text-[#39918c] mb-6 text-center">Why Donate?</h2>
 			<div class="space-y-4 text-gray-700 text-lg">
 				<p>
-					As a community café run by Eltham Green Community Church, Fresh Ground strives to provide quality food and beverages at accessible prices. We're committed to creating a welcoming space for everyone, regardless of their circumstances.
+					As a community café run by <a href="https://www.egcc.co.uk" target="_blank" rel="noopener noreferrer" class="text-[#39918c] hover:underline font-semibold">Eltham Green Community Church</a>, Fresh Ground strives to provide quality food and beverages at accessible prices. We're committed to creating a welcoming space for everyone, regardless of their circumstances.
 				</p>
 				<p>
 					Your donation helps us:

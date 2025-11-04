@@ -105,7 +105,7 @@
 		</div>
 
 		{#if showTestimonialForm}
-			<div class="bg-[#d0b49f] rounded-lg p-8 shadow-xl border-2 border-[#39918c] mb-8">
+			<div class="bg-white rounded-lg p-8 shadow-xl border-2 border-[#39918c] mb-8">
 				<h2 class="text-2xl font-bold text-[#39918c] mb-6">
 					{editingTestimonialId ? 'Edit Testimonial' : 'Add New Testimonial'}
 				</h2>
@@ -219,7 +219,7 @@
 		</div>
 
 		{#if testimonials.length === 0}
-			<div class="text-center py-12 bg-[#d0b49f] rounded-lg">
+			<div class="text-center py-12 bg-white rounded-lg">
 				<p class="text-xl text-gray-700">No testimonials yet. Add your first testimonial above!</p>
 			</div>
 		{/if}

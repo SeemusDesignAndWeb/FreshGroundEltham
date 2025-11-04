@@ -193,7 +193,7 @@
 			<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
 				<!-- Payment Form -->
 				<div class="lg:col-span-2">
-					<div class="bg-[#d0b49f] rounded-lg p-8 shadow-lg border-2 border-[#39918c]">
+					<div class="bg-white rounded-lg p-8 shadow-lg border-2 border-[#39918c]">
 						<h2 class="text-3xl font-bold text-[#39918c] mb-6">Payment Details</h2>
 						
 						<div class="bg-white rounded-lg p-6 mb-6">

@@ -1,6 +1,7 @@
 <script lang="ts">
 	import Header from './Header.svelte';
 	import Footer from './Footer.svelte';
+	import Notification from '$lib/components/Notification.svelte';
 	import { page } from '$app/stores';
 	import '../app.css';
 
@@ -22,6 +23,9 @@
 	{#if !isAdminRoute}
 		<Footer />
 	{/if}
+
+	<!-- Global Notifications -->
+	<Notification />
 </div>
 
 <style>
