@@ -2,6 +2,7 @@
 	import { cart } from '$lib/stores/cart';
 	import { goto } from '$app/navigation';
 	import type { CartItem } from '$lib/stores/cart';
+	import SEOHead from '$lib/components/SEOHead.svelte';
 
 	let formData = $state({
 		name: '',
@@ -45,10 +46,7 @@
 	}
 </script>
 
-<svelte:head>
-	<title>Checkout - Fresh Ground Eltham</title>
-	<meta name="description" content="Complete your activity booking" />
-</svelte:head>
+<SEOHead />
 
 <!-- Hero Section -->
 <div class="relative z-0">

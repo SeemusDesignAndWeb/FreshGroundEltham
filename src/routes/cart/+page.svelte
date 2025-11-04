@@ -2,6 +2,7 @@
 	import { cart, removeFromCart, updateQuantity, clearCart } from '$lib/stores/cart';
 	import { goto } from '$app/navigation';
 	import type { CartItem } from '$lib/stores/cart';
+	import SEOHead from '$lib/components/SEOHead.svelte';
 
 	function formatPrice(price: number) {
 		return new Intl.NumberFormat('en-GB', {
@@ -21,10 +22,7 @@
 	}
 </script>
 
-<svelte:head>
-	<title>Shopping Cart - Fresh Ground Eltham</title>
-	<meta name="description" content="Review your activity bookings" />
-</svelte:head>
+<SEOHead />
 
 <!-- Hero Section -->
 <div class="relative z-0">

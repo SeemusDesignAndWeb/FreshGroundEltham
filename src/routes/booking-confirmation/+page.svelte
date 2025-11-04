@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
+	import SEOHead from '$lib/components/SEOHead.svelte';
 
 	let confirmation = $state<any>(null);
 	let emailSent = $state(false);
@@ -56,10 +57,7 @@
 	}
 </script>
 
-<svelte:head>
-	<title>Booking Confirmation - Fresh Ground Eltham</title>
-	<meta name="description" content="Your booking has been confirmed" />
-</svelte:head>
+<SEOHead />
 
 {#if confirmation}
 	<!-- Hero Section -->

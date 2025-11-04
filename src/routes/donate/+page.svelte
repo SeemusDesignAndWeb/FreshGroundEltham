@@ -1,4 +1,6 @@
 <script lang="ts">
+	import SEOHead from '$lib/components/SEOHead.svelte';
+	
 	function handleImageError(event: Event) {
 		const img = event.target as HTMLImageElement;
 		if (img) {
@@ -7,10 +9,7 @@
 	}
 </script>
 
-<svelte:head>
-	<title>Donate - Fresh Ground Eltham</title>
-	<meta name="description" content="Support Fresh Ground Eltham community café with a donation" />
-</svelte:head>
+<SEOHead />
 
 <!-- Hero Section -->
 <div class="relative z-0">

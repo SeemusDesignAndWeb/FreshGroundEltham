@@ -2,6 +2,7 @@
 	import HeroSlider from './HeroSlider.svelte';
 	import TestimonialCarousel from './TestimonialCarousel.svelte';
 	import SEOHead from '$lib/components/SEOHead.svelte';
+	import StructuredData from '$lib/components/StructuredData.svelte';
 	
 	function handleImageError(event: Event) {
 		const img = event.target as HTMLImageElement;
@@ -23,6 +24,10 @@
 </script>
 
 <SEOHead />
+
+<!-- Structured Data for SEO -->
+<StructuredData type="LocalBusiness" />
+<StructuredData type="WebSite" />
 
 <!-- Hero Slider Section -->
 <div class="relative z-0">

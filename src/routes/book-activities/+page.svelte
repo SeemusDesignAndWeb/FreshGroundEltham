@@ -1,4 +1,6 @@
 <script lang="ts">
+	import SEOHead from '$lib/components/SEOHead.svelte';
+	
 	let formSubmitted = $state(false);
 	let formData = $state({
 		name: '',
@@ -38,10 +40,7 @@
 	}
 </script>
 
-<svelte:head>
-	<title>Kids Activities - Fresh Ground Eltham</title>
-	<meta name="description" content="Book kids activities at Fresh Ground Eltham during half term and school holidays" />
-</svelte:head>
+<SEOHead />
 
 <!-- Hero Section -->
 <div class="relative z-0">

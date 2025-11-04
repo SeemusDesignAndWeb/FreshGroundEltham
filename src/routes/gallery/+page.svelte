@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import SEOHead from '$lib/components/SEOHead.svelte';
 
 	let selectedImage = $state<string | null>(null);
 	let images = $state([
@@ -94,10 +95,7 @@
 	});
 </script>
 
-<svelte:head>
-	<title>Gallery - Fresh Ground Eltham</title>
-	<meta name="description" content="Photo gallery showcasing Fresh Ground Eltham - our coffee, food, and welcoming atmosphere" />
-</svelte:head>
+<SEOHead />
 
 <!-- Hero Section -->
 <div class="relative z-0">

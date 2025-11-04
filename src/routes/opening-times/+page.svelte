@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import type { OpeningTimes } from '$lib/server/database';
+	import SEOHead from '$lib/components/SEOHead.svelte';
 
 	let openingTimes = $state<OpeningTimes | null>(null);
 
@@ -17,10 +18,7 @@
 	});
 </script>
 
-<svelte:head>
-	<title>Opening Times - Fresh Ground Eltham</title>
-	<meta name="description" content="Fresh Ground Eltham opening times" />
-</svelte:head>
+<SEOHead />
 
 <!-- Full Screen Opening Times Section -->
 <div class="opening-times-container relative w-full h-screen flex items-center justify-center">
