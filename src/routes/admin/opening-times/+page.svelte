@@ -36,7 +36,7 @@
 					days: 'Wednesday to Saturday',
 					hours: '9:30 am to 2:00 pm',
 					closedDays: 'Sunday, Monday, and Tuesday',
-					backgroundImage: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1920&q=80',
+					backgroundImage: '',
 					specialHours: ''
 				};
 			} else {
@@ -45,7 +45,7 @@
 					days: 'Wednesday to Saturday',
 					hours: '9:30 am to 2:00 pm',
 					closedDays: 'Sunday, Monday, and Tuesday',
-					backgroundImage: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1920&q=80',
+					backgroundImage: '',
 					specialHours: ''
 				};
 			}
@@ -55,7 +55,7 @@
 				days: 'Wednesday to Saturday',
 				hours: '9:30 am to 2:00 pm',
 				closedDays: 'Sunday, Monday, and Tuesday',
-				backgroundImage: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1920&q=80',
+				backgroundImage: '',
 				specialHours: ''
 			};
 		} finally {

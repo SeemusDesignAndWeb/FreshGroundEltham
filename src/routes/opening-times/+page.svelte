@@ -1,21 +1,10 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
 	import type { OpeningTimes } from '$lib/server/database';
+	import type { PageData } from './$types';
 	import SEOHead from '$lib/components/SEOHead.svelte';
 
-	let openingTimes = $state<OpeningTimes | null>(null);
-
-	onMount(async () => {
-		try {
-			const response = await fetch('/api/opening-times');
-			if (response.ok) {
-				const data = await response.json();
-				openingTimes = data.openingTimes || null;
-			}
-		} catch (error) {
-			console.error('Error loading opening times:', error);
-		}
-	});
+	let { data }: { data: PageData } = $props();
+	let openingTimes = $state<OpeningTimes | null>(data?.openingTimes || null);
 </script>
 
 <SEOHead />
