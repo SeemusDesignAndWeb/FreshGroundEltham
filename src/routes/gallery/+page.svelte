@@ -5,7 +5,7 @@
 
 	let selectedImage = $state<string | null>(null);
 	let images = $state<Array<{src: string; alt: string; category: string}>>([]);
-	let backgroundImage = $state('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1920&q=80');
+	let backgroundImage = $state<string | null>(null);
 
 	let filteredImages = $state(images);
 	let selectedCategory = $state<string>('all');
@@ -60,7 +60,10 @@
 
 	onMount(async () => {
 		// Load background image
-		backgroundImage = await getPageBackground('/gallery', backgroundImage);
+		const loadedBackground = await getPageBackground('/gallery', '');
+		if (loadedBackground) {
+			backgroundImage = loadedBackground;
+		}
 		
 		// Load gallery images from API
 		try {
@@ -88,7 +91,7 @@
 
 <!-- Hero Section -->
 <div class="relative z-0">
-	<section class="relative bg-cover bg-center py-8 px-4 -mt-[120px] pt-[calc(120px+2rem)] min-h-[200px] flex items-center" style="background-image: url('{backgroundImage}');">
+	<section class="relative bg-cover bg-center py-8 px-4 -mt-[120px] pt-[calc(120px+2rem)] min-h-[200px] flex items-center {backgroundImage ? '' : 'bg-gradient-to-r from-[#39918c] to-[#2f435a]'}" style={backgroundImage ? `background-image: url('${backgroundImage}');` : ''}>
 		<div class="absolute inset-0 bg-gradient-to-r from-[#39918c]/20 to-[#2f435a]/20 z-10"></div>
 		<div class="max-w-4xl mx-auto text-center relative z-20 text-white">
 			<h1 class="text-4xl md:text-5xl font-bold mb-4">Gallery</h1>

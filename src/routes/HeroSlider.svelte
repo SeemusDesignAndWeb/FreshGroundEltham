@@ -74,19 +74,24 @@
 </script>
 
 <div class="hero-slider relative w-full h-screen overflow-hidden -mt-[120px] z-0">
-	{#each images as image, index}
-		<div 
-			class="hero-slide absolute inset-0 {index === currentIndex ? 'opacity-100 z-10' : 'opacity-0 z-0'}"
-		>
-			<img 
-				src={image} 
-				alt="Fresh Ground Eltham" 
-				class="w-full h-full object-cover"
-				onerror={handleImageError}
-			/>
-			<div class="absolute inset-0 bg-gradient-to-r from-[#39918c] to-[#2f435a] z-20 opacity-30"></div>
-		</div>
-	{/each}
+	{#if images.length > 0}
+		{#each images as image, index}
+			<div 
+				class="hero-slide absolute inset-0 {index === currentIndex ? 'opacity-100 z-10' : 'opacity-0 z-0'}"
+			>
+				<img 
+					src={image} 
+					alt="Fresh Ground Eltham" 
+					class="w-full h-full object-cover"
+					onerror={handleImageError}
+				/>
+				<div class="absolute inset-0 bg-gradient-to-r from-[#39918c] to-[#2f435a] z-20 opacity-30"></div>
+			</div>
+		{/each}
+	{:else}
+		<!-- Fallback gradient background when no images loaded -->
+		<div class="absolute inset-0 bg-gradient-to-r from-[#39918c] to-[#2f435a]"></div>
+	{/if}
 	
 	<!-- Content overlay -->
 	<div class="absolute inset-0 z-30 flex items-center justify-center">
