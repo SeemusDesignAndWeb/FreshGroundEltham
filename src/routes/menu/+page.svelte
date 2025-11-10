@@ -5,8 +5,8 @@
 	import SEOHead from '$lib/components/SEOHead.svelte';
 	import { getPageBackground } from '$lib/utils/pageBackground';
 
-	let { data } = $props<PageData>();
-	let menuItems = $state<MenuItem[]>([]);
+	let { data }: { data: PageData } = $props();
+	let menuItems = $state<MenuItem[]>(data?.menuItems || []);
 	let isMenuHidden = $state(false);
 	let backgroundImage = $state('https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=1920&q=80');
 
@@ -30,17 +30,15 @@
 			console.error('Error loading navigation:', error);
 		}
 
-		// Load menu items only if menu is not hidden
-		if (!isMenuHidden) {
-			try {
-				const response = await fetch('/api/menu');
-				if (response.ok) {
-					const result = await response.json();
-					menuItems = result.menuItems || [];
-				}
-			} catch (error) {
-				console.error('Error loading menu:', error);
+		// Reload menu items to get latest data
+		try {
+			const response = await fetch('/api/menu');
+			if (response.ok) {
+				const result = await response.json();
+				menuItems = result.menuItems || [];
 			}
+		} catch (error) {
+			console.error('Error loading menu:', error);
 		}
 	});
 
