@@ -42,6 +42,7 @@
 			name: 'Content',
 			key: 'content',
 			items: [
+				{ path: '/admin/special-offers', label: 'Special Offers' },
 				{ path: '/admin/activities', label: 'Activities' },
 				{ path: '/admin/testimonials', label: 'Testimonials' },
 				{ path: '/admin/menu', label: 'Menu' },

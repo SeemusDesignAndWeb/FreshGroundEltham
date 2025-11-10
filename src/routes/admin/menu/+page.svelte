@@ -14,6 +14,17 @@
 		description: '',
 		price: 0
 	});
+	
+	// Get unique categories from existing menu items
+	let existingCategories = $derived(() => {
+		const categories = new Set<string>();
+		menuItems.forEach(item => {
+			if (item.category && item.category.trim()) {
+				categories.add(item.category.trim());
+			}
+		});
+		return Array.from(categories).sort();
+	});
 
 	async function loadMenuItems() {
 		try {
@@ -300,19 +311,31 @@
 					<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
 						<div>
 							<label for="category" class="block text-gray-700 font-medium mb-2">Category *</label>
-							<select
-								id="category"
-								bind:value={menuItemFormData.category}
-								required
-								class="w-full px-4 py-2 border-2 border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#39918c]"
-							>
-								<option value="">Select category...</option>
-								<option value="Hot Drinks">Hot Drinks</option>
-								<option value="Cold Drinks">Cold Drinks</option>
-								<option value="Food">Food</option>
-								<option value="Cakes">Cakes</option>
-								<option value="Snacks">Snacks</option>
-							</select>
+							<div class="relative">
+								<input
+									id="category"
+									type="text"
+									list="category-list"
+									bind:value={menuItemFormData.category}
+									required
+									placeholder="Type or select category..."
+									class="w-full px-4 py-2 border-2 border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#39918c]"
+								/>
+								<datalist id="category-list">
+									{#each existingCategories as category}
+										<option value={category} />
+									{/each}
+									<!-- Default categories if none exist yet -->
+									<option value="Hot Drinks" />
+									<option value="Cold Drinks" />
+									<option value="Food" />
+									<option value="Cakes" />
+									<option value="Snacks" />
+								</datalist>
+							</div>
+							<p class="text-xs text-gray-500 mt-1">
+								Type a new category or select from existing ones
+							</p>
 						</div>
 						<div>
 							<label for="price" class="block text-gray-700 font-medium mb-2">Price (£) *</label>

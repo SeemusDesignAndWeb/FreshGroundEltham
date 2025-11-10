@@ -1,0 +1,13 @@
+{
+  "offers": [
+    {
+      "id": "1762809342028",
+      "name": "Coffee and cake deal",
+      "description": "This is a description fo what you get",
+      "image": "/images/pastries.jpg",
+      "price": 10,
+      "enabled": true,
+      "emailInformation": "This is some information on the email"
+    }
+  ]
+}

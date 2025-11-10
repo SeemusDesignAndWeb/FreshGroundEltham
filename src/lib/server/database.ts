@@ -1,8 +1,9 @@
-import { readFileSync, writeFileSync, mkdirSync } from 'fs';
+import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'fs';
 import { join, dirname } from 'path';
 import type { Activity } from '../stores/cart';
 
 const DB_PATH = process.env.DATABASE_PATH || './data/database.json';
+const SPECIAL_OFFERS_DB_PATH = process.env.SPECIAL_OFFERS_DB_PATH || './data/specialOffers.json';
 
 export interface Testimonial {
 	id: string;
@@ -75,6 +76,16 @@ export interface GallerySettings {
 	images: GalleryImage[];
 }
 
+export interface SpecialOffer {
+	id: string;
+	name: string; // Offer name
+	description: string; // Description of the offer
+	price: number; // Price in GBP
+	image: string; // Image path/URL
+	enabled: boolean; // Whether to display this offer
+	emailInformation?: string; // Information to be emailed to customers
+}
+
 export interface Database {
 	activities: Activity[];
 	bookings: any[];
@@ -88,6 +99,10 @@ export interface Database {
 	pageBackgrounds?: PageBackgroundImages;
 	heroSliderSettings?: HeroSliderSettings;
 	gallerySettings?: GallerySettings;
+}
+
+export interface SpecialOffersDatabase {
+	offers: SpecialOffer[];
 }
 
 function getDbPath(): string {
@@ -106,12 +121,43 @@ function getDbPath(): string {
 	return DB_PATH;
 }
 
+function getSpecialOffersDbPath(): string {
+	if (SPECIAL_OFFERS_DB_PATH.startsWith('./') || SPECIAL_OFFERS_DB_PATH.startsWith('../')) {
+		// Relative path - resolve from project root
+		const resolved = join(process.cwd(), SPECIAL_OFFERS_DB_PATH);
+		// Ensure the directory exists
+		const dir = dirname(resolved);
+		try {
+			mkdirSync(dir, { recursive: true });
+		} catch (error) {
+			// Directory might already exist, ignore
+		}
+		return resolved;
+	}
+	return SPECIAL_OFFERS_DB_PATH;
+}
+
 export function readDatabase(): Database {
 	try {
 		const dbPath = getDbPath();
 		const data = readFileSync(dbPath, 'utf-8');
 		return JSON.parse(data);
 	} catch (error) {
+		// If file doesn't exist, try to initialize from git version
+		// This helps on Railway when using persistent storage
+		try {
+			const gitDbPath = join(process.cwd(), './data/database.json');
+			if (gitDbPath !== dbPath && existsSync(gitDbPath)) {
+				const gitData = readFileSync(gitDbPath, 'utf-8');
+				const db = JSON.parse(gitData);
+				// Copy to persistent location
+				writeDatabase(db);
+				return db;
+			}
+		} catch (initError) {
+			// Ignore initialization errors
+		}
+		
 		// If file doesn't exist, return default structure
 		return {
 			activities: [],
@@ -573,5 +619,73 @@ export function updateGallerySettings(settings: GallerySettings): void {
 	const db = readDatabase();
 	db.gallerySettings = settings;
 	writeDatabase(db);
+}
+
+function readSpecialOffersDatabase(): SpecialOffersDatabase {
+	try {
+		const dbPath = getSpecialOffersDbPath();
+		const data = readFileSync(dbPath, 'utf-8');
+		return JSON.parse(data);
+	} catch (error) {
+		// If file doesn't exist, try to initialize from git version
+		// This helps on Railway when using persistent storage
+		try {
+			const gitDbPath = join(process.cwd(), './data/specialOffers.json');
+			if (gitDbPath !== dbPath && existsSync(gitDbPath)) {
+				const gitData = readFileSync(gitDbPath, 'utf-8');
+				const db = JSON.parse(gitData);
+				// Copy to persistent location
+				writeSpecialOffersDatabase(db);
+				return db;
+			}
+		} catch (initError) {
+			// Ignore initialization errors
+		}
+		
+		// If file doesn't exist, return default structure
+		return {
+			offers: []
+		};
+	}
+}
+
+function writeSpecialOffersDatabase(data: SpecialOffersDatabase): void {
+	const dbPath = getSpecialOffersDbPath();
+	writeFileSync(dbPath, JSON.stringify(data, null, 2), 'utf-8');
+}
+
+export function getSpecialOffers(): SpecialOffer[] {
+	const db = readSpecialOffersDatabase();
+	return db.offers || [];
+}
+
+export function addSpecialOffer(offer: SpecialOffer): void {
+	const db = readSpecialOffersDatabase();
+	if (!db.offers) {
+		db.offers = [];
+	}
+	db.offers.push(offer);
+	writeSpecialOffersDatabase(db);
+}
+
+export function updateSpecialOffer(offerId: string, updatedOffer: Partial<SpecialOffer>): void {
+	const db = readSpecialOffersDatabase();
+	if (!db.offers) {
+		db.offers = [];
+	}
+	const index = db.offers.findIndex(o => o.id === offerId);
+	if (index !== -1) {
+		db.offers[index] = { ...db.offers[index], ...updatedOffer };
+		writeSpecialOffersDatabase(db);
+	}
+}
+
+export function removeSpecialOffer(offerId: string): void {
+	const db = readSpecialOffersDatabase();
+	if (!db.offers) {
+		db.offers = [];
+	}
+	db.offers = db.offers.filter(o => o.id !== offerId);
+	writeSpecialOffersDatabase(db);
 }
 

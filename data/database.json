@@ -1,0 +1,414 @@
+{
+  "activities": [
+    {
+      "id": "1",
+      "title": "Craft Workshop",
+      "description": "Creative arts and crafts session for children aged 5-12. All materials provided.",
+      "image": "/images/pastries.jpg",
+      "date": "2025-02-17",
+      "time": "10:00",
+      "price": 5,
+      "capacity": 15
+    },
+    {
+      "id": "2",
+      "title": "Story Time",
+      "description": "Interactive storytelling session with engaging books and activities. Perfect for ages 3-8.",
+      "image": "/images/coffee-making.jpg",
+      "date": "2025-02-18",
+      "time": "11:00",
+      "price": 3,
+      "capacity": 20
+    },
+    {
+      "id": "3",
+      "title": "Baking Fun",
+      "description": "Kids baking workshop where children can learn to make simple treats. Ages 6+.",
+      "image": "/images/pastries.jpg",
+      "date": "2025-02-19",
+      "time": "10:30",
+      "price": 8,
+      "capacity": 12
+    },
+    {
+      "id": "4",
+      "title": "Half Term Games",
+      "description": "Fun games and activities session including board games, puzzles and group activities.",
+      "image": "/images/coffee-latte-art.jpg",
+      "date": "2025-02-20",
+      "time": "13:00",
+      "price": 4,
+      "capacity": 18
+    }
+  ],
+  "bookings": [],
+  "testimonials": [
+    {
+      "id": "1",
+      "name": "Sarah Johnson",
+      "text": "Fresh Ground is such a wonderful community space! The coffee is excellent and the atmosphere is so welcoming. My kids love coming here during half term activities.",
+      "rating": 5
+    },
+    {
+      "id": "2",
+      "name": "Michael Thompson",
+      "text": "Best coffee in Eltham! The staff are friendly, prices are reasonable, and it's a great place to meet friends. Highly recommend the cakes too!",
+      "rating": 5
+    },
+    {
+      "id": "3",
+      "name": "Emma Davies",
+      "text": "As a parent, I really appreciate how family-friendly Fresh Ground is. My children always feel welcome and the kids activities are fantastic. A real gem in our community!",
+      "rating": 5
+    },
+    {
+      "id": "4",
+      "name": "David Wilson",
+      "text": "Love supporting a café that makes a difference. The coffee from Old Spike Roastery is delicious and knowing it supports a good cause makes it even better.",
+      "rating": 5
+    },
+    {
+      "id": "5",
+      "name": "Lisa Brown",
+      "text": "Fresh Ground has become my regular spot. Great coffee, friendly staff, and such a warm atmosphere. Perfect for catching up with friends or working quietly.",
+      "rating": 4
+    },
+    {
+      "id": "6",
+      "name": "James Miller",
+      "text": "The kids activities here are brilliant! My daughter had so much fun at the craft workshop. The staff are patient and creative, and the prices are very reasonable.",
+      "rating": 5
+    }
+  ],
+  "menuItems": [
+    {
+      "id": "1762812893067uownkrdqn",
+      "category": "Breakfast",
+      "name": "Toast",
+      "description": "Butter/spread, conserve",
+      "price": 2.5
+    },
+    {
+      "id": "1762812893068fl1y32wah",
+      "category": "Breakfast",
+      "name": "Toasted Tea Cake",
+      "description": "Butter/spread, conserve",
+      "price": 2.6
+    },
+    {
+      "id": "1762812893068s9jqh5awl",
+      "category": "Breakfast",
+      "name": "Sausage or Bacon Sandwhich",
+      "description": "",
+      "price": 3
+    },
+    {
+      "id": "1762812893068tah81xfhs",
+      "category": "Breakfast",
+      "name": "Breakfast Panini",
+      "description": "Egg, bacon, tomato, chutney, chives",
+      "price": 5.55
+    },
+    {
+      "id": "176281289306844iioxaae",
+      "category": "Breakfast",
+      "name": "Bacon & Egg on Toast",
+      "description": "",
+      "price": 4.45
+    },
+    {
+      "id": "1762812893069h0j53htyi",
+      "category": "Breakfast",
+      "name": "Small English Breakfast",
+      "description": "Egg, bacon, sausage, beans and toast",
+      "price": 7.3
+    },
+    {
+      "id": "1762812893069dcd1lsva3",
+      "category": "Breakfast",
+      "name": "Large Englsih Breakfast",
+      "description": "Egg, bacon, sausage, beans and toast",
+      "price": 9.5
+    },
+    {
+      "id": "1762812893069h5ufzsw14",
+      "category": "Breakfast",
+      "name": "Smashed Avocado on Toast. V",
+      "description": "",
+      "price": 4.85
+    },
+    {
+      "id": "1762812893069u8wbgoifb",
+      "category": "Sandwiches",
+      "name": "The Fresh Ground Club",
+      "description": "Chicken, bacon, egg mayo, tomato and lettuce.",
+      "price": 6.65
+    },
+    {
+      "id": "1762812893070czkzb8xkz",
+      "category": "Sandwiches",
+      "name": "Smashed Avocado & Bacon or Chicken",
+      "description": "Tomato",
+      "price": 6.65
+    },
+    {
+      "id": "1762812893070q8kwjjn5i",
+      "category": "Sandwiches",
+      "name": "Chicken, Sweetcorn and Mayo",
+      "description": "",
+      "price": 5.95
+    },
+    {
+      "id": "1762812893070tebwmvt91",
+      "category": "Scotch Pancakes",
+      "name": "Simply Butter & Maple Syrup",
+      "description": "",
+      "price": 2.65
+    },
+    {
+      "id": "1762812893070tprpggazy",
+      "category": "Scotch Pancakes",
+      "name": "Bacon & Maple Syrup",
+      "description": "",
+      "price": 4.45
+    },
+    {
+      "id": "1762812893071d10mg7dhb",
+      "category": "Scotch Pancakes",
+      "name": "Banana & Chocolate",
+      "description": "",
+      "price": 4.45
+    },
+    {
+      "id": "17628128930713jphe428h",
+      "category": "Scotch Pancakes",
+      "name": "Summer Berries",
+      "description": "",
+      "price": 4.25
+    },
+    {
+      "id": "1762812893071jgvrnu97d",
+      "category": "Jacket Potatoes with side salad",
+      "name": "Beans or Cheese",
+      "description": "",
+      "price": 6.95
+    },
+    {
+      "id": "17628128930717oj9qyrw5",
+      "category": "Jacket Potatoes with side salad",
+      "name": "Chicken Mayo",
+      "description": "",
+      "price": 7.95
+    },
+    {
+      "id": "1762812893071muimbjlbl",
+      "category": "Jacket Potatoes with side salad",
+      "name": "Tuna Mayo",
+      "description": "",
+      "price": 7.95
+    },
+    {
+      "id": "17628128930729k3fjie9f",
+      "category": "Yamis Latin Soup",
+      "name": "Beef",
+      "description": "With Toasted Farmhouse Bread",
+      "price": 6.95
+    },
+    {
+      "id": "1762812893072w9kppm8kk",
+      "category": "Yamis Latin Soup",
+      "name": "Chicken",
+      "description": "With Toasted Farmhouse Bread",
+      "price": 6.95
+    },
+    {
+      "id": "1762812893072qtw5hq3hr",
+      "category": "Yamis Latin Soup",
+      "name": "Pork",
+      "description": "With Toasted Farmhouse Bread",
+      "price": 6.95
+    },
+    {
+      "id": "17628128930724lhoss7do",
+      "category": "Yamis Latin Soup",
+      "name": "Lentil",
+      "description": "With Toasted Farmhouse Bread",
+      "price": 6.95
+    },
+    {
+      "id": "176281289307264h4tg9cm",
+      "category": "Panini",
+      "name": "Breakfast Panini",
+      "description": "",
+      "price": 5.55
+    },
+    {
+      "id": "1762812893073xrxqyska6",
+      "category": "Panini",
+      "name": "Cheese & Tomato",
+      "description": "",
+      "price": 4.75
+    },
+    {
+      "id": "1762812893073puabplvfv",
+      "category": "Panini",
+      "name": "Ham and Cheese",
+      "description": "",
+      "price": 4.75
+    },
+    {
+      "id": "1762812893073s3bhknwbd",
+      "category": "Panini",
+      "name": "Tuna Melt",
+      "description": "Tuna and Cheese",
+      "price": 5.15
+    },
+    {
+      "id": "1762812893074h9gvts6j4",
+      "category": "Panini",
+      "name": "Chicken & Chorizo",
+      "description": "",
+      "price": 5.55
+    },
+    {
+      "id": "1762812893074cactl5neb",
+      "category": "Saver Menu",
+      "name": "Cheese Toastie",
+      "description": "",
+      "price": 2.75
+    },
+    {
+      "id": "1762812893074izyoav4zd",
+      "category": "Saver Menu",
+      "name": "Ham and Cheese Toastie",
+      "description": "",
+      "price": 2.75
+    }
+  ],
+  "openingTimes": {
+    "days": "Wednesday to Saturday",
+    "hours": "9:30 am to 2:00 pm",
+    "closedDays": "Sunday, Monday, and Tuesday",
+    "backgroundImage": "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1920&q=80",
+    "specialHours": "Extended Hours - Sunday 1pm"
+  },
+  "activitiesSettings": {
+    "hidden": true,
+    "message": "No activities scheduled at the moment. Check back soon for upcoming kids activities!"
+  },
+  "bannerSettings": {
+    "message": "Latest deal 20% off drinks",
+    "enabled": false,
+    "icon": "fire",
+    "endIcon": "fire"
+  },
+  "images": [
+    {
+      "id": "1762261354825iisfi9nww",
+      "name": "Pastries",
+      "path": "/images/pastries.jpg",
+      "alt": "Pastries",
+      "category": "food"
+    },
+    {
+      "id": "1762261354825q6fod359h",
+      "name": "Coffee Making",
+      "path": "/images/coffee-making.jpg",
+      "alt": "Coffee Making",
+      "category": "coffee"
+    },
+    {
+      "id": "1762261354825n2j6qisxc",
+      "name": "Coffee Latte Art",
+      "path": "/images/coffee-latte-art.jpg",
+      "alt": "Coffee Latte Art",
+      "category": "coffee"
+    },
+    {
+      "id": "1762261625871",
+      "name": "Richard and Damola",
+      "path": "/images/whatsapp_image_2025-08-24_at_09.40.08_1762261604279.jpeg",
+      "alt": "Richard and Damola",
+      "category": "People"
+    },
+    {
+      "id": "1762805678585",
+      "name": "Cake",
+      "path": "https://res.cloudinary.com/dzkjhr1o0/image/upload/v1762805665/freshground/freshground/img-3241black_1024_1762805664523.jpg",
+      "alt": "Cake",
+      "category": "food"
+    }
+  ],
+  "navigationSettings": {
+    "items": [
+      {
+        "path": "/",
+        "label": "Home",
+        "hidden": false
+      },
+      {
+        "path": "/about",
+        "label": "About Us",
+        "hidden": false
+      },
+      {
+        "path": "/opening-times",
+        "label": "Opening Times",
+        "hidden": false
+      },
+      {
+        "path": "/activities",
+        "label": "Kids Activities",
+        "hidden": false
+      },
+      {
+        "path": "/menu",
+        "label": "Menu",
+        "hidden": false
+      },
+      {
+        "path": "/contact",
+        "label": "Contact Us",
+        "hidden": false
+      },
+      {
+        "path": "/donate",
+        "label": "Donate",
+        "hidden": false
+      }
+    ]
+  },
+  "heroSliderSettings": {
+    "images": [
+      "/images/coffee-cup-hero.jpg",
+      "/images/coffee-making.jpg",
+      "/images/coffee-latte-art.jpg",
+      "/images/pastries.jpg",
+      "/images/coffee-beans-background.jpg"
+    ]
+  },
+  "gallerySettings": {
+    "images": [
+      {
+        "src": "/images/coffee-cup-hero.jpg",
+        "alt": "Fresh coffee cup",
+        "category": "coffee"
+      },
+      {
+        "src": "/images/coffee-making.jpg",
+        "alt": "Coffee being prepared",
+        "category": "coffee"
+      },
+      {
+        "src": "/images/pastries.jpg",
+        "alt": "Delicious pastries",
+        "category": "food"
+      },
+      {
+        "src": "/images/coffee-beans-background.jpg",
+        "alt": "Coffee beans",
+        "category": "coffee"
+      }
+    ]
+  }
+}
