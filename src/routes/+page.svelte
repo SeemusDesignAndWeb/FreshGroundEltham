@@ -1,8 +1,33 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
 	import HeroSlider from './HeroSlider.svelte';
 	import TestimonialCarousel from './TestimonialCarousel.svelte';
 	import SEOHead from '$lib/components/SEOHead.svelte';
 	import StructuredData from '$lib/components/StructuredData.svelte';
+	
+	interface GalleryImage {
+		src: string;
+		alt: string;
+		category: string;
+	}
+	
+	let galleryImages = $state<GalleryImage[]>([]);
+	
+	onMount(async () => {
+		// Load gallery images from API
+		try {
+			const response = await fetch('/api/gallery');
+			if (response.ok) {
+				const data = await response.json();
+				galleryImages = data.images || [];
+			}
+		} catch (error) {
+			console.error('Error loading gallery:', error);
+		}
+	});
+	
+	// Show first 4 images for home page preview
+	let previewImages = $derived(galleryImages.slice(0, 4));
 	
 	function handleImageError(event: Event) {
 		const img = event.target as HTMLImageElement;
@@ -110,52 +135,71 @@
 <section class="py-16 px-4 bg-white">
 	<div class="max-w-7xl mx-auto">
 		<h2 class="text-4xl font-bold text-center text-[#39918c] mb-8">Fresh Ground Gallery</h2>
-		<div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
-			<div class="aspect-square rounded-lg overflow-hidden bg-gray-200 relative">
-				<img 
-					src="/images/coffee-latte-art.jpg" 
-					alt="Coffee latte art" 
-					class="w-full h-full object-cover hover:scale-110 transition-transform duration-300"
-					onerror={handleGalleryImageError}
-				/>
-				<div class="hidden absolute inset-0 items-center justify-center bg-gray-300">
-					<span class="text-gray-500">Photo 1</span>
+		{#if previewImages.length > 0}
+			<div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+				{#each previewImages as image, index}
+					<div class="aspect-square rounded-lg overflow-hidden bg-gray-200 relative">
+						<img 
+							src={image.src} 
+							alt={image.alt || `Gallery image ${index + 1}`}
+							class="w-full h-full object-cover hover:scale-110 transition-transform duration-300"
+							onerror={handleGalleryImageError}
+						/>
+						<div class="hidden absolute inset-0 items-center justify-center bg-gray-300">
+							<span class="text-gray-500">Photo {index + 1}</span>
+						</div>
+					</div>
+				{/each}
+			</div>
+		{:else}
+			<!-- Fallback: show default images if gallery is empty -->
+			<div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+				<div class="aspect-square rounded-lg overflow-hidden bg-gray-200 relative">
+					<img 
+						src="/images/coffee-latte-art.jpg" 
+						alt="Coffee latte art" 
+						class="w-full h-full object-cover hover:scale-110 transition-transform duration-300"
+						onerror={handleGalleryImageError}
+					/>
+					<div class="hidden absolute inset-0 items-center justify-center bg-gray-300">
+						<span class="text-gray-500">Photo 1</span>
+					</div>
+				</div>
+				<div class="aspect-square rounded-lg overflow-hidden bg-gray-200 relative">
+					<img 
+						src="/images/coffee-making.jpg" 
+						alt="Coffee making" 
+						class="w-full h-full object-cover hover:scale-110 transition-transform duration-300"
+						onerror={handleGalleryImageError}
+					/>
+					<div class="hidden absolute inset-0 items-center justify-center bg-gray-300">
+						<span class="text-gray-500">Photo 2</span>
+					</div>
+				</div>
+				<div class="aspect-square rounded-lg overflow-hidden bg-gray-200 relative">
+					<img 
+						src="/images/pastries.jpg" 
+						alt="Pastries" 
+						class="w-full h-full object-cover hover:scale-110 transition-transform duration-300"
+						onerror={handleGalleryImageError}
+					/>
+					<div class="hidden absolute inset-0 items-center justify-center bg-gray-300">
+						<span class="text-gray-500">Photo 3</span>
+					</div>
+				</div>
+				<div class="aspect-square rounded-lg overflow-hidden bg-gray-200 relative">
+					<img 
+						src="/images/coffee-making.jpg" 
+						alt="Coffee bar" 
+						class="w-full h-full object-cover hover:scale-110 transition-transform duration-300"
+						onerror={handleGalleryImageError}
+					/>
+					<div class="hidden absolute inset-0 items-center justify-center bg-gray-300">
+						<span class="text-gray-500">Photo 4</span>
+					</div>
 				</div>
 			</div>
-			<div class="aspect-square rounded-lg overflow-hidden bg-gray-200 relative">
-				<img 
-					src="/images/coffee-making.jpg" 
-					alt="Coffee making" 
-					class="w-full h-full object-cover hover:scale-110 transition-transform duration-300"
-					onerror={handleGalleryImageError}
-				/>
-				<div class="hidden absolute inset-0 items-center justify-center bg-gray-300">
-					<span class="text-gray-500">Photo 2</span>
-				</div>
-			</div>
-			<div class="aspect-square rounded-lg overflow-hidden bg-gray-200 relative">
-				<img 
-					src="/images/pastries.jpg" 
-					alt="Pastries" 
-					class="w-full h-full object-cover hover:scale-110 transition-transform duration-300"
-					onerror={handleGalleryImageError}
-				/>
-				<div class="hidden absolute inset-0 items-center justify-center bg-gray-300">
-					<span class="text-gray-500">Photo 3</span>
-				</div>
-			</div>
-			<div class="aspect-square rounded-lg overflow-hidden bg-gray-200 relative">
-				<img 
-					src="/images/coffee-making.jpg" 
-					alt="Coffee bar" 
-					class="w-full h-full object-cover hover:scale-110 transition-transform duration-300"
-					onerror={handleGalleryImageError}
-				/>
-				<div class="hidden absolute inset-0 items-center justify-center bg-gray-300">
-					<span class="text-gray-500">Photo 4</span>
-				</div>
-			</div>
-		</div>
+		{/if}
 		<div class="text-center mt-8">
 			<a href="/gallery" class="text-[#39918c] hover:underline font-medium">
 				More Photos →
