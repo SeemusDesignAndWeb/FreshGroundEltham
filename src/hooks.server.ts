@@ -1,6 +1,21 @@
 import type { Handle } from '@sveltejs/kit';
 import { sequence } from '@sveltejs/kit/hooks';
-import type { Cookies } from '@sveltejs/kit';
+import { error } from '@sveltejs/kit';
+
+function createImagePathHandle(): Handle {
+	return async ({ event, resolve }) => {
+		// Handle invalid image paths that look like routes but aren't
+		// These are often old Cloudinary paths or malformed image URLs
+		const pathname = event.url.pathname;
+		
+		// Return 404 immediately for paths that start with /company/ (old Cloudinary paths)
+		if (pathname.startsWith('/company/')) {
+			return error(404, 'Not found');
+		}
+
+		return resolve(event);
+	};
+}
 
 function createAuthHandle(): Handle {
 	return async ({ event, resolve }) => {
@@ -16,5 +31,5 @@ function createAuthHandle(): Handle {
 	};
 }
 
-export const handle: Handle = sequence(createAuthHandle());
+export const handle: Handle = sequence(createImagePathHandle(), createAuthHandle());
 
