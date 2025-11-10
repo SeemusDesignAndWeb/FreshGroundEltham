@@ -37,6 +37,7 @@
 	},
 	"dependencies": {
 		"@paypal/paypal-js": "^9.0.1",
+		"cloudinary": "^2.8.0",
 		"resend": "^6.4.0",
 		"xlsx": "^0.18.5"
 	},

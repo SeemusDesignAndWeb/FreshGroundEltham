@@ -1,8 +1,7 @@
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
-import { writeFile, mkdir } from 'fs/promises';
-import { join } from 'path';
-import { existsSync } from 'fs';
+import { v2 as cloudinary } from 'cloudinary';
+import { env } from '$env/dynamic/private';
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 const ALLOWED_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp', 'image/svg+xml'];
@@ -12,6 +11,30 @@ export const POST: RequestHandler = async ({ request, cookies }) => {
 	if (!cookies.get('admin_session')) {
 		return json({ error: 'Unauthorized' }, { status: 401 });
 	}
+
+	// Get and validate Cloudinary credentials
+	const CLOUDINARY_CLOUD_NAME = env.CLOUDINARY_CLOUD_NAME?.trim();
+	const CLOUDINARY_API_KEY = env.CLOUDINARY_API_KEY?.trim();
+	const CLOUDINARY_API_SECRET = env.CLOUDINARY_API_SECRET?.trim();
+
+	if (!CLOUDINARY_CLOUD_NAME || !CLOUDINARY_API_KEY || !CLOUDINARY_API_SECRET) {
+		console.error('Cloudinary configuration missing:', {
+			hasCloudName: !!CLOUDINARY_CLOUD_NAME,
+			hasApiKey: !!CLOUDINARY_API_KEY,
+			hasApiSecret: !!CLOUDINARY_API_SECRET
+		});
+		return json({ 
+			error: 'Cloudinary not configured',
+			details: 'Please set CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, and CLOUDINARY_API_SECRET in your .env file'
+		}, { status: 500 });
+	}
+
+	// Configure Cloudinary for this request
+	cloudinary.config({
+		cloud_name: CLOUDINARY_CLOUD_NAME,
+		api_key: CLOUDINARY_API_KEY,
+		api_secret: CLOUDINARY_API_SECRET
+	});
 
 	try {
 		const formData = await request.formData();
@@ -35,87 +58,69 @@ export const POST: RequestHandler = async ({ request, cookies }) => {
 			}, { status: 400 });
 		}
 
-		// Ensure images directory exists
-		// Use the standard static/images directory
-		// This should work in both development and production
-		const imagesDir = join(process.cwd(), 'static', 'images');
-		
-		// Log for debugging (will appear in server logs)
-		console.log('Upload attempt:', {
-			cwd: process.cwd(),
-			targetDir: imagesDir,
-			dirExists: existsSync(imagesDir),
-			parentExists: existsSync(join(process.cwd(), 'static'))
-		});
-		
-		// Ensure the directory exists
-		if (!existsSync(imagesDir)) {
-			try {
-				await mkdir(imagesDir, { recursive: true });
-				console.log('Created images directory:', imagesDir);
-			} catch (mkdirError) {
-				console.error('Error creating images directory:', mkdirError);
-				const errorMsg = mkdirError instanceof Error ? mkdirError.message : String(mkdirError);
-				return json({ 
-					error: 'Failed to create images directory. The server may not have write permissions to the static folder.',
-					details: process.env.NODE_ENV === 'development' ? errorMsg : 'Please contact your hosting provider to ensure the static/images directory is writable.'
-				}, { status: 500 });
-			}
-		}
-
-		// Generate filename (sanitize original filename)
+		// Generate a sanitized public_id for Cloudinary
 		const originalName = file.name;
 		const sanitizedName = originalName
-			.replace(/[^a-zA-Z0-9.-]/g, '_')
+			.replace(/\.[^/.]+$/, '') // Remove extension
+			.replace(/[^a-zA-Z0-9-]/g, '_')
 			.toLowerCase();
 		
-		// Add timestamp to avoid conflicts
 		const timestamp = Date.now();
-		const extension = sanitizedName.split('.').pop() || 'jpg';
-		const baseName = sanitizedName.replace(/\.[^/.]+$/, '') || 'image';
-		let filename = `${baseName}_${timestamp}.${extension}`;
-		let filepath = join(imagesDir, filename);
+		const publicId = `freshground/${sanitizedName}_${timestamp}`;
 
-		// Check if file already exists (very unlikely with timestamp, but just in case)
-		if (existsSync(filepath)) {
-			// Add random string if timestamp collision
-			const random = Math.random().toString(36).substr(2, 5);
-			filename = `${baseName}_${timestamp}_${random}.${extension}`;
-			filepath = join(imagesDir, filename);
-		}
-
-		// Convert file to buffer and save
+		// Convert file to base64 data URI for Cloudinary upload
 		const arrayBuffer = await file.arrayBuffer();
 		const buffer = Buffer.from(arrayBuffer);
-		
-		try {
-			await writeFile(filepath, buffer);
-		} catch (writeError) {
-			console.error('Error writing file:', writeError);
-			return json({ 
-				error: 'Failed to save image file. Please check server permissions.',
-				details: process.env.NODE_ENV === 'development' ? (writeError instanceof Error ? writeError.message : String(writeError)) : undefined
-			}, { status: 500 });
-		}
+		const base64 = buffer.toString('base64');
+		const dataURI = `data:${file.type};base64,${base64}`;
 
-		// Return the path that will be used in the app
-		const imagePath = `/images/${filename}`;
-
-		return json({ 
-			success: true, 
-			path: imagePath,
-			filename: filename,
-			originalName: originalName,
+		console.log('Uploading to Cloudinary:', {
+			publicId,
+			originalName,
 			size: file.size,
 			type: file.type
 		});
+
+		try {
+			// Upload to Cloudinary
+			const result = await cloudinary.uploader.upload(dataURI, {
+				public_id: publicId,
+				folder: 'freshground',
+				resource_type: 'auto',
+				overwrite: false
+			});
+
+			console.log('Cloudinary upload successful:', {
+				public_id: result.public_id,
+				secure_url: result.secure_url,
+				format: result.format
+			});
+
+			// Return the Cloudinary URL
+			return json({ 
+				success: true, 
+				path: result.secure_url,
+				filename: result.public_id,
+				originalName: originalName,
+				size: file.size,
+				type: file.type,
+				cloudinary_id: result.public_id,
+				width: result.width,
+				height: result.height
+			});
+		} catch (uploadError) {
+			console.error('Cloudinary upload error:', uploadError);
+			return json({ 
+				error: 'Failed to upload image to Cloudinary',
+				details: process.env.NODE_ENV === 'development' ? (uploadError instanceof Error ? uploadError.message : String(uploadError)) : 'Please check Cloudinary configuration'
+			}, { status: 500 });
+		}
 	} catch (error) {
 		console.error('Error uploading image:', error);
 		const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
 		console.error('Error details:', {
 			message: errorMessage,
-			stack: error instanceof Error ? error.stack : undefined,
-			cwd: process.cwd()
+			stack: error instanceof Error ? error.stack : undefined
 		});
 		return json({ 
 			error: 'Failed to upload image',
