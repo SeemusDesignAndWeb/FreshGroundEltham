@@ -106,35 +106,45 @@ export interface SpecialOffersDatabase {
 }
 
 function getDbPath(): string {
+	let finalPath: string;
 	if (DB_PATH.startsWith('./') || DB_PATH.startsWith('../')) {
 		// Relative path - resolve from project root
-		const resolved = join(process.cwd(), DB_PATH);
-		// Ensure the directory exists
-		const dir = dirname(resolved);
-		try {
-			mkdirSync(dir, { recursive: true });
-		} catch (error) {
-			// Directory might already exist, ignore
-		}
-		return resolved;
+		finalPath = join(process.cwd(), DB_PATH);
+	} else {
+		// Absolute path (e.g., /data/database.json for Railway volumes)
+		finalPath = DB_PATH;
 	}
-	return DB_PATH;
+	
+	// Ensure the directory exists for both relative and absolute paths
+	const dir = dirname(finalPath);
+	try {
+		mkdirSync(dir, { recursive: true });
+	} catch (error) {
+		// Directory might already exist, or volume might not be mounted yet (during build)
+		// This is okay - we'll handle errors when reading/writing
+	}
+	return finalPath;
 }
 
 function getSpecialOffersDbPath(): string {
+	let finalPath: string;
 	if (SPECIAL_OFFERS_DB_PATH.startsWith('./') || SPECIAL_OFFERS_DB_PATH.startsWith('../')) {
 		// Relative path - resolve from project root
-		const resolved = join(process.cwd(), SPECIAL_OFFERS_DB_PATH);
-		// Ensure the directory exists
-		const dir = dirname(resolved);
-		try {
-			mkdirSync(dir, { recursive: true });
-		} catch (error) {
-			// Directory might already exist, ignore
-		}
-		return resolved;
+		finalPath = join(process.cwd(), SPECIAL_OFFERS_DB_PATH);
+	} else {
+		// Absolute path (e.g., /data/specialOffers.json for Railway volumes)
+		finalPath = SPECIAL_OFFERS_DB_PATH;
 	}
-	return SPECIAL_OFFERS_DB_PATH;
+	
+	// Ensure the directory exists for both relative and absolute paths
+	const dir = dirname(finalPath);
+	try {
+		mkdirSync(dir, { recursive: true });
+	} catch (error) {
+		// Directory might already exist, or volume might not be mounted yet (during build)
+		// This is okay - we'll handle errors when reading/writing
+	}
+	return finalPath;
 }
 
 export function readDatabase(): Database {
@@ -177,7 +187,20 @@ export function readDatabase(): Database {
 
 export function writeDatabase(data: Database): void {
 	const dbPath = getDbPath();
-	writeFileSync(dbPath, JSON.stringify(data, null, 2), 'utf-8');
+	// Ensure directory exists before writing (in case it wasn't created earlier)
+	const dir = dirname(dbPath);
+	try {
+		mkdirSync(dir, { recursive: true });
+	} catch (error) {
+		// Directory might already exist, ignore
+	}
+	try {
+		writeFileSync(dbPath, JSON.stringify(data, null, 2), 'utf-8');
+	} catch (error) {
+		// If write fails (e.g., volume not mounted during build), log but don't crash
+		console.warn('Could not write database to', dbPath, ':', error);
+		throw error; // Re-throw so caller can handle it
+	}
 }
 
 export function getActivities(): Activity[] {
@@ -636,7 +659,20 @@ function readSpecialOffersDatabase(): SpecialOffersDatabase {
 
 function writeSpecialOffersDatabase(data: SpecialOffersDatabase): void {
 	const dbPath = getSpecialOffersDbPath();
-	writeFileSync(dbPath, JSON.stringify(data, null, 2), 'utf-8');
+	// Ensure directory exists before writing (in case it wasn't created earlier)
+	const dir = dirname(dbPath);
+	try {
+		mkdirSync(dir, { recursive: true });
+	} catch (error) {
+		// Directory might already exist, ignore
+	}
+	try {
+		writeFileSync(dbPath, JSON.stringify(data, null, 2), 'utf-8');
+	} catch (error) {
+		// If write fails (e.g., volume not mounted during build), log but don't crash
+		console.warn('Could not write special offers database to', dbPath, ':', error);
+		throw error; // Re-throw so caller can handle it
+	}
 }
 
 export function getSpecialOffers(): SpecialOffer[] {
