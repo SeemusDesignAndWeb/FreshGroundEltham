@@ -82,88 +82,207 @@
   ],
   "menuItems": [
     {
-      "id": "1",
-      "category": "Hot Drinks",
-      "name": "Americano",
-      "description": "Rich espresso with hot water",
+      "id": "1762812893067uownkrdqn",
+      "category": "Breakfast",
+      "name": "Toast",
+      "description": "Butter/spread, conserve",
       "price": 2.5
     },
     {
-      "id": "2",
-      "category": "Hot Drinks",
-      "name": "Cappuccino",
-      "description": "Espresso with steamed milk and foam",
+      "id": "1762812893068fl1y32wah",
+      "category": "Breakfast",
+      "name": "Toasted Tea Cake",
+      "description": "Butter/spread, conserve",
+      "price": 2.6
+    },
+    {
+      "id": "1762812893068s9jqh5awl",
+      "category": "Breakfast",
+      "name": "Sausage or Bacon Sandwhich",
+      "description": "",
       "price": 3
     },
     {
-      "id": "3",
-      "category": "Hot Drinks",
-      "name": "Latte",
-      "description": "Espresso with steamed milk",
-      "price": 3.2
+      "id": "1762812893068tah81xfhs",
+      "category": "Breakfast",
+      "name": "Breakfast Panini",
+      "description": "Egg, bacon, tomato, chutney, chives",
+      "price": 5.55
     },
     {
-      "id": "4",
-      "category": "Hot Drinks",
-      "name": "Flat White",
-      "description": "Double espresso with steamed milk",
-      "price": 3.2
+      "id": "176281289306844iioxaae",
+      "category": "Breakfast",
+      "name": "Bacon & Egg on Toast",
+      "description": "",
+      "price": 4.45
     },
     {
-      "id": "5",
-      "category": "Hot Drinks",
-      "name": "Tea",
-      "description": "Selection of quality teas from Suki Tea",
-      "price": 2
+      "id": "1762812893069h0j53htyi",
+      "category": "Breakfast",
+      "name": "Small English Breakfast",
+      "description": "Egg, bacon, sausage, beans and toast",
+      "price": 7.3
     },
     {
-      "id": "6",
-      "category": "Cold Drinks",
-      "name": "Iced Coffee",
-      "description": "Chilled coffee served over ice",
-      "price": 3
+      "id": "1762812893069dcd1lsva3",
+      "category": "Breakfast",
+      "name": "Large Englsih Breakfast",
+      "description": "Egg, bacon, sausage, beans and toast",
+      "price": 9.5
     },
     {
-      "id": "7",
-      "category": "Cold Drinks",
-      "name": "Iced Latte",
-      "description": "Espresso with cold milk over ice",
-      "price": 3.2
+      "id": "1762812893069h5ufzsw14",
+      "category": "Breakfast",
+      "name": "Smashed Avocado on Toast. V",
+      "description": "",
+      "price": 4.85
     },
     {
-      "id": "8",
-      "category": "Food",
-      "name": "Toasted Sandwich",
-      "description": "Choice of fillings, served with salad",
-      "price": 4.5
+      "id": "1762812893069u8wbgoifb",
+      "category": "Sandwiches",
+      "name": "The Fresh Ground Club",
+      "description": "Chicken, bacon, egg mayo, tomato and lettuce.",
+      "price": 6.65
     },
     {
-      "id": "9",
-      "category": "Food",
-      "name": "Baguette",
-      "description": "Fresh baguette with your choice of filling",
-      "price": 4
+      "id": "1762812893070czkzb8xkz",
+      "category": "Sandwiches",
+      "name": "Smashed Avocado & Bacon or Chicken",
+      "description": "Tomato",
+      "price": 6.65
     },
     {
-      "id": "10",
-      "category": "Food",
-      "name": "Panini",
-      "description": "Warm pressed panini with various fillings",
-      "price": 4.5
+      "id": "1762812893070q8kwjjn5i",
+      "category": "Sandwiches",
+      "name": "Chicken, Sweetcorn and Mayo",
+      "description": "",
+      "price": 5.95
     },
     {
-      "id": "11",
-      "category": "Cakes",
-      "name": "Slice of Cake",
-      "description": "Selection of homemade cakes available daily",
-      "price": 3
+      "id": "1762812893070tebwmvt91",
+      "category": "Scotch Pancakes",
+      "name": "Simply Butter & Maple Syrup",
+      "description": "",
+      "price": 2.65
     },
     {
-      "id": "12",
-      "category": "Snacks",
-      "name": "Crisps",
-      "description": "Selection of crisps",
-      "price": 1
+      "id": "1762812893070tprpggazy",
+      "category": "Scotch Pancakes",
+      "name": "Bacon & Maple Syrup",
+      "description": "",
+      "price": 4.45
+    },
+    {
+      "id": "1762812893071d10mg7dhb",
+      "category": "Scotch Pancakes",
+      "name": "Banana & Chocolate",
+      "description": "",
+      "price": 4.45
+    },
+    {
+      "id": "17628128930713jphe428h",
+      "category": "Scotch Pancakes",
+      "name": "Summer Berries",
+      "description": "",
+      "price": 4.25
+    },
+    {
+      "id": "1762812893071jgvrnu97d",
+      "category": "Jacket Potatoes with side salad",
+      "name": "Beans or Cheese",
+      "description": "",
+      "price": 6.95
+    },
+    {
+      "id": "17628128930717oj9qyrw5",
+      "category": "Jacket Potatoes with side salad",
+      "name": "Chicken Mayo",
+      "description": "",
+      "price": 7.95
+    },
+    {
+      "id": "1762812893071muimbjlbl",
+      "category": "Jacket Potatoes with side salad",
+      "name": "Tuna Mayo",
+      "description": "",
+      "price": 7.95
+    },
+    {
+      "id": "17628128930729k3fjie9f",
+      "category": "Yamis Latin Soup",
+      "name": "Beef",
+      "description": "With Toasted Farmhouse Bread",
+      "price": 6.95
+    },
+    {
+      "id": "1762812893072w9kppm8kk",
+      "category": "Yamis Latin Soup",
+      "name": "Chicken",
+      "description": "With Toasted Farmhouse Bread",
+      "price": 6.95
+    },
+    {
+      "id": "1762812893072qtw5hq3hr",
+      "category": "Yamis Latin Soup",
+      "name": "Pork",
+      "description": "With Toasted Farmhouse Bread",
+      "price": 6.95
+    },
+    {
+      "id": "17628128930724lhoss7do",
+      "category": "Yamis Latin Soup",
+      "name": "Lentil",
+      "description": "With Toasted Farmhouse Bread",
+      "price": 6.95
+    },
+    {
+      "id": "176281289307264h4tg9cm",
+      "category": "Panini",
+      "name": "Breakfast Panini",
+      "description": "",
+      "price": 5.55
+    },
+    {
+      "id": "1762812893073xrxqyska6",
+      "category": "Panini",
+      "name": "Cheese & Tomato",
+      "description": "",
+      "price": 4.75
+    },
+    {
+      "id": "1762812893073puabplvfv",
+      "category": "Panini",
+      "name": "Ham and Cheese",
+      "description": "",
+      "price": 4.75
+    },
+    {
+      "id": "1762812893073s3bhknwbd",
+      "category": "Panini",
+      "name": "Tuna Melt",
+      "description": "Tuna and Cheese",
+      "price": 5.15
+    },
+    {
+      "id": "1762812893074h9gvts6j4",
+      "category": "Panini",
+      "name": "Chicken & Chorizo",
+      "description": "",
+      "price": 5.55
+    },
+    {
+      "id": "1762812893074cactl5neb",
+      "category": "Saver Menu",
+      "name": "Cheese Toastie",
+      "description": "",
+      "price": 2.75
+    },
+    {
+      "id": "1762812893074izyoav4zd",
+      "category": "Saver Menu",
+      "name": "Ham and Cheese Toastie",
+      "description": "",
+      "price": 2.75
     }
   ],
   "openingTimes": {
@@ -245,7 +364,7 @@
       {
         "path": "/menu",
         "label": "Menu",
-        "hidden": true
+        "hidden": false
       },
       {
         "path": "/contact",
