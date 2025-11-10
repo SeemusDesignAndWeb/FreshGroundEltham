@@ -315,7 +315,7 @@
       "name": "Coffee Making",
       "path": "/images/coffee-making.jpg",
       "alt": "Coffee Making",
-      "category": "coffee"
+      "category": "machine"
     },
     {
       "id": "1762261354825n2j6qisxc",
@@ -408,6 +408,16 @@
         "src": "/images/coffee-beans-background.jpg",
         "alt": "Coffee beans",
         "category": "coffee"
+      },
+      {
+        "src": "https://res.cloudinary.com/dzkjhr1o0/image/upload/v1762805665/freshground/freshground/img-3241black_1024_1762805664523.jpg",
+        "alt": "Cake",
+        "category": "food"
+      },
+      {
+        "src": "/images/whatsapp_image_2025-08-24_at_09.40.08_1762261604279.jpeg",
+        "alt": "Richard and Damola",
+        "category": "People"
       }
     ]
   }

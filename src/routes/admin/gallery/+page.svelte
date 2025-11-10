@@ -3,13 +3,6 @@
 	import { notify } from '$lib/stores/notifications';
 	import type { SiteImage, GalleryImage } from '$lib/server/database';
 
-	const categories = [
-		{ id: 'coffee', label: 'Coffee' },
-		{ id: 'food', label: 'Food' },
-		{ id: 'people', label: 'People' },
-		{ id: 'other', label: 'Other' }
-	];
-
 	let galleryImages = $state<GalleryImage[]>([]);
 	let images = $state<SiteImage[]>([]);
 	let isSaving = $state(false);
@@ -72,7 +65,8 @@
 	}
 
 	function addImage() {
-		galleryImages = [...galleryImages, { src: '', alt: '', category: 'coffee' }];
+		// Category will be auto-populated when image is selected from library
+		galleryImages = [...galleryImages, { src: '', alt: '', category: 'other' }];
 	}
 
 	function removeImage(index: number) {
@@ -84,11 +78,40 @@
 		galleryImages = [...galleryImages]; // Trigger reactivity
 	}
 
-	// Get unique categories from gallery images for display
-	let uniqueCategories = $derived(() => {
-		const cats = new Set(galleryImages.map(img => img.category).filter(cat => cat));
-		return Array.from(cats);
-	});
+	// Handle image selection from library - auto-populate category and alt text
+	function handleImageSelect(index: number, selectedPath: string) {
+		// Find the selected image in the library
+		const selectedImage = images.find(img => img.path === selectedPath);
+		if (selectedImage) {
+			// Auto-populate category and alt text from the image library
+			const updatedImage = { ...galleryImages[index] };
+			updatedImage.src = selectedPath;
+			
+			// Use category from image library if available, otherwise use 'other' as default
+			if (selectedImage.category && selectedImage.category.trim() !== '') {
+				updatedImage.category = selectedImage.category.trim();
+			} else {
+				updatedImage.category = 'other';
+			}
+			
+			// Use alt text from image library if available, otherwise keep existing
+			if (selectedImage.alt && selectedImage.alt.trim() !== '') {
+				updatedImage.alt = selectedImage.alt.trim();
+			}
+			
+			galleryImages[index] = updatedImage;
+			galleryImages = [...galleryImages]; // Trigger reactivity
+		} else {
+			// Just update the src if it's a custom URL, and set default category
+			const updatedImage = { ...galleryImages[index] };
+			updatedImage.src = selectedPath;
+			if (!updatedImage.category || updatedImage.category.trim() === '') {
+				updatedImage.category = 'other';
+			}
+			galleryImages[index] = updatedImage;
+			galleryImages = [...galleryImages]; // Trigger reactivity
+		}
+	}
 </script>
 
 <svelte:head>
@@ -132,7 +155,7 @@
 											</label>
 											<select 
 												value={image.src}
-												onchange={(e) => updateImage(index, 'src', e.target.value)}
+												onchange={(e) => handleImageSelect(index, e.target.value)}
 												class="w-full px-4 py-2 border-2 border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#39918c] focus:border-[#39918c]"
 											>
 												<option value="">Select an image from library...</option>
@@ -156,17 +179,6 @@
 												placeholder="Alt text (description for accessibility)"
 												class="w-full px-4 py-2 border-2 border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#39918c] focus:border-[#39918c]"
 											/>
-											
-											<!-- Category -->
-											<select 
-												value={image.category}
-												onchange={(e) => updateImage(index, 'category', e.target.value)}
-												class="w-full px-4 py-2 border-2 border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#39918c] focus:border-[#39918c]"
-											>
-												{#each categories as cat}
-													<option value={cat.id}>{cat.label}</option>
-												{/each}
-											</select>
 											
 											<!-- Preview -->
 											{#if image.src}
@@ -224,10 +236,11 @@
 			<div class="bg-gray-50 rounded-lg p-6 border border-gray-200">
 				<h3 class="text-xl font-bold text-[#39918c] mb-3">About Gallery Images</h3>
 				<ul class="space-y-2 text-gray-600">
-					<li>• Images can be categorized (Coffee, Food, People, Other) for filtering</li>
+					<li>• When selecting an image from the library, category and alt text are automatically populated from the image's metadata</li>
+					<li>• Categories are automatically extracted from the selected images and displayed as filter buttons on the front-end gallery page</li>
 					<li>• Select from your site image library or enter custom URLs</li>
 					<li>• Alt text is important for accessibility - describe what's in the image</li>
-					<li>• Images are displayed in a grid with category filtering</li>
+					<li>• Images are displayed in a grid with category filtering on the gallery page</li>
 					<li>• Click any image to view it in a lightbox modal</li>
 					<li>• Changes take effect immediately after saving</li>
 				</ul>
