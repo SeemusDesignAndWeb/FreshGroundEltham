@@ -1,7 +1,10 @@
 import type { Handle } from '@sveltejs/kit';
 import { sequence } from '@sveltejs/kit/hooks';
 
+console.log('[HOOKS] hooks.server.ts loaded');
+
 function createInvalidPathHandle(): Handle {
+	console.log('[HOOKS] createInvalidPathHandle() called');
 	return async ({ event, resolve }) => {
 		// Handle invalid paths that look like routes but aren't
 		// These are often from security scanners, old Cloudinary paths, or misconfigured clients
@@ -75,6 +78,7 @@ function createInvalidPathHandle(): Handle {
 }
 
 function createAuthHandle(): Handle {
+	console.log('[HOOKS] createAuthHandle() called');
 	return async ({ event, resolve }) => {
 		// Check if route is protected
 		if (event.url.pathname.startsWith('/admin') && event.url.pathname !== '/admin/login') {
@@ -88,5 +92,7 @@ function createAuthHandle(): Handle {
 	};
 }
 
+console.log('[HOOKS] Setting up handle sequence');
 export const handle: Handle = sequence(createInvalidPathHandle(), createAuthHandle());
+console.log('[HOOKS] Handle sequence configured');
 

@@ -2,8 +2,16 @@ import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'fs';
 import { join, dirname } from 'path';
 import type { Activity } from '../stores/cart';
 
+console.log('[DB] database.ts module loaded');
+console.log('[DB] DATABASE_PATH env:', process.env.DATABASE_PATH);
+console.log('[DB] SPECIAL_OFFERS_DB_PATH env:', process.env.SPECIAL_OFFERS_DB_PATH);
+console.log('[DB] process.cwd():', process.cwd());
+
 const DB_PATH = process.env.DATABASE_PATH || './data/database.json';
 const SPECIAL_OFFERS_DB_PATH = process.env.SPECIAL_OFFERS_DB_PATH || './data/specialOffers.json';
+
+console.log('[DB] DB_PATH resolved to:', DB_PATH);
+console.log('[DB] SPECIAL_OFFERS_DB_PATH resolved to:', SPECIAL_OFFERS_DB_PATH);
 
 export interface Testimonial {
 	id: string;
@@ -106,75 +114,114 @@ export interface SpecialOffersDatabase {
 }
 
 function getDbPath(): string {
+	console.log('[DB] getDbPath() called');
+	console.log('[DB] DB_PATH from env:', DB_PATH);
+	console.log('[DB] process.cwd():', process.cwd());
+	
 	let finalPath: string;
 	if (DB_PATH.startsWith('./') || DB_PATH.startsWith('../')) {
 		// Relative path - resolve from project root
 		finalPath = join(process.cwd(), DB_PATH);
+		console.log('[DB] Using relative path, resolved to:', finalPath);
 	} else {
 		// Absolute path (e.g., /data/database.json for Railway volumes)
 		finalPath = DB_PATH;
+		console.log('[DB] Using absolute path:', finalPath);
 	}
 	
 	// Ensure the directory exists for both relative and absolute paths
 	const dir = dirname(finalPath);
+	console.log('[DB] Ensuring directory exists:', dir);
 	try {
 		mkdirSync(dir, { recursive: true });
+		console.log('[DB] Directory created/exists:', dir);
 	} catch (error) {
 		// Directory might already exist, or volume might not be mounted yet (during build)
 		// This is okay - we'll handle errors when reading/writing
+		console.warn('[DB] Could not create directory (may already exist or volume not mounted):', error);
 	}
+	console.log('[DB] Returning final path:', finalPath);
 	return finalPath;
 }
 
 function getSpecialOffersDbPath(): string {
+	console.log('[DB] getSpecialOffersDbPath() called');
+	console.log('[DB] SPECIAL_OFFERS_DB_PATH from env:', SPECIAL_OFFERS_DB_PATH);
+	
 	let finalPath: string;
 	if (SPECIAL_OFFERS_DB_PATH.startsWith('./') || SPECIAL_OFFERS_DB_PATH.startsWith('../')) {
 		// Relative path - resolve from project root
 		finalPath = join(process.cwd(), SPECIAL_OFFERS_DB_PATH);
+		console.log('[DB] Using relative path for special offers, resolved to:', finalPath);
 	} else {
 		// Absolute path (e.g., /data/specialOffers.json for Railway volumes)
 		finalPath = SPECIAL_OFFERS_DB_PATH;
+		console.log('[DB] Using absolute path for special offers:', finalPath);
 	}
 	
 	// Ensure the directory exists for both relative and absolute paths
 	const dir = dirname(finalPath);
+	console.log('[DB] Ensuring special offers directory exists:', dir);
 	try {
 		mkdirSync(dir, { recursive: true });
+		console.log('[DB] Special offers directory created/exists:', dir);
 	} catch (error) {
 		// Directory might already exist, or volume might not be mounted yet (during build)
 		// This is okay - we'll handle errors when reading/writing
+		console.warn('[DB] Could not create special offers directory (may already exist or volume not mounted):', error);
 	}
+	console.log('[DB] Returning special offers final path:', finalPath);
 	return finalPath;
 }
 
 export function readDatabase(): Database {
+	console.log('[DB] readDatabase() called');
 	try {
 		const dbPath = getDbPath();
+		console.log('[DB] Attempting to read database from:', dbPath);
 		const data = readFileSync(dbPath, 'utf-8');
-		return JSON.parse(data);
+		console.log('[DB] Successfully read database, size:', data.length, 'bytes');
+		const parsed = JSON.parse(data);
+		console.log('[DB] Successfully parsed database');
+		return parsed;
 	} catch (error) {
+		console.warn('[DB] Failed to read database from persistent location:', error);
+		console.log('[DB] Error details:', error instanceof Error ? error.message : String(error));
+		
 		// If file doesn't exist, try to initialize from git version
 		// This helps on Railway when using persistent storage
 		try {
 			const gitDbPath = join(process.cwd(), './data/database.json');
+			console.log('[DB] Attempting to initialize from git version at:', gitDbPath);
+			console.log('[DB] Git path exists?', existsSync(gitDbPath));
+			
 			if (gitDbPath !== dbPath && existsSync(gitDbPath)) {
+				console.log('[DB] Git database found, reading...');
 				const gitData = readFileSync(gitDbPath, 'utf-8');
 				const db = JSON.parse(gitData);
+				console.log('[DB] Git database parsed successfully');
+				
 				// Copy to persistent location
 				try {
+					console.log('[DB] Attempting to copy git database to persistent location...');
 					writeDatabase(db);
+					console.log('[DB] Successfully copied database to persistent location');
 				} catch (writeError) {
 					// If write fails, just return the db without saving
-					console.warn('Could not write database to persistent location:', writeError);
+					console.warn('[DB] Could not write database to persistent location:', writeError);
 				}
 				return db;
+			} else {
+				console.log('[DB] Git database not found or same as persistent path');
 			}
 		} catch (initError) {
 			// Ignore initialization errors
-			console.warn('Could not initialize from git database:', initError);
+			console.warn('[DB] Could not initialize from git database:', initError);
+			console.log('[DB] Init error details:', initError instanceof Error ? initError.message : String(initError));
 		}
 		
 		// If file doesn't exist, return default structure
+		console.log('[DB] Returning default empty database structure');
 		return {
 			activities: [],
 			bookings: [],
@@ -186,19 +233,33 @@ export function readDatabase(): Database {
 }
 
 export function writeDatabase(data: Database): void {
+	console.log('[DB] writeDatabase() called');
 	const dbPath = getDbPath();
+	console.log('[DB] Writing to path:', dbPath);
+	
 	// Ensure directory exists before writing (in case it wasn't created earlier)
 	const dir = dirname(dbPath);
+	console.log('[DB] Ensuring directory exists:', dir);
 	try {
 		mkdirSync(dir, { recursive: true });
+		console.log('[DB] Directory ready:', dir);
 	} catch (error) {
 		// Directory might already exist, ignore
+		console.warn('[DB] Directory creation warning (may already exist):', error);
 	}
+	
 	try {
-		writeFileSync(dbPath, JSON.stringify(data, null, 2), 'utf-8');
+		const jsonData = JSON.stringify(data, null, 2);
+		console.log('[DB] Writing', jsonData.length, 'bytes to', dbPath);
+		writeFileSync(dbPath, jsonData, 'utf-8');
+		console.log('[DB] Successfully wrote database to', dbPath);
 	} catch (error) {
 		// If write fails (e.g., volume not mounted during build), log but don't crash
-		console.warn('Could not write database to', dbPath, ':', error);
+		console.error('[DB] Could not write database to', dbPath, ':', error);
+		console.error('[DB] Write error details:', error instanceof Error ? error.message : String(error));
+		if (error instanceof Error && 'code' in error) {
+			console.error('[DB] Error code:', (error as any).code);
+		}
 		throw error; // Re-throw so caller can handle it
 	}
 }
@@ -624,33 +685,42 @@ export function updateGallerySettings(settings: GallerySettings): void {
 }
 
 function readSpecialOffersDatabase(): SpecialOffersDatabase {
+	console.log('[DB] readSpecialOffersDatabase() called');
 	const dbPath = getSpecialOffersDbPath();
+	console.log('[DB] Special offers DB path:', dbPath);
+	
 	try {
 		const data = readFileSync(dbPath, 'utf-8');
+		console.log('[DB] Successfully read special offers database');
 		return JSON.parse(data);
 	} catch (error) {
+		console.warn('[DB] Failed to read special offers database:', error);
+		
 		// If file doesn't exist, try to initialize from git version
 		// This helps on Railway when using persistent storage
 		try {
 			const gitDbPath = join(process.cwd(), './data/specialOffers.json');
+			console.log('[DB] Attempting to initialize special offers from git:', gitDbPath);
 			if (gitDbPath !== dbPath && existsSync(gitDbPath)) {
 				const gitData = readFileSync(gitDbPath, 'utf-8');
 				const db = JSON.parse(gitData);
 				// Copy to persistent location
 				try {
 					writeSpecialOffersDatabase(db);
+					console.log('[DB] Successfully copied special offers database');
 				} catch (writeError) {
 					// If write fails, just return the db without saving
-					console.warn('Could not write special offers database to persistent location:', writeError);
+					console.warn('[DB] Could not write special offers database to persistent location:', writeError);
 				}
 				return db;
 			}
 		} catch (initError) {
 			// Ignore initialization errors
-			console.warn('Could not initialize special offers from git database:', initError);
+			console.warn('[DB] Could not initialize special offers from git database:', initError);
 		}
 		
 		// If file doesn't exist, return default structure
+		console.log('[DB] Returning default empty special offers structure');
 		return {
 			offers: []
 		};
@@ -658,19 +728,33 @@ function readSpecialOffersDatabase(): SpecialOffersDatabase {
 }
 
 function writeSpecialOffersDatabase(data: SpecialOffersDatabase): void {
+	console.log('[DB] writeSpecialOffersDatabase() called');
 	const dbPath = getSpecialOffersDbPath();
+	console.log('[DB] Writing special offers to path:', dbPath);
+	
 	// Ensure directory exists before writing (in case it wasn't created earlier)
 	const dir = dirname(dbPath);
+	console.log('[DB] Ensuring special offers directory exists:', dir);
 	try {
 		mkdirSync(dir, { recursive: true });
+		console.log('[DB] Special offers directory ready:', dir);
 	} catch (error) {
 		// Directory might already exist, ignore
+		console.warn('[DB] Special offers directory creation warning (may already exist):', error);
 	}
+	
 	try {
-		writeFileSync(dbPath, JSON.stringify(data, null, 2), 'utf-8');
+		const jsonData = JSON.stringify(data, null, 2);
+		console.log('[DB] Writing', jsonData.length, 'bytes to special offers database');
+		writeFileSync(dbPath, jsonData, 'utf-8');
+		console.log('[DB] Successfully wrote special offers database to', dbPath);
 	} catch (error) {
 		// If write fails (e.g., volume not mounted during build), log but don't crash
-		console.warn('Could not write special offers database to', dbPath, ':', error);
+		console.error('[DB] Could not write special offers database to', dbPath, ':', error);
+		console.error('[DB] Write error details:', error instanceof Error ? error.message : String(error));
+		if (error instanceof Error && 'code' in error) {
+			console.error('[DB] Error code:', (error as any).code);
+		}
 		throw error; // Re-throw so caller can handle it
 	}
 }
