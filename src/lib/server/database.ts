@@ -601,8 +601,8 @@ export function updateGallerySettings(settings: GallerySettings): void {
 }
 
 function readSpecialOffersDatabase(): SpecialOffersDatabase {
+	const dbPath = getSpecialOffersDbPath();
 	try {
-		const dbPath = getSpecialOffersDbPath();
 		const data = readFileSync(dbPath, 'utf-8');
 		return JSON.parse(data);
 	} catch (error) {
