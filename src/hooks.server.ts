@@ -6,20 +6,26 @@ console.log('[HOOKS] hooks.server.ts loaded');
 function createInvalidPathHandle(): Handle {
 	console.log('[HOOKS] createInvalidPathHandle() called');
 	return async ({ event, resolve }) => {
+		// Log all incoming requests to track health checks
+		const pathname = event.url.pathname;
+		if (pathname === '/api/health' || pathname === '/') {
+			console.log('[HOOKS] Incoming request:', pathname, 'at', new Date().toISOString());
+		}
+		
 		// Handle invalid paths that look like routes but aren't
 		// These are often from security scanners, old Cloudinary paths, or misconfigured clients
-		let pathname = event.url.pathname;
+		let decodedPathname = pathname;
 		
 		// Decode URL-encoded paths (security scanners often use URL encoding)
 		try {
-			pathname = decodeURIComponent(pathname);
+			decodedPathname = decodeURIComponent(pathname);
 		} catch {
 			// If decoding fails, use original pathname
 		}
 		
 		// Check for pipe-separated paths (common security scanner pattern)
 		// e.g., /config.php|/.env|settings.py or /.git|/.svn
-		if (pathname.includes('|')) {
+		if (decodedPathname.includes('|')) {
 			return new Response('Not found', { status: 404 });
 		}
 		
@@ -44,18 +50,18 @@ function createInvalidPathHandle(): Handle {
 		
 		// Check if path matches any invalid pattern
 		for (const invalidPath of invalidPaths) {
-			if (pathname.startsWith(invalidPath)) {
+			if (decodedPathname.startsWith(invalidPath)) {
 				return new Response('Not found', { status: 404 });
 			}
 		}
 		
 		// Also check for exact matches
 		if (
-			pathname === '/s3cmd.ini' || 
-			pathname === '/.env' || 
-			pathname === '/.aws/credentials' ||
-			pathname === '/config.php' ||
-			pathname === '/settings.py'
+			decodedPathname === '/s3cmd.ini' || 
+			decodedPathname === '/.env' || 
+			decodedPathname === '/.aws/credentials' ||
+			decodedPathname === '/config.php' ||
+			decodedPathname === '/settings.py'
 		) {
 			return new Response('Not found', { status: 404 });
 		}
@@ -95,4 +101,5 @@ function createAuthHandle(): Handle {
 console.log('[HOOKS] Setting up handle sequence');
 export const handle: Handle = sequence(createInvalidPathHandle(), createAuthHandle());
 console.log('[HOOKS] Handle sequence configured');
+console.log('[HOOKS] Server hooks ready - health check available at /api/health');
 
