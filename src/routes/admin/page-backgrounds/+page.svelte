@@ -8,6 +8,7 @@
 		{ path: '/about', label: 'About Us' },
 		{ path: '/menu', label: 'Menu' },
 		{ path: '/activities', label: 'Kids Activities' },
+		{ path: '/opening-times', label: 'Opening Times' },
 		{ path: '/donate', label: 'Donate' },
 		{ path: '/contact', label: 'Contact Us' },
 		{ path: '/gallery', label: 'Gallery' },

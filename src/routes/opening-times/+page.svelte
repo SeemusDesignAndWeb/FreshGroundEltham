@@ -5,16 +5,17 @@
 
 	let { data }: { data: PageData } = $props();
 	let openingTimes = $state<OpeningTimes | null>(data?.openingTimes || null);
+	let backgroundImage = $state<string | null>(data?.backgroundImage || null);
 </script>
 
 <SEOHead />
 
 <!-- Full Screen Opening Times Section -->
 <div class="opening-times-container relative w-full h-screen flex items-center justify-center">
-	{#if openingTimes?.backgroundImage}
+	{#if backgroundImage}
 		<div 
 			class="absolute inset-0 bg-cover bg-center"
-			style="background-image: url('{openingTimes.backgroundImage}');"
+			style="background-image: url('{backgroundImage}');"
 		></div>
 		<div class="absolute inset-0 bg-gradient-to-r from-[#39918c]/20 to-[#2f435a]/20 z-10"></div>
 	{:else}
