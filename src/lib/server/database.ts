@@ -1,4 +1,4 @@
-import { readFileSync, writeFileSync, mkdirSync } from 'fs';
+import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'fs';
 import { join, dirname } from 'path';
 import type { Activity } from '../stores/cart';
 
@@ -143,6 +143,21 @@ export function readDatabase(): Database {
 		const data = readFileSync(dbPath, 'utf-8');
 		return JSON.parse(data);
 	} catch (error) {
+		// If file doesn't exist, try to initialize from git version
+		// This helps on Railway when using persistent storage
+		try {
+			const gitDbPath = join(process.cwd(), './data/database.json');
+			if (gitDbPath !== dbPath && existsSync(gitDbPath)) {
+				const gitData = readFileSync(gitDbPath, 'utf-8');
+				const db = JSON.parse(gitData);
+				// Copy to persistent location
+				writeDatabase(db);
+				return db;
+			}
+		} catch (initError) {
+			// Ignore initialization errors
+		}
+		
 		// If file doesn't exist, return default structure
 		return {
 			activities: [],
@@ -612,6 +627,21 @@ function readSpecialOffersDatabase(): SpecialOffersDatabase {
 		const data = readFileSync(dbPath, 'utf-8');
 		return JSON.parse(data);
 	} catch (error) {
+		// If file doesn't exist, try to initialize from git version
+		// This helps on Railway when using persistent storage
+		try {
+			const gitDbPath = join(process.cwd(), './data/specialOffers.json');
+			if (gitDbPath !== dbPath && existsSync(gitDbPath)) {
+				const gitData = readFileSync(gitDbPath, 'utf-8');
+				const db = JSON.parse(gitData);
+				// Copy to persistent location
+				writeSpecialOffersDatabase(db);
+				return db;
+			}
+		} catch (initError) {
+			// Ignore initialization errors
+		}
+		
 		// If file doesn't exist, return default structure
 		return {
 			offers: []
