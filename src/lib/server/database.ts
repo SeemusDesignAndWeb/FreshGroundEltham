@@ -151,11 +151,17 @@ export function readDatabase(): Database {
 				const gitData = readFileSync(gitDbPath, 'utf-8');
 				const db = JSON.parse(gitData);
 				// Copy to persistent location
-				writeDatabase(db);
+				try {
+					writeDatabase(db);
+				} catch (writeError) {
+					// If write fails, just return the db without saving
+					console.warn('Could not write database to persistent location:', writeError);
+				}
 				return db;
 			}
 		} catch (initError) {
 			// Ignore initialization errors
+			console.warn('Could not initialize from git database:', initError);
 		}
 		
 		// If file doesn't exist, return default structure
@@ -608,11 +614,17 @@ function readSpecialOffersDatabase(): SpecialOffersDatabase {
 				const gitData = readFileSync(gitDbPath, 'utf-8');
 				const db = JSON.parse(gitData);
 				// Copy to persistent location
-				writeSpecialOffersDatabase(db);
+				try {
+					writeSpecialOffersDatabase(db);
+				} catch (writeError) {
+					// If write fails, just return the db without saving
+					console.warn('Could not write special offers database to persistent location:', writeError);
+				}
 				return db;
 			}
 		} catch (initError) {
 			// Ignore initialization errors
+			console.warn('Could not initialize special offers from git database:', initError);
 		}
 		
 		// If file doesn't exist, return default structure
