@@ -560,26 +560,13 @@ export function getPageBackgroundImage(path: string): string | null {
 	return backgrounds[path] || null;
 }
 
-// Default hero slider images
-const DEFAULT_HERO_IMAGES = [
-	'/images/coffee-cup-hero.jpg',
-	'/images/coffee-making.jpg',
-	'/images/coffee-latte-art.jpg',
-	'/images/pastries.jpg',
-	'/images/coffee-beans-background.jpg'
-];
-
 export function getHeroSliderSettings(): HeroSliderSettings {
 	const db = readDatabase();
 	if (!db.heroSliderSettings || !db.heroSliderSettings.images || db.heroSliderSettings.images.length === 0) {
-		// Initialize with default images
-		const defaultSettings: HeroSliderSettings = {
-			images: [...DEFAULT_HERO_IMAGES]
+		// Return empty hero slider settings if none exist
+		return {
+			images: []
 		};
-		// Save defaults to database
-		db.heroSliderSettings = defaultSettings;
-		writeDatabase(db);
-		return defaultSettings;
 	}
 	return db.heroSliderSettings;
 }
@@ -590,27 +577,13 @@ export function updateHeroSliderSettings(settings: HeroSliderSettings): void {
 	writeDatabase(db);
 }
 
-// Default gallery images
-const DEFAULT_GALLERY_IMAGES: GalleryImage[] = [
-	{ src: '/images/coffee-cup-hero.jpg', alt: 'Fresh coffee cup', category: 'coffee' },
-	{ src: '/images/coffee-latte-art.jpg', alt: 'Beautiful latte art', category: 'coffee' },
-	{ src: '/images/coffee-making.jpg', alt: 'Coffee being prepared', category: 'coffee' },
-	{ src: '/images/pastries.jpg', alt: 'Delicious pastries', category: 'food' },
-	{ src: '/images/coffee-beans-background.jpg', alt: 'Coffee beans', category: 'coffee' },
-	{ src: '/images/coffeebeans.png', alt: 'Coffee beans close up', category: 'coffee' }
-];
-
 export function getGallerySettings(): GallerySettings {
 	const db = readDatabase();
 	if (!db.gallerySettings || !db.gallerySettings.images || db.gallerySettings.images.length === 0) {
-		// Initialize with default images
-		const defaultSettings: GallerySettings = {
-			images: [...DEFAULT_GALLERY_IMAGES]
+		// Return empty gallery settings if none exist
+		return {
+			images: []
 		};
-		// Save defaults to database
-		db.gallerySettings = defaultSettings;
-		writeDatabase(db);
-		return defaultSettings;
 	}
 	return db.gallerySettings;
 }

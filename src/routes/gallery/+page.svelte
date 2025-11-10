@@ -69,30 +69,11 @@
 				const data = await response.json();
 				images = data.images || [];
 				filteredImages = images; // Initialize filtered images
-			} else {
-				// Fallback to default images if API fails
-				images = [
-					{ src: '/images/coffee-cup-hero.jpg', alt: 'Fresh coffee cup', category: 'coffee' },
-					{ src: '/images/coffee-latte-art.jpg', alt: 'Beautiful latte art', category: 'coffee' },
-					{ src: '/images/coffee-making.jpg', alt: 'Coffee being prepared', category: 'coffee' },
-					{ src: '/images/pastries.jpg', alt: 'Delicious pastries', category: 'food' },
-					{ src: '/images/coffee-beans-background.jpg', alt: 'Coffee beans', category: 'coffee' },
-					{ src: '/images/coffeebeans.png', alt: 'Coffee beans close up', category: 'coffee' }
-				];
-				filteredImages = images;
 			}
 		} catch (error) {
 			console.error('Error loading gallery images:', error);
-			// Fallback to default images
-			images = [
-				{ src: '/images/coffee-cup-hero.jpg', alt: 'Fresh coffee cup', category: 'coffee' },
-				{ src: '/images/coffee-latte-art.jpg', alt: 'Beautiful latte art', category: 'coffee' },
-				{ src: '/images/coffee-making.jpg', alt: 'Coffee being prepared', category: 'coffee' },
-				{ src: '/images/pastries.jpg', alt: 'Delicious pastries', category: 'food' },
-				{ src: '/images/coffee-beans-background.jpg', alt: 'Coffee beans', category: 'coffee' },
-				{ src: '/images/coffeebeans.png', alt: 'Coffee beans close up', category: 'coffee' }
-			];
-			filteredImages = images;
+			images = [];
+			filteredImages = [];
 		}
 		
 		window.addEventListener('keydown', handleKeydown);

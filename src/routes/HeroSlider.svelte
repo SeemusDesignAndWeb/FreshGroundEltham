@@ -42,26 +42,10 @@
 			if (response.ok) {
 				const data = await response.json();
 				images = data.images || [];
-			} else {
-				// Fallback to default images if API fails
-				images = [
-					'/images/coffee-cup-hero.jpg',
-					'/images/coffee-making.jpg',
-					'/images/coffee-latte-art.jpg',
-					'/images/pastries.jpg',
-					'/images/coffee-beans-background.jpg'
-				];
 			}
 		} catch (error) {
 			console.error('Error loading hero slider images:', error);
-			// Fallback to default images
-			images = [
-				'/images/coffee-cup-hero.jpg',
-				'/images/coffee-making.jpg',
-				'/images/coffee-latte-art.jpg',
-				'/images/pastries.jpg',
-				'/images/coffee-beans-background.jpg'
-			];
+			images = [];
 		}
 		
 		// Load special offers

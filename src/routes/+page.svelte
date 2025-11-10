@@ -29,12 +29,8 @@
 	
 	function handleGalleryImageError(event: Event) {
 		const img = event.target as HTMLImageElement;
-		if (img && img.parentElement) {
+		if (img) {
 			img.style.display = 'none';
-			const fallback = img.nextElementSibling as HTMLElement;
-			if (fallback) {
-				fallback.style.display = 'flex';
-			}
 		}
 	}
 </script>
@@ -136,9 +132,6 @@
 							class="w-full h-full object-cover hover:scale-110 transition-transform duration-300"
 							onerror={handleGalleryImageError}
 						/>
-						<div class="hidden absolute inset-0 items-center justify-center bg-gray-300">
-							<span class="text-gray-500">Photo {index + 1}</span>
-						</div>
 					</div>
 				{/each}
 			</div>
