@@ -1,21 +1,37 @@
-import type { PageLoad } from './$types';
+import type { PageServerLoad } from './$types';
 
-export const load: PageLoad = async ({ fetch }) => {
+export const load: PageServerLoad = async ({ fetch }) => {
 	try {
-		const response = await fetch('/api/activities');
-		if (response.ok) {
-			const data = await response.json();
-			return {
-				activities: data.activities || [],
-				settings: data.settings || { hidden: false, message: 'No activities scheduled at the moment. Check back soon for upcoming kids activities!' }
-			};
+		const [activitiesResponse, backgroundResponse] = await Promise.all([
+			fetch('/api/activities'),
+			fetch('/api/page-backgrounds?path=/activities')
+		]);
+		
+		let activities = [];
+		let settings = { hidden: false, message: 'No activities scheduled at the moment. Check back soon for upcoming kids activities!' };
+		if (activitiesResponse.ok) {
+			const activitiesData = await activitiesResponse.json();
+			activities = activitiesData.activities || [];
+			settings = activitiesData.settings || settings;
 		}
+		
+		let backgroundImage = null;
+		if (backgroundResponse.ok) {
+			const backgroundData = await backgroundResponse.json();
+			backgroundImage = backgroundData.background || null;
+		}
+		
+		return {
+			activities,
+			settings,
+			backgroundImage
+		};
 	} catch (error) {
-		console.error('Error loading activities:', error);
+		console.error('Error loading activities data:', error);
+		return {
+			activities: [],
+			settings: { hidden: false, message: 'No activities scheduled at the moment. Check back soon for upcoming kids activities!' },
+			backgroundImage: null
+		};
 	}
-
-	return {
-		activities: [],
-		settings: { hidden: false, message: 'No activities scheduled at the moment. Check back soon for upcoming kids activities!' }
-	};
 };

@@ -1,11 +1,12 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import SEOHead from '$lib/components/SEOHead.svelte';
-	import { getPageBackground } from '$lib/utils/pageBackground';
+	import type { PageData } from './$types';
 
+	let { data }: { data: PageData } = $props();
 	let selectedImage = $state<string | null>(null);
 	let images = $state<Array<{src: string; alt: string; category: string}>>([]);
-	let backgroundImage = $state<string | null>(null);
+	let backgroundImage = $state<string | null>(data?.backgroundImage || null);
 
 	let filteredImages = $state(images);
 	let selectedCategory = $state<string>('all');
@@ -59,12 +60,6 @@
 	}
 
 	onMount(async () => {
-		// Load background image
-		const loadedBackground = await getPageBackground('/gallery', '');
-		if (loadedBackground) {
-			backgroundImage = loadedBackground;
-		}
-		
 		// Load gallery images from API
 		try {
 			const response = await fetch('/api/gallery');

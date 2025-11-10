@@ -5,16 +5,13 @@
 	import type { Activity } from '$lib/stores/cart';
 	import type { PageData } from './$types';
 	import SEOHead from '$lib/components/SEOHead.svelte';
-	import { getPageBackground } from '$lib/utils/pageBackground';
 
 	let { data } = $props<PageData>();
 	let activities = $state<Activity[]>(data?.activities || []);
 	let settings = $state<{ hidden: boolean; message: string }>(data?.settings || { hidden: false, message: 'No activities scheduled at the moment. Check back soon for upcoming kids activities!' });
-	let backgroundImage = $state('https://images.unsplash.com/photo-1516627145497-ae6968895b74?w=1920&q=80');
+	let backgroundImage = $state<string | null>(data?.backgroundImage || null);
 
 	onMount(async () => {
-		// Load background image
-		backgroundImage = await getPageBackground('/activities', backgroundImage);
 		
 		// Reload activities in case they've been updated
 		try {
@@ -63,7 +60,7 @@
 
 <!-- Hero Section -->
 <div class="relative z-0">
-	<section class="relative bg-cover bg-center py-8 px-4 -mt-[120px] pt-[calc(120px+2rem)] min-h-[200px] flex items-center" style="background-image: url('{backgroundImage}');">
+	<section class="relative bg-cover bg-center py-8 px-4 -mt-[120px] pt-[calc(120px+2rem)] min-h-[200px] flex items-center {backgroundImage ? '' : 'bg-gradient-to-r from-[#39918c] to-[#2f435a]'}" style={backgroundImage ? `background-image: url('${backgroundImage}');` : ''}>
 		<div class="absolute inset-0 bg-gradient-to-r from-[#39918c]/20 to-[#2f435a]/20 z-10"></div>
 		<div class="max-w-4xl mx-auto text-center relative z-20 text-white">
 			<h1 class="text-4xl md:text-5xl font-bold mb-4">Kids Activities</h1>
