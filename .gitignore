@@ -20,5 +20,12 @@ Thumbs.db
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 
-# Database - Note: data/database.json is now tracked in git to deploy CMS content
-# If you need separate dev/prod databases, use DATABASE_PATH environment variable
+# Database - Exclude to prevent overwriting data
+/data/database.json
+/data/*.json
+!data/.gitkeep
+
+# Backups - Exclude backup files
+/backups/*.json
+/backups/*.json.gz
+!backups/.gitkeep

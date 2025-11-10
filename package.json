@@ -10,7 +10,9 @@
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
 		"format": "prettier --write .",
 		"lint": "prettier --check . && eslint .",
-		"download-images": "node download-images.mjs"
+		"download-images": "node download-images.mjs",
+		"backup": "./scripts/backup-database.sh",
+		"restore": "./scripts/restore-database.sh"
 	},
 	"devDependencies": {
 		"@fontsource/fira-mono": "^5.0.0",
