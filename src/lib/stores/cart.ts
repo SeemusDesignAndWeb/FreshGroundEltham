@@ -12,20 +12,57 @@ export interface Activity {
 	emailInformation?: string; // Information to be emailed to customers (not displayed on front end)
 }
 
-export interface CartItem extends Activity {
+export interface SpecialOffer {
+	id: string;
+	name: string;
+	description: string;
+	price: number;
+	image: string;
+	emailInformation?: string;
+}
+
+export interface CartItem {
+	id: string;
+	title: string; // For activities or name for special offers
+	description: string;
+	image: string;
+	price: number;
 	quantity: number;
+	type: 'activity' | 'special-offer'; // To distinguish between activities and special offers
+	date?: string; // Only for activities
+	time?: string; // Only for activities
+	emailInformation?: string;
 }
 
 export const cart = writable<CartItem[]>([]);
 
-export function addToCart(activity: Activity) {
+export function addToCart(item: Activity | SpecialOffer) {
 	cart.update(items => {
-		const existing = items.find(item => item.id === activity.id);
+		const existing = items.find(cartItem => cartItem.id === item.id);
 		if (existing) {
 			existing.quantity += 1;
 			return items;
 		}
-		return [...items, { ...activity, quantity: 1 }];
+		
+		// Determine if it's an activity or special offer
+		const isActivity = 'date' in item && 'time' in item;
+		
+		const newItem: CartItem = {
+			id: item.id,
+			title: isActivity ? (item as Activity).title : (item as SpecialOffer).name,
+			description: item.description,
+			image: item.image,
+			price: item.price,
+			quantity: 1,
+			type: isActivity ? 'activity' : 'special-offer',
+			...(isActivity && { 
+				date: (item as Activity).date, 
+				time: (item as Activity).time 
+			}),
+			emailInformation: item.emailInformation
+		};
+		
+		return [...items, newItem];
 	});
 }
 

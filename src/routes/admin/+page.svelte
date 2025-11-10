@@ -5,14 +5,16 @@
 	let testimonialsCount = $state(0);
 	let menuItemsCount = $state(0);
 	let imagesCount = $state(0);
+	let specialOffersCount = $state(0);
 
 	onMount(async () => {
 		try {
-			const [activitiesRes, testimonialsRes, menuRes, imagesRes] = await Promise.all([
+			const [activitiesRes, testimonialsRes, menuRes, imagesRes, offersRes] = await Promise.all([
 				fetch('/api/admin/activities'),
 				fetch('/api/admin/testimonials'),
 				fetch('/api/admin/menu'),
-				fetch('/api/admin/images')
+				fetch('/api/admin/images'),
+				fetch('/api/admin/special-offers')
 			]);
 
 			if (activitiesRes.ok) {
@@ -31,6 +33,10 @@
 				const data = await imagesRes.json();
 				imagesCount = data.images?.length || 0;
 			}
+			if (offersRes.ok) {
+				const data = await offersRes.json();
+				specialOffersCount = data.offers?.length || 0;
+			}
 		} catch (error) {
 			console.error('Error loading dashboard data:', error);
 		}
@@ -48,6 +54,17 @@
 		<h1 class="text-4xl font-bold text-[#39918c] mb-8">Admin Dashboard</h1>
 		
 		<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+			<a href="/admin/special-offers" class="bg-white rounded-lg p-6 shadow-lg border-2 border-[#ab6b51] hover:shadow-xl transition-shadow">
+				<div class="flex items-center justify-between mb-4">
+					<h2 class="text-2xl font-bold text-[#ab6b51]">Special Offers</h2>
+					<svg class="w-8 h-8 text-[#ab6b51]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+					</svg>
+				</div>
+				<p class="text-4xl font-bold text-gray-700 mb-2">{specialOffersCount}</p>
+				<p class="text-gray-600">Promotional offers</p>
+			</a>
+			
 			<a href="/admin/activities" class="bg-white rounded-lg p-6 shadow-lg border-2 border-[#39918c] hover:shadow-xl transition-shadow">
 				<div class="flex items-center justify-between mb-4">
 					<h2 class="text-2xl font-bold text-[#39918c]">Activities</h2>

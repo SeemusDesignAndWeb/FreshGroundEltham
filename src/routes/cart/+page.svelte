@@ -30,7 +30,7 @@
 		<div class="absolute inset-0 bg-gradient-to-r from-[#39918c]/20 to-[#2f435a]/20 z-10"></div>
 		<div class="max-w-4xl mx-auto text-center relative z-20 text-white">
 			<h1 class="text-4xl md:text-5xl font-bold mb-4">Shopping Cart</h1>
-			<p class="text-xl text-gray-100">Review your activity bookings</p>
+			<p class="text-xl text-gray-100">Review your bookings and purchases</p>
 		</div>
 	</section>
 </div>
@@ -44,23 +44,35 @@
 					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
 				</svg>
 				<h2 class="text-3xl font-bold text-[#39918c] mb-4">Your cart is empty</h2>
-				<p class="text-gray-700 mb-6">Browse our kids activities to get started!</p>
-				<a href="/activities" class="inline-block bg-[#39918c] text-white px-8 py-3 rounded hover:bg-[#ab6b51] transition-colors font-medium">
-					View Activities →
-				</a>
+				<p class="text-gray-700 mb-6">Browse our activities or check out our special offers!</p>
+				<div class="flex gap-4 justify-center">
+					<a href="/activities" class="inline-block bg-[#39918c] text-white px-8 py-3 rounded hover:bg-[#ab6b51] transition-colors font-medium">
+						View Activities →
+					</a>
+					<a href="/" class="inline-block bg-[#ab6b51] text-white px-8 py-3 rounded hover:bg-[#8b5a41] transition-colors font-medium">
+						View Special Offers →
+					</a>
+				</div>
 			</div>
 		{:else}
 			<div class="space-y-4 mb-8">
 				{#each $cart as item (item.id)}
-					<div class="bg-white rounded-lg p-6 shadow-lg border-2 border-[#39918c]">
+					<div class="bg-white rounded-lg p-6 shadow-lg border-2 {item.type === 'special-offer' ? 'border-[#ab6b51]' : 'border-[#39918c]'}">
 						<div class="flex flex-col md:flex-row gap-4">
 							<div class="flex-1">
-								<h3 class="text-2xl font-bold text-[#39918c] mb-2">{item.title}</h3>
-								<p class="text-gray-700 mb-2">{item.description}</p>
-								<div class="flex flex-wrap gap-4 text-sm text-gray-600">
-									<span>Date: {item.date}</span>
-									<span>Time: {item.time}</span>
+								<div class="flex items-center gap-2 mb-2">
+									<h3 class="text-2xl font-bold text-[#39918c]">{item.title}</h3>
+									{#if item.type === 'special-offer'}
+										<span class="bg-[#ab6b51] text-white text-xs font-semibold px-2 py-1 rounded">Special Offer</span>
+									{/if}
 								</div>
+								<p class="text-gray-700 mb-2">{item.description}</p>
+								{#if item.type === 'activity' && item.date && item.time}
+									<div class="flex flex-wrap gap-4 text-sm text-gray-600">
+										<span>📅 Date: {new Date(item.date).toLocaleDateString('en-GB', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</span>
+										<span>🕐 Time: {item.time}</span>
+									</div>
+								{/if}
 							</div>
 							<div class="flex flex-col items-end gap-4">
 								<div class="text-right">
