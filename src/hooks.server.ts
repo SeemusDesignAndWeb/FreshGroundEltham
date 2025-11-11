@@ -102,4 +102,5 @@ console.log('[HOOKS] Setting up handle sequence');
 export const handle: Handle = sequence(createInvalidPathHandle(), createAuthHandle());
 console.log('[HOOKS] Handle sequence configured');
 console.log('[HOOKS] Server hooks ready - health check available at /api/health');
+console.log('[HOOKS] Server is ready to handle requests');
 

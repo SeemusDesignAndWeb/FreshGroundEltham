@@ -6,6 +6,18 @@
 	import BannerIcon from '$lib/components/BannerIcon.svelte';
 	
 	let mobileMenuOpen = $state(false);
+	
+	// Close mobile menu when page changes and scroll to top
+	$effect(() => {
+		// Access $page to track it as a dependency
+		const currentPath = $page.url.pathname;
+		// Close menu and scroll to top whenever path changes
+		mobileMenuOpen = false;
+		// Scroll to top on page change to prevent starting halfway down
+		if (typeof window !== 'undefined') {
+			window.scrollTo(0, 0);
+		}
+	});
 	let bookingsCount = $state(0);
 	let isScrolled = $state(false);
 	let bannerMessage = $state('');
@@ -178,7 +190,11 @@
 				<ul class="md:hidden mt-4 space-y-2 list-none m-0 p-0 pb-4">
 					{#each visibleNavItems as item}
 						<li>
-							<a href={item.path} class="block py-2 transition-colors {isScrolled ? 'text-white hover:text-[#39918c]' : 'text-white hover:text-[#39918c]'}">
+							<a 
+								href={item.path} 
+								onclick={() => { mobileMenuOpen = false; }}
+								class="block py-2 transition-colors {isScrolled ? 'text-white hover:text-[#39918c]' : 'text-white hover:text-[#39918c]'}"
+							>
 								{item.label}
 							</a>
 						</li>
