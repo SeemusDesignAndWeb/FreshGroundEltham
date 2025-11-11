@@ -143,8 +143,8 @@
 			</div>
 		</div>
 
-		<!-- Main navigation - blue on scroll, transparent when at top -->
-		<nav class="w-full px-4 py-4 transition-all duration-300 pointer-events-auto" class:bg-[#2f435a]={isScrolled}>
+		<!-- Main navigation - blue on scroll or when mobile menu is open, transparent when at top -->
+		<nav class="w-full px-4 py-4 transition-all duration-300 pointer-events-auto" class:bg-[#2f435a]={isScrolled || mobileMenuOpen}>
 		<div class="max-w-7xl mx-auto flex justify-between items-center">
 			<a href="/" class="flex items-center">
 				<img
@@ -187,13 +187,13 @@
 
 			<!-- Mobile menu -->
 			{#if mobileMenuOpen}
-				<ul class="md:hidden mt-4 space-y-2 list-none m-0 p-0 pb-4">
+				<ul class="md:hidden mt-4 space-y-2 list-none m-0 p-0 pb-4 bg-[#2f435a]">
 					{#each visibleNavItems as item}
 						<li>
 							<a 
 								href={item.path} 
 								onclick={() => { mobileMenuOpen = false; }}
-								class="block py-2 transition-colors {isScrolled ? 'text-white hover:text-[#39918c]' : 'text-white hover:text-[#39918c]'}"
+								class="block py-2 transition-colors text-white hover:text-[#39918c]"
 							>
 								{item.label}
 							</a>
