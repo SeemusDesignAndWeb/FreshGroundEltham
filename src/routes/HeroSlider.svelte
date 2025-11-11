@@ -73,7 +73,7 @@
 	});
 </script>
 
-<div class="hero-slider relative w-full h-screen overflow-hidden -mt-[120px] z-0">
+<div class="hero-slider relative w-full overflow-hidden -mt-[120px] z-0">
 	{#if images.length > 0}
 		{#each images as image, index}
 			<div 
@@ -96,39 +96,39 @@
 	<!-- Content overlay -->
 	<div class="absolute inset-0 z-30 flex items-center justify-center">
 		<div class="text-center text-white px-4 max-w-4xl mx-auto w-full">
-			<div class="mb-6 flex justify-center">
+			<div class="hidden md:flex mb-3 md:mb-6 justify-center">
 				<img
 					src="/images/freshgroundlogowhite.svg"
 					alt="Fresh Ground Eltham Logo"
-					class="h-20 md:h-24 w-auto"
+					class="h-12 md:h-24 w-auto"
 					onerror={handleImageError}
 				/>
 			</div>
 	
-			<h1 class="text-5xl md:text-6xl font-bold mb-4">A community café serving the best coffee in Eltham</h1>
-			<p class="text-lg md:text-xl text-gray-200 mb-8">Run by <a href="https://www.egcc.co.uk" target="_blank" rel="noopener noreferrer" class="text-white hover:text-gray-200">Eltham Green Community Church</a></p>
+			<h1 class="text-2xl md:text-6xl font-bold mb-2 md:mb-4 px-2">A community café serving the best coffee in Eltham</h1>
+			<p class="text-sm md:text-xl text-gray-200 mb-4 md:mb-8 px-2">Run by <a href="https://www.egcc.co.uk" target="_blank" rel="noopener noreferrer" class="text-white hover:text-gray-200">Eltham Green Community Church</a></p>
 			
 			<!-- Special Offers Banner -->
 			{#if specialOffers.length > 0}
-				<div class="mt-8 space-y-4">
+				<div class="mt-4 md:mt-8 space-y-3 md:space-y-4">
 					{#each specialOffers as offer (offer.id)}
-						<div class="bg-black/25 backdrop-blur-md rounded-2xl px-4 py-3 shadow-2xl border border-black/20 max-w-xl mx-auto special-offer-banner relative">
-							<div class="absolute top-3 left-3">
-								<div class="text-xs md:text-sm text-white/80 drop-shadow-md -mb-1">Only</div>
-								<span class="text-2xl md:text-3xl font-bold text-white drop-shadow-lg">{formatPrice(offer.price)}</span>
+						<div class="bg-black/25 backdrop-blur-md rounded-xl md:rounded-2xl px-3 py-2 md:px-4 md:py-3 shadow-2xl border border-black/20 max-w-xl mx-auto special-offer-banner relative">
+							<div class="absolute top-2 left-2 md:top-3 md:left-3">
+								<div class="text-[10px] md:text-sm text-white/80 drop-shadow-md -mb-0.5 md:-mb-1">Only</div>
+								<span class="text-xl md:text-3xl font-bold text-white drop-shadow-lg">{formatPrice(offer.price)}</span>
 							</div>
 							<a 
 								href="javascript:void(0)"
 								onclick={() => handleBuyOffer(offer)}
-								class="absolute top-3 right-3 bg-[#ff8c42]/30 backdrop-blur-sm text-[#ff8c42] px-4 py-1.5 rounded-full hover:bg-[#ff8c42]/40 transition-all duration-300 text-sm font-medium border border-[#ff8c42]/50 hover:border-[#ff8c42]/70 shadow-md hover:shadow-lg whitespace-nowrap inline-block font-bold z-10"
+								class="absolute top-2 right-2 md:top-3 md:right-3 bg-[#ff8c42]/30 backdrop-blur-sm text-[#ff8c42] px-2.5 py-1 md:px-4 md:py-1.5 rounded-full hover:bg-[#ff8c42]/40 transition-all duration-300 text-xs md:text-sm font-medium border border-[#ff8c42]/50 hover:border-[#ff8c42]/70 shadow-md hover:shadow-lg whitespace-nowrap inline-block font-bold z-10"
 							>
 								Buy Now
 							</a>
-							<div class="text-center space-y-2 leading-tight">
-								<div class="space-y-1">
-									<span class="inline-block text-sm md:text-base font-bold text-[#ff8c42] uppercase tracking-wider px-3 py-1 bg-[#ff8c42]/30 rounded-full drop-shadow-lg animate-pulse-bright">Special Offer</span>
-									<h3 class="text-3xl md:text-4xl font-bold text-white drop-shadow-lg leading-tight">{offer.name}</h3>
-									<p class="text-sm md:text-base text-white/90 drop-shadow-md leading-tight">
+							<div class="text-center space-y-1.5 md:space-y-2 leading-tight pt-8 md:pt-0">
+								<div class="space-y-0.5 md:space-y-1">
+									<span class="inline-block text-xs md:text-base font-bold text-[#ff8c42] uppercase tracking-wider px-2 py-0.5 md:px-3 md:py-1 bg-[#ff8c42]/30 rounded-full drop-shadow-lg animate-pulse-bright">Special Offer</span>
+									<h3 class="text-xl md:text-4xl font-bold text-white drop-shadow-lg leading-tight px-2">{offer.name}</h3>
+									<p class="text-xs md:text-base text-white/90 drop-shadow-md leading-tight px-2">
 										{offer.description}
 									</p>
 								</div>
@@ -164,8 +164,9 @@
 	
 	@media (max-width: 768px) {
 		.hero-slider {
-			height: 80vh;
-			min-height: 80vh;
+			/* Account for navbar height - approximately 120px on mobile */
+			height: calc(100vh - 120px);
+			min-height: calc(100vh - 120px);
 		}
 	}
 	

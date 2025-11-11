@@ -298,7 +298,7 @@
   },
   "bannerSettings": {
     "message": "Latest deal 20% off drinks",
-    "enabled": false,
+    "enabled": true,
     "icon": "fire",
     "endIcon": "fire"
   },
