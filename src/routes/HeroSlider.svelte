@@ -105,30 +105,30 @@
 				/>
 			</div>
 	
-			<h1 class="text-2xl md:text-6xl font-bold mb-2 md:mb-4 px-2">A community café serving the best coffee in Eltham</h1>
-			<p class="text-sm md:text-xl text-gray-200 mb-4 md:mb-8 px-2">Run by <a href="https://www.egcc.co.uk" target="_blank" rel="noopener noreferrer" class="text-white hover:text-gray-200">Eltham Green Community Church</a></p>
+			<h1 class="text-4xl md:text-6xl font-bold mb-2 md:mb-4 px-2">A community café serving the best coffee in Eltham</h1>
+			<p class="text-base md:text-xl text-gray-200 mb-4 md:mb-8 px-2">Run by <a href="https://www.egcc.co.uk" target="_blank" rel="noopener noreferrer" class="text-white hover:text-gray-200">Eltham Green Community Church</a></p>
 			
 			<!-- Special Offers Banner -->
 			{#if specialOffers.length > 0}
-				<div class="mt-4 md:mt-8 space-y-3 md:space-y-4">
+				<div class="mt-4 md:mt-8 space-y-3 md:space-y-4 flex flex-col items-center">
 					{#each specialOffers as offer (offer.id)}
-						<div class="bg-black/25 backdrop-blur-md rounded-xl md:rounded-2xl px-3 py-2 md:px-4 md:py-3 shadow-2xl border border-black/20 max-w-xl mx-auto special-offer-banner relative">
+						<div class="bg-black/25 backdrop-blur-md rounded-xl md:rounded-2xl px-3 py-2 md:px-4 md:py-3 shadow-2xl border border-black/20 max-w-xl w-full mx-auto special-offer-banner relative">
 							<div class="absolute top-2 left-2 md:top-3 md:left-3">
-								<div class="text-[10px] md:text-sm text-white/80 drop-shadow-md -mb-0.5 md:-mb-1">Only</div>
-								<span class="text-xl md:text-3xl font-bold text-white drop-shadow-lg">{formatPrice(offer.price)}</span>
+								<div class="text-xs md:text-sm text-white/80 drop-shadow-md -mb-0.5 md:-mb-1">Only</div>
+								<span class="text-2xl md:text-3xl font-bold text-white drop-shadow-lg">{formatPrice(offer.price)}</span>
 							</div>
 							<a 
 								href="javascript:void(0)"
 								onclick={() => handleBuyOffer(offer)}
-								class="absolute top-2 right-2 md:top-3 md:right-3 bg-[#ff8c42]/30 backdrop-blur-sm text-[#ff8c42] px-2.5 py-1 md:px-4 md:py-1.5 rounded-full hover:bg-[#ff8c42]/40 transition-all duration-300 text-xs md:text-sm font-medium border border-[#ff8c42]/50 hover:border-[#ff8c42]/70 shadow-md hover:shadow-lg whitespace-nowrap inline-block font-bold z-10"
+								class="absolute top-2 right-2 md:top-3 md:right-3 bg-[#ff8c42]/30 backdrop-blur-sm text-[#ff8c42] px-3 py-1.5 md:px-4 md:py-1.5 rounded-full hover:bg-[#ff8c42]/40 transition-all duration-300 text-sm md:text-sm font-medium border border-[#ff8c42]/50 hover:border-[#ff8c42]/70 shadow-md hover:shadow-lg whitespace-nowrap inline-block font-bold z-10"
 							>
 								Buy Now
 							</a>
 							<div class="text-center space-y-1.5 md:space-y-2 leading-tight pt-8 md:pt-0">
 								<div class="space-y-0.5 md:space-y-1">
-									<span class="inline-block text-xs md:text-base font-bold text-[#ff8c42] uppercase tracking-wider px-2 py-0.5 md:px-3 md:py-1 bg-[#ff8c42]/30 rounded-full drop-shadow-lg animate-pulse-bright">Special Offer</span>
-									<h3 class="text-xl md:text-4xl font-bold text-white drop-shadow-lg leading-tight px-2">{offer.name}</h3>
-									<p class="text-xs md:text-base text-white/90 drop-shadow-md leading-tight px-2">
+									<span class="inline-block text-sm md:text-base font-bold text-[#ff8c42] uppercase tracking-wider px-2 py-0.5 md:px-3 md:py-1 bg-[#ff8c42]/30 rounded-full drop-shadow-lg animate-pulse-bright">Special Offer</span>
+									<h3 class="text-2xl md:text-4xl font-bold text-white drop-shadow-lg leading-tight px-2">{offer.name}</h3>
+									<p class="text-sm md:text-base text-white/90 drop-shadow-md leading-tight px-2">
 										{offer.description}
 									</p>
 								</div>
