@@ -84,6 +84,11 @@ export interface GallerySettings {
 	images: GalleryImage[];
 }
 
+export interface TvScreenSettings {
+	images: string[]; // Array of image paths/URLs
+	transitionDuration?: number; // Transition duration in milliseconds (default: 5000)
+}
+
 export interface SpecialOffer {
 	id: string;
 	name: string; // Offer name
@@ -107,6 +112,7 @@ export interface Database {
 	pageBackgrounds?: PageBackgroundImages;
 	heroSliderSettings?: HeroSliderSettings;
 	gallerySettings?: GallerySettings;
+	tvScreenSettings?: TvScreenSettings;
 }
 
 export interface SpecialOffersDatabase {
@@ -681,6 +687,33 @@ export function getGallerySettings(): GallerySettings {
 export function updateGallerySettings(settings: GallerySettings): void {
 	const db = readDatabase();
 	db.gallerySettings = settings;
+	writeDatabase(db);
+}
+
+export function getTvScreenSettings(): TvScreenSettings {
+	const db = readDatabase();
+	if (!db.tvScreenSettings || !db.tvScreenSettings.images || db.tvScreenSettings.images.length === 0) {
+		// Initialize with empty settings
+		const defaultSettings: TvScreenSettings = {
+			images: [],
+			transitionDuration: 5000
+		};
+		// Save defaults to database
+		db.tvScreenSettings = defaultSettings;
+		writeDatabase(db);
+		return defaultSettings;
+	}
+	// Ensure transitionDuration has a default value
+	if (!db.tvScreenSettings.transitionDuration) {
+		db.tvScreenSettings.transitionDuration = 5000;
+		writeDatabase(db);
+	}
+	return db.tvScreenSettings;
+}
+
+export function updateTvScreenSettings(settings: TvScreenSettings): void {
+	const db = readDatabase();
+	db.tvScreenSettings = settings;
 	writeDatabase(db);
 }
 
