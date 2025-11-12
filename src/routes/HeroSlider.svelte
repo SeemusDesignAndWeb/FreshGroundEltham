@@ -98,6 +98,8 @@
 			return 0;
 		});
 
+		let nextEvent: EventType | null = null;
+
 		// Find the first valid upcoming event within the date range
 		for (const event of sortedEvents) {
 			if (event.recurring && event.recurring.length > 0) {
@@ -107,10 +109,12 @@
 						const [hours, minutes] = event.time.split(':');
 						const eventTime = parseInt(hours) * 60 + parseInt(minutes);
 						if (eventTime >= currentTime) {
-							return event;
+							nextEvent = event;
+							break;
 						}
 					} else {
-						return event; // No time specified, show it
+						nextEvent = event; // No time specified, show it
+						break;
 					}
 				}
 				// Check if any recurring day is in the future within maxDays
@@ -124,9 +128,11 @@
 						const eventTime = parseInt(hours) * 60 + parseInt(minutes);
 						return eventTime >= currentTime;
 					})()))) {
-						return event;
+						nextEvent = event;
+						break;
 					}
 				}
+				if (nextEvent) break;
 			} else {
 				// Single date event
 				const eventDate = new Date(event.date);
@@ -140,17 +146,49 @@
 						const [hours, minutes] = event.time.split(':');
 						const eventTime = parseInt(hours) * 60 + parseInt(minutes);
 						if (eventTime >= currentTime) {
-							return event;
+							nextEvent = event;
+							break;
 						}
 					} else if (eventDate.getTime() > todayDate.getTime()) {
 						// Future date within range
-						return event;
+						nextEvent = event;
+						break;
 					}
 				}
 			}
 		}
 
-		return null;
+		// If the next event is recurring, check for non-recurring events within 7 days
+		if (nextEvent && nextEvent.recurring && nextEvent.recurring.length > 0) {
+			const sevenDaysFromNow = new Date(now);
+			sevenDaysFromNow.setDate(sevenDaysFromNow.getDate() + 7);
+			sevenDaysFromNow.setHours(23, 59, 59, 999);
+			const todayDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+
+			// Look for non-recurring events within 7 days
+			for (const event of events) {
+				if (!event.recurring || event.recurring.length === 0) {
+					const eventDate = new Date(event.date);
+					eventDate.setHours(0, 0, 0, 0);
+
+					// Check if event is within 7 days
+					if (eventDate.getTime() <= sevenDaysFromNow.getTime() && eventDate.getTime() >= todayDate.getTime()) {
+						// If it's today, check if time hasn't passed
+						if (eventDate.getTime() === todayDate.getTime() && event.time) {
+							const [hours, minutes] = event.time.split(':');
+							const eventTime = parseInt(hours) * 60 + parseInt(minutes);
+							if (eventTime >= currentTime) {
+								return event; // Prefer this non-recurring event
+							}
+						} else if (eventDate.getTime() > todayDate.getTime()) {
+							return event; // Prefer this non-recurring event
+						}
+					}
+				}
+			}
+		}
+
+		return nextEvent;
 	}
 	
 	onMount(async () => {
