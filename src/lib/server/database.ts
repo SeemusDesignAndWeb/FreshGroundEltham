@@ -644,6 +644,7 @@ const DEFAULT_NAVIGATION_ITEMS: NavigationItem[] = [
 	{ path: '/menu', label: 'Menu', hidden: false },
 	{ path: '/opening-times', label: 'Opening Times', hidden: false },
 	{ path: '/activities', label: 'Kids Activities', hidden: false },
+	{ path: '/events', label: 'Events', hidden: false },
 	{ path: '/donate', label: 'Donate', hidden: false },
 	{ path: '/contact', label: 'Contact Us', hidden: false }
 ];

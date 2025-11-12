@@ -53,8 +53,11 @@ export const POST: RequestHandler = async ({ request, cookies }) => {
 
 		// Validate file size
 		if (file.size > MAX_FILE_SIZE) {
+			const fileSizeMB = (file.size / (1024 * 1024)).toFixed(2);
+			const maxSizeMB = (MAX_FILE_SIZE / (1024 * 1024)).toFixed(0);
 			return json({ 
-				error: `File too large. Maximum size is ${MAX_FILE_SIZE / 1024 / 1024}MB` 
+				error: `File too large`,
+				details: `File size is ${fileSizeMB}MB. Maximum allowed size is ${maxSizeMB}MB. Please compress or resize the image before uploading.`
 			}, { status: 400 });
 		}
 

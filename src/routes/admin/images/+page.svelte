@@ -104,14 +104,25 @@
 		const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp', 'image/svg+xml'];
 		if (!allowedTypes.includes(file.type)) {
 			notify.error('Invalid file type. Please upload a JPEG, PNG, GIF, WebP, or SVG image.');
+			input.value = ''; // Clear the input
 			return;
 		}
 
 		// Validate file size (10MB max)
-		const maxSize = 10 * 1024 * 1024;
+		const maxSize = 10 * 1024 * 1024; // 10MB in bytes
+		const fileSizeMB = (file.size / (1024 * 1024)).toFixed(2);
+		
 		if (file.size > maxSize) {
-			notify.error('File is too large. Maximum size is 10MB.');
+			notify.error(`File is too large (${fileSizeMB}MB). Maximum size is 10MB. Please compress or resize the image before uploading.`);
+			input.value = ''; // Clear the input
+			selectedFile = null;
+			uploadPreview = null;
 			return;
+		}
+		
+		// Warn if file is close to the limit (8MB+)
+		if (file.size > 8 * 1024 * 1024) {
+			notify.info(`Large file detected (${fileSizeMB}MB). Upload may take longer.`);
 		}
 
 		selectedFile = file;
@@ -283,8 +294,13 @@
 						<p class="text-sm text-gray-600 mt-1">
 							{editingId 
 								? 'Upload a new image to replace the current one. Leave empty to keep current image.'
-								: 'Upload an image file (JPEG, PNG, GIF, WebP, or SVG). Maximum size: 10MB.'}
+								: 'Upload an image file (JPEG, PNG, GIF, WebP, or SVG). Maximum size: 10MB. Large images will be automatically optimized.'}
 						</p>
+						{#if selectedFile}
+							<p class="text-sm text-[#39918c] mt-1 font-medium">
+								Selected: {selectedFile.name} ({(selectedFile.size / (1024 * 1024)).toFixed(2)}MB)
+							</p>
+						{/if}
 						{#if uploading}
 							<p class="text-sm text-[#39918c] mt-1">Uploading...</p>
 						{/if}
