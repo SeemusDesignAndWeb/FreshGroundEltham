@@ -420,5 +420,12 @@
         "category": "People"
       }
     ]
+  },
+  "tvScreenSettings": {
+    "images": [
+      "/images/pastries.jpg",
+      "/images/coffee-latte-art.jpg"
+    ],
+    "transitionDuration": 5000
   }
 }
