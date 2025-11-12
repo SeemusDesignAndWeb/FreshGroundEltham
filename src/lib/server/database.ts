@@ -1,6 +1,7 @@
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'fs';
 import { join, dirname } from 'path';
-import type { Activity } from '../stores/cart';
+import type { Activity, Event } from '../stores/cart';
+import type { SiteImage } from '../types';
 
 console.log('[DB] database.ts module loaded');
 console.log('[DB] DATABASE_PATH env:', process.env.DATABASE_PATH);
@@ -48,13 +49,9 @@ export interface BannerSettings {
 	endIcon?: string; // Icon to display after the message (e.g., 'star', 'explosion', 'sparkle')
 }
 
-export interface SiteImage {
-	id: string;
-	name: string; // Display name for the image
-	path: string; // Path to the image (e.g., '/images/pastries.jpg')
-	alt?: string; // Alt text for accessibility
-	category?: string; // Optional category (e.g., 'coffee', 'food', 'activities')
-}
+// SiteImage is imported from shared types to keep types in sync
+// Re-export for convenience
+export type { SiteImage } from '../types';
 
 export interface NavigationItem {
 	path: string; // URL path (e.g., '/about')
@@ -89,6 +86,10 @@ export interface TvScreenSettings {
 	transitionDuration?: number; // Transition duration in milliseconds (default: 5000)
 }
 
+// Event interface is imported from '../stores/cart' to keep types in sync
+// Re-export for convenience
+export type { Event } from '../stores/cart';
+
 export interface SpecialOffer {
 	id: string;
 	name: string; // Offer name
@@ -101,6 +102,7 @@ export interface SpecialOffer {
 
 export interface Database {
 	activities: Activity[];
+	events?: Event[];
 	bookings: any[];
 	testimonials: Testimonial[];
 	menuItems: MenuItem[];
@@ -201,7 +203,7 @@ export function readDatabase(): Database {
 			console.log('[DB] Attempting to initialize from git version at:', gitDbPath);
 			console.log('[DB] Git path exists?', existsSync(gitDbPath));
 			
-			if (gitDbPath !== dbPath && existsSync(gitDbPath)) {
+			if (gitDbPath !== DB_PATH && existsSync(gitDbPath)) {
 				console.log('[DB] Git database found, reading...');
 				const gitData = readFileSync(gitDbPath, 'utf-8');
 				const db = JSON.parse(gitData);
@@ -293,6 +295,41 @@ export function updateActivity(activityId: string, updatedActivity: Partial<Acti
 export function removeActivity(activityId: string): void {
 	const db = readDatabase();
 	db.activities = db.activities.filter(a => a.id !== activityId);
+	writeDatabase(db);
+}
+
+export function getEvents(): Event[] {
+	const db = readDatabase();
+	return db.events || [];
+}
+
+export function addEvent(event: Event): void {
+	const db = readDatabase();
+	if (!db.events) {
+		db.events = [];
+	}
+	db.events.push(event);
+	writeDatabase(db);
+}
+
+export function updateEvent(eventId: string, updatedEvent: Partial<Event>): void {
+	const db = readDatabase();
+	if (!db.events) {
+		db.events = [];
+	}
+	const index = db.events.findIndex(e => e.id === eventId);
+	if (index !== -1) {
+		db.events[index] = { ...db.events[index], ...updatedEvent };
+		writeDatabase(db);
+	}
+}
+
+export function removeEvent(eventId: string): void {
+	const db = readDatabase();
+	if (!db.events) {
+		db.events = [];
+	}
+	db.events = db.events.filter(e => e.id !== eventId);
 	writeDatabase(db);
 }
 
@@ -515,6 +552,9 @@ export function populateImagesFromActivities(): { added: number; skipped: number
 			category: category
 		};
 		
+		if (!db.images) {
+			db.images = [];
+		}
 		db.images.push(newImage);
 		existingPaths.add(path); // Add to set to avoid duplicates in the same run
 		added++;
@@ -734,7 +774,7 @@ function readSpecialOffersDatabase(): SpecialOffersDatabase {
 		try {
 			const gitDbPath = join(process.cwd(), './data/specialOffers.json');
 			console.log('[DB] Attempting to initialize special offers from git:', gitDbPath);
-			if (gitDbPath !== dbPath && existsSync(gitDbPath)) {
+			if (gitDbPath !== SPECIAL_OFFERS_DB_PATH && existsSync(gitDbPath)) {
 				const gitData = readFileSync(gitDbPath, 'utf-8');
 				const db = JSON.parse(gitData);
 				// Copy to persistent location

@@ -362,6 +362,11 @@
         "hidden": false
       },
       {
+        "path": "/events",
+        "label": "Events",
+        "hidden": false
+      },
+      {
         "path": "/menu",
         "label": "Menu",
         "hidden": false
@@ -421,6 +426,21 @@
       }
     ]
   },
+  "events": [
+    {
+      "id": "1762972124031",
+      "title": "Songs of the Sixties",
+      "description": "A description of songs of the sixties this week when we hear more great songs",
+      "image": "/images/whatsapp_image_2025-08-24_at_09.40.08_1762261604279.jpeg",
+      "date": "2025-11-14",
+      "time": "12:00",
+      "recurring": [
+        "Tuesday",
+        "Wednesday"
+      ],
+      "endTime": "13:00"
+    }
+  ],
   "pageBackgrounds": {},
   "tvScreenSettings": {
     "images": [

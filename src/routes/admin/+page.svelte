@@ -2,6 +2,7 @@
 	import { onMount } from 'svelte';
 
 	let activitiesCount = $state(0);
+	let eventsCount = $state(0);
 	let testimonialsCount = $state(0);
 	let menuItemsCount = $state(0);
 	let imagesCount = $state(0);
@@ -9,8 +10,9 @@
 
 	onMount(async () => {
 		try {
-			const [activitiesRes, testimonialsRes, menuRes, imagesRes, offersRes] = await Promise.all([
+			const [activitiesRes, eventsRes, testimonialsRes, menuRes, imagesRes, offersRes] = await Promise.all([
 				fetch('/api/admin/activities'),
+				fetch('/api/admin/events'),
 				fetch('/api/admin/testimonials'),
 				fetch('/api/admin/menu'),
 				fetch('/api/admin/images'),
@@ -20,6 +22,10 @@
 			if (activitiesRes.ok) {
 				const data = await activitiesRes.json();
 				activitiesCount = data.activities?.length || 0;
+			}
+			if (eventsRes.ok) {
+				const data = await eventsRes.json();
+				eventsCount = data.events?.length || 0;
 			}
 			if (testimonialsRes.ok) {
 				const data = await testimonialsRes.json();
@@ -74,6 +80,17 @@
 				</div>
 				<p class="text-4xl font-bold text-gray-700 mb-2">{activitiesCount}</p>
 				<p class="text-gray-600">Kids activities</p>
+			</a>
+
+			<a href="/admin/events" class="bg-white rounded-lg p-6 shadow-lg border-2 border-[#39918c] hover:shadow-xl transition-shadow">
+				<div class="flex items-center justify-between mb-4">
+					<h2 class="text-2xl font-bold text-[#39918c]">Events</h2>
+					<svg class="w-8 h-8 text-[#39918c]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+					</svg>
+				</div>
+				<p class="text-4xl font-bold text-gray-700 mb-2">{eventsCount}</p>
+				<p class="text-gray-600">Upcoming events</p>
 			</a>
 
 			<a href="/admin/testimonials" class="bg-white rounded-lg p-6 shadow-lg border-2 border-[#39918c] hover:shadow-xl transition-shadow">

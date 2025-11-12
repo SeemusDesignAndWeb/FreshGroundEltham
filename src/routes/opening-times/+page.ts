@@ -13,16 +13,11 @@ export const load: PageServerLoad = async ({ fetch }) => {
 			openingTimes = data.openingTimes || null;
 		}
 		
-		// Check page backgrounds first, fall back to openingTimes.backgroundImage
+		// Only use page backgrounds, no fallback to openingTimes.backgroundImage
 		let backgroundImage = null;
 		if (backgroundResponse.ok) {
 			const backgroundData = await backgroundResponse.json();
 			backgroundImage = backgroundData.background || null;
-		}
-		
-		// If no page background is set, use openingTimes.backgroundImage as fallback
-		if (!backgroundImage && openingTimes?.backgroundImage) {
-			backgroundImage = openingTimes.backgroundImage;
 		}
 		
 		return {

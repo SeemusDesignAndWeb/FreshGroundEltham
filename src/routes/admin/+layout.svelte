@@ -44,6 +44,7 @@
 			items: [
 				{ path: '/admin/special-offers', label: 'Special Offers' },
 				{ path: '/admin/activities', label: 'Activities' },
+				{ path: '/admin/events', label: 'Events' },
 				{ path: '/admin/testimonials', label: 'Testimonials' },
 				{ path: '/admin/menu', label: 'Menu' },
 				{ path: '/admin/opening-times', label: 'Opening Times' }

@@ -12,6 +12,17 @@ export interface Activity {
 	emailInformation?: string; // Information to be emailed to customers (not displayed on front end)
 }
 
+export interface Event {
+	id: string;
+	title: string;
+	description: string;
+	image: string;
+	date: string; // ISO date string (YYYY-MM-DD) - used for initial date or single events
+	time: string; // Start time string (HH:MM)
+	endTime?: string; // End time string (HH:MM) - optional
+	recurring?: string[]; // Array of day names (e.g., ["Wednesday", "Thursday", "Friday"]) - if set, event repeats on these days
+}
+
 export interface SpecialOffer {
 	id: string;
 	name: string;
