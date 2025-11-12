@@ -20,6 +20,8 @@
 		endTime: '',
 		recurring: []
 	});
+	let eventsSettings = $state({ hideFromHomePage: false });
+	let showSettingsForm = $state(false);
 	let selectedDays = $state<string[]>([]);
 	const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
@@ -47,9 +49,38 @@
 		}
 	}
 
+	async function loadEventsSettings() {
+		try {
+			const response = await fetch('/api/admin/events/settings');
+			if (response.ok) {
+				const data = await response.json();
+				eventsSettings = data.settings || { hideFromHomePage: false };
+			}
+		} catch (error) {
+			console.error('Error loading events settings:', error);
+		}
+	}
+
+	async function saveEventsSettings() {
+		try {
+			const response = await fetch('/api/admin/events/settings', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify(eventsSettings)
+			});
+			if (!response.ok) throw new Error('Failed to save');
+			showSettingsForm = false;
+			notify.success('Events settings saved successfully!');
+		} catch (error) {
+			console.error('Error saving events settings:', error);
+			notify.error('Failed to save events settings. Please try again.');
+		}
+	}
+
 	onMount(() => {
 		loadEvents();
 		loadImages();
+		loadEventsSettings();
 	});
 
 	function handleImageError(event: Event) {
@@ -169,13 +200,57 @@
 	<div class="max-w-7xl mx-auto">
 		<div class="flex justify-between items-center mb-8">
 			<h1 class="text-4xl font-bold text-[#39918c]">Events</h1>
-			<button 
-				onclick={handleAdd}
-				class="bg-[#39918c] text-white px-6 py-3 rounded hover:bg-[#ab6b51] transition-colors font-medium"
-			>
-				+ Add New Event
-			</button>
+			<div class="flex gap-4">
+				<button 
+					onclick={() => showSettingsForm = !showSettingsForm}
+					class="bg-[#2f435a] text-white px-6 py-3 rounded hover:bg-[#1e2d3f] transition-colors font-medium"
+				>
+					⚙️ Settings
+				</button>
+				<button 
+					onclick={handleAdd}
+					class="bg-[#39918c] text-white px-6 py-3 rounded hover:bg-[#ab6b51] transition-colors font-medium"
+				>
+					+ Add New Event
+				</button>
+			</div>
 		</div>
+
+		{#if showSettingsForm}
+			<!-- Events Settings -->
+			<div class="bg-white rounded-lg p-8 shadow-xl border-2 border-[#39918c] mb-8">
+				<h2 class="text-2xl font-bold text-[#39918c] mb-6">Events Settings</h2>
+				<div class="space-y-4">
+					<div>
+						<label class="flex items-center gap-3 cursor-pointer">
+							<input 
+								type="checkbox" 
+								bind:checked={eventsSettings.hideFromHomePage}
+								class="w-5 h-5 text-[#39918c] rounded focus:ring-2 focus:ring-[#39918c]"
+							/>
+							<span class="text-lg font-medium text-gray-700">Hide events from home page</span>
+						</label>
+						<p class="text-sm text-gray-600 mt-2 ml-8">
+							When enabled, events will not appear in the hero slider on the home page. Events will still be visible on the events page.
+						</p>
+					</div>
+					<div class="flex gap-4 pt-4">
+						<button 
+							onclick={saveEventsSettings}
+							class="bg-[#39918c] text-white px-6 py-3 rounded hover:bg-[#ab6b51] transition-colors font-medium"
+						>
+							Save Settings
+						</button>
+						<button 
+							onclick={() => showSettingsForm = false}
+							class="bg-gray-300 text-gray-700 px-6 py-3 rounded hover:bg-gray-400 transition-colors font-medium"
+						>
+							Cancel
+						</button>
+					</div>
+				</div>
+			</div>
+		{/if}
 
 		{#if showAddForm}
 			<div class="bg-white rounded-lg p-8 shadow-xl border-2 border-[#39918c] mb-8">

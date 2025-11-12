@@ -86,6 +86,10 @@ export interface TvScreenSettings {
 	transitionDuration?: number; // Transition duration in milliseconds (default: 5000)
 }
 
+export interface EventsSettings {
+	hideFromHomePage: boolean; // If true, events won't appear in the hero slider on the home page
+}
+
 // Event interface is imported from '../stores/cart' to keep types in sync
 // Re-export for convenience
 export type { Event } from '../stores/cart';
@@ -115,6 +119,7 @@ export interface Database {
 	heroSliderSettings?: HeroSliderSettings;
 	gallerySettings?: GallerySettings;
 	tvScreenSettings?: TvScreenSettings;
+	eventsSettings?: EventsSettings;
 }
 
 export interface SpecialOffersDatabase {
@@ -755,6 +760,19 @@ export function getTvScreenSettings(): TvScreenSettings {
 export function updateTvScreenSettings(settings: TvScreenSettings): void {
 	const db = readDatabase();
 	db.tvScreenSettings = settings;
+	writeDatabase(db);
+}
+
+export function getEventsSettings(): EventsSettings {
+	const db = readDatabase();
+	return db.eventsSettings || {
+		hideFromHomePage: false
+	};
+}
+
+export function updateEventsSettings(settings: EventsSettings): void {
+	const db = readDatabase();
+	db.eventsSettings = settings;
 	writeDatabase(db);
 }
 

@@ -448,5 +448,8 @@
       "/images/coffee-latte-art.jpg"
     ],
     "transitionDuration": 5000
+  },
+  "eventsSettings": {
+    "hideFromHomePage": true
   }
 }
