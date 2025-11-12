@@ -2,6 +2,7 @@
 	import { onMount } from 'svelte';
 	import { notify } from '$lib/stores/notifications';
 	import type { SiteImage } from '$lib/server/database';
+	import ImageSelector from '$lib/components/ImageSelector.svelte';
 
 	// List of pages that can have background images
 	const pages = [
@@ -106,34 +107,18 @@
 							<div class="space-y-4">
 								<!-- Image Selector -->
 								<div>
-									<label for="bg-{page.path}" class="block text-gray-700 font-medium mb-2">
-										Background Image
-									</label>
-									<select 
-										id="bg-{page.path}"
+									<ImageSelector
+										images={images}
 										value={backgrounds[page.path] || ''}
-										onchange={(e) => updatePageBackground(page.path, e.target.value)}
-										class="w-full px-4 py-2 border-2 border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#39918c] focus:border-[#39918c]"
-									>
-										<option value="">Select an image...</option>
-										{#each images as img}
-											<option value={img.path}>{img.name} ({img.path})</option>
-										{/each}
-									</select>
+										onchange={(newValue) => updatePageBackground(page.path, newValue)}
+										label="Background Image"
+										placeholder="Select an image..."
+										allowCustomUrl={true}
+										showPreview={false}
+									/>
 									<p class="text-sm text-gray-600 mt-1">
-										Select from <a href="/admin/images" class="text-[#39918c] hover:underline" target="_blank">site images</a>, or enter a custom URL below
+										Select from <a href="/admin/images" class="text-[#39918c] hover:underline" target="_blank">site images</a>, or enter a custom URL
 									</p>
-									<div class="mt-2">
-										<label for="url-{page.path}" class="block text-gray-700 font-medium mb-2 text-sm">Or enter a custom URL:</label>
-										<input 
-											id="url-{page.path}"
-											type="text" 
-											value={backgrounds[page.path] || ''}
-											oninput={(e) => updatePageBackground(page.path, e.target.value)}
-											placeholder="https://images.unsplash.com/photo-..."
-											class="w-full px-4 py-2 border-2 border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#39918c] focus:border-[#39918c]"
-										/>
-									</div>
 								</div>
 								
 								<!-- Preview -->

@@ -2,6 +2,7 @@
 	import { onMount } from 'svelte';
 	import { notify } from '$lib/stores/notifications';
 	import type { SiteImage, GalleryImage } from '$lib/server/database';
+	import ImageSelector from '$lib/components/ImageSelector.svelte';
 
 	let galleryImages = $state<GalleryImage[]>([]);
 	let images = $state<SiteImage[]>([]);
@@ -79,18 +80,17 @@
 	}
 
 	// Handle image selection from library - auto-populate category and alt text
-	function handleImageSelect(index: number, selectedPath: string) {
-		// Find the selected image in the library
-		const selectedImage = images.find(img => img.path === selectedPath);
+	function handleImageSrcChange(index: number, newSrc: string) {
+		const selectedImage = images.find(img => img.path === newSrc);
 		if (selectedImage) {
 			// Auto-populate category and alt text from the image library
 			const updatedImage = { ...galleryImages[index] };
-			updatedImage.src = selectedPath;
+			updatedImage.src = newSrc;
 			
 			// Use category from image library if available, otherwise use 'other' as default
 			if (selectedImage.category && selectedImage.category.trim() !== '') {
 				updatedImage.category = selectedImage.category.trim();
-			} else {
+			} else if (!updatedImage.category || updatedImage.category.trim() === '') {
 				updatedImage.category = 'other';
 			}
 			
@@ -104,7 +104,7 @@
 		} else {
 			// Just update the src if it's a custom URL, and set default category
 			const updatedImage = { ...galleryImages[index] };
-			updatedImage.src = selectedPath;
+			updatedImage.src = newSrc;
 			if (!updatedImage.category || updatedImage.category.trim() === '') {
 				updatedImage.category = 'other';
 			}
@@ -150,25 +150,14 @@
 									<div class="flex gap-4 items-start">
 										<!-- Image Selector and URL -->
 										<div class="flex-1 space-y-3">
-											<label class="block text-gray-700 font-medium">
-												Image {index + 1}
-											</label>
-											<select 
+											<ImageSelector
+												images={images}
 												value={image.src}
-												onchange={(e) => handleImageSelect(index, e.target.value)}
-												class="w-full px-4 py-2 border-2 border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#39918c] focus:border-[#39918c]"
-											>
-												<option value="">Select an image from library...</option>
-												{#each images as img}
-													<option value={img.path}>{img.name} ({img.path})</option>
-												{/each}
-											</select>
-											<input 
-												type="text" 
-												value={image.src}
-												oninput={(e) => updateImage(index, 'src', e.target.value)}
-												placeholder="Or enter a custom URL (e.g., https://images.unsplash.com/...)"
-												class="w-full px-4 py-2 border-2 border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#39918c] focus:border-[#39918c]"
+												onchange={(newValue) => handleImageSrcChange(index, newValue)}
+												label="Image {index + 1}"
+												placeholder="Select an image from library..."
+												allowCustomUrl={true}
+												showPreview={true}
 											/>
 											
 											<!-- Alt Text -->
@@ -180,17 +169,6 @@
 												class="w-full px-4 py-2 border-2 border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#39918c] focus:border-[#39918c]"
 											/>
 											
-											<!-- Preview -->
-											{#if image.src}
-												<div class="mt-2">
-													<img 
-														src={image.src} 
-														alt={image.alt || 'Preview'}
-														class="max-w-full max-h-32 object-contain border border-gray-300 rounded"
-														onerror={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
-													/>
-												</div>
-											{/if}
 										</div>
 										<!-- Remove Button -->
 										<button

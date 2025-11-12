@@ -29,29 +29,6 @@
 		}
 	}
 
-	async function handlePopulateFromActivities() {
-		if (!confirm('This will add all images currently used by activities to the image library. Continue?')) {
-			return;
-		}
-		
-		try {
-			const response = await fetch('/api/admin/images/populate', {
-				method: 'POST'
-			});
-			
-			if (response.ok) {
-				const data = await response.json();
-				await loadImages(); // Reload images to show the newly added ones
-				notify.success(data.message || 'Images populated successfully!');
-			} else {
-				const error = await response.json();
-				notify.error(error.error || 'Failed to populate images');
-			}
-		} catch (error) {
-			console.error('Error populating images:', error);
-			notify.error('Failed to populate images. Please try again.');
-		}
-	}
 
 	onMount(async () => {
 		await loadImages();
@@ -256,20 +233,12 @@
 	<div class="max-w-7xl mx-auto">
 		<div class="flex justify-between items-center mb-8">
 			<h1 class="text-4xl font-bold text-[#39918c]">Site Images</h1>
-			<div class="flex gap-4">
-				<button 
-					onclick={handlePopulateFromActivities}
-					class="bg-[#2f435a] text-white px-6 py-3 rounded hover:bg-[#1e2d3f] transition-colors font-medium"
-				>
-					Import from Activities
-				</button>
-				<button 
-					onclick={handleAdd}
-					class="bg-[#39918c] text-white px-6 py-3 rounded hover:bg-[#ab6b51] transition-colors font-medium"
-				>
-					+ Add New Image
-				</button>
-			</div>
+			<button 
+				onclick={handleAdd}
+				class="bg-[#39918c] text-white px-6 py-3 rounded hover:bg-[#ab6b51] transition-colors font-medium"
+			>
+				+ Add New Image
+			</button>
 		</div>
 
 		{#if showAddForm}

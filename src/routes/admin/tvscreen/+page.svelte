@@ -2,6 +2,7 @@
 	import { onMount } from 'svelte';
 	import { notify } from '$lib/stores/notifications';
 	import type { SiteImage } from '$lib/server/database';
+	import ImageSelector from '$lib/components/ImageSelector.svelte';
 
 	let tvScreenImages = $state<string[]>([]);
 	let images = $state<SiteImage[]>([]);
@@ -134,36 +135,15 @@
 									<div class="flex gap-4 items-start">
 										<!-- Image Selector -->
 										<div class="flex-1">
-											<label class="block text-gray-700 font-medium mb-2">
-												Image {index + 1}
-											</label>
-											<select 
+											<ImageSelector
+												images={images}
 												value={image}
-												onchange={(e) => updateImage(index, e.target.value)}
-												class="w-full px-4 py-2 border-2 border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#39918c] focus:border-[#39918c] mb-2"
-											>
-												<option value="">Select an image from library...</option>
-												{#each images as img}
-													<option value={img.path}>{img.name} ({img.path})</option>
-												{/each}
-											</select>
-											<input 
-												type="text" 
-												value={image}
-												oninput={(e) => updateImage(index, e.target.value)}
-												placeholder="Or enter a custom URL (e.g., https://images.unsplash.com/...)"
-												class="w-full px-4 py-2 border-2 border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#39918c] focus:border-[#39918c] mt-2"
+												onchange={(newValue) => updateImage(index, newValue)}
+												label="Image {index + 1}"
+												placeholder="Select an image from library..."
+												allowCustomUrl={true}
+												showPreview={true}
 											/>
-											{#if image}
-												<div class="mt-2">
-													<img 
-														src={image} 
-														alt="Preview"
-														class="max-w-full max-h-32 object-contain border border-gray-300 rounded"
-														onerror={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
-													/>
-												</div>
-											{/if}
 										</div>
 										<!-- Remove Button -->
 										<button

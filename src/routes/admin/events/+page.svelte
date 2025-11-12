@@ -4,6 +4,7 @@
 	import type { SiteImage } from '$lib/server/database';
 	import type { PageData } from './$types';
 	import { notify } from '$lib/stores/notifications';
+	import ImageSelector from '$lib/components/ImageSelector.svelte';
 
 	let { data } = $props<PageData>();
 	let events = $state<Event[]>(data?.events || []);
@@ -195,31 +196,17 @@
 							/>
 						</div>
 						<div>
-							<label for="image" class="block text-gray-700 font-medium mb-2">Image *</label>
-							<select 
-								id="image"
+							<ImageSelector
+								images={images}
 								bind:value={formData.image}
-								required
-								class="w-full px-4 py-2 border-2 border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#39918c]"
-							>
-								<option value="">Select an image...</option>
-								{#each images as img}
-									<option value={img.path}>{img.name} ({img.path})</option>
-								{/each}
-							</select>
+								label="Image *"
+								placeholder="Select an image..."
+								allowCustomUrl={true}
+								showPreview={true}
+							/>
 							<p class="text-sm text-gray-600 mt-1">
 								Can't find the image you need? <a href="/admin/images" class="text-[#39918c] hover:underline" target="_blank">Add it to the image library</a>
 							</p>
-							{#if formData.image}
-								<div class="mt-2">
-									<img 
-										src={formData.image} 
-										alt="Preview"
-										class="max-w-full max-h-32 object-contain border border-gray-300 rounded"
-										onerror={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
-									/>
-								</div>
-							{/if}
 						</div>
 					</div>
 

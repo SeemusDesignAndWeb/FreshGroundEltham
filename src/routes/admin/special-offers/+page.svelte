@@ -4,6 +4,7 @@
 	import type { SiteImage } from '$lib/server/database';
 	import type { PageData } from './$types';
 	import { notify } from '$lib/stores/notifications';
+	import ImageSelector from '$lib/components/ImageSelector.svelte';
 
 	let { data } = $props<PageData>();
 	let offers = $state<SpecialOffer[]>(data?.offers || []);
@@ -223,17 +224,14 @@
 				</div>
 
 				<div class="mt-4">
-					<label for="offer-image" class="block text-gray-700 font-medium mb-2">Image (Optional - not displayed)</label>
-					<select 
-						id="offer-image"
+					<ImageSelector
+						images={images}
 						bind:value={formData.image}
-						class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#39918c]"
-					>
-						<option value="">No image</option>
-						{#each images as img}
-							<option value={img.path}>{img.name} ({img.category})</option>
-						{/each}
-					</select>
+						label="Image (Optional - not displayed)"
+						placeholder="No image"
+						allowCustomUrl={true}
+						showPreview={true}
+					/>
 					<p class="text-sm text-gray-500 mt-1">Images are stored but not displayed in the banner style.</p>
 				</div>
 
