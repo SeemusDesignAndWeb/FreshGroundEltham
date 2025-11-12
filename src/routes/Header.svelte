@@ -113,7 +113,7 @@
 							</a>
 						</div>
 						<!-- Banner Message - second on mobile, right on desktop -->
-						<div class="w-full md:flex-1 md:text-right pointer-events-auto order-2 md:order-none">
+						<div class="w-full md:flex-1 text-center md:text-right pointer-events-auto order-2 md:order-none">
 							<p class="text-white text-md font-medium inline-flex items-center gap-1.5 justify-center md:justify-end w-full md:w-auto">
 								{#if bannerIcon && bannerIcon !== 'none'}
 									<BannerIcon icon={bannerIcon} size={16} />
