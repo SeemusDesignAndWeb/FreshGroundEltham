@@ -58,7 +58,7 @@
 				{ path: '/admin/page-backgrounds', label: 'Page Backgrounds' },
 				{ path: '/admin/hero-slider', label: 'Hero Slider' },
 				{ path: '/admin/gallery', label: 'Gallery' },
-				{ path: '/admin/tvscreen', label: 'TV Screen' }
+				{ path: '/admin/tv-screen', label: 'TV Screen' }
 			]
 		},
 		{

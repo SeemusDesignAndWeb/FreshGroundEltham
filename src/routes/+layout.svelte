@@ -10,7 +10,7 @@
 	// Check if we're on an admin route (excluding login)
 	let isAdminRoute = $derived($page.url.pathname.startsWith('/admin') && !$page.url.pathname.startsWith('/admin/login'));
 	// Check if we're on the TV screen route
-	let isTvScreenRoute = $derived($page.url.pathname === '/tvscreen');
+	let isTvScreenRoute = $derived($page.url.pathname === '/tv-screen');
 </script>
 
 <div class="app">

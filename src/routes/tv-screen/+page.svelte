@@ -26,7 +26,7 @@
 
 	async function loadTvScreenSettings() {
 		try {
-			const response = await fetch('/api/tvscreen');
+			const response = await fetch('/api/tv-screen');
 			if (response.ok) {
 				const data: TvScreenSettings = await response.json();
 				images = data.images || [];

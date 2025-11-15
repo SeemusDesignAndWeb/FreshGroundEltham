@@ -17,7 +17,7 @@
 
 	async function loadTvScreen() {
 		try {
-			const response = await fetch('/api/admin/tvscreen');
+			const response = await fetch('/api/admin/tv-screen');
 			if (response.ok) {
 				const data = await response.json();
 				tvScreenImages = data.images || [];
@@ -46,7 +46,7 @@
 	async function handleSave() {
 		isSaving = true;
 		try {
-			const response = await fetch('/api/admin/tvscreen', {
+			const response = await fetch('/api/admin/tv-screen', {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify({
@@ -182,7 +182,7 @@
 							{isSaving ? 'Saving...' : 'Save TV Screen Images'}
 						</button>
 						<a
-							href="/tvscreen"
+							href="/tv-screen"
 							target="_blank"
 							class="bg-gray-600 text-white px-8 py-3 rounded-lg hover:bg-gray-700 transition-colors font-medium text-lg shadow-md"
 						>
@@ -200,7 +200,7 @@
 					<li>• Select from your site image library or enter custom URLs</li>
 					<li>• You can adjust the transition duration (how long each image is displayed)</li>
 					<li>• Images should be high quality and optimized for large displays</li>
-					<li>• The TV screen page is accessible at <code class="bg-gray-200 px-2 py-1 rounded">/tvscreen</code></li>
+					<li>• The TV screen page is accessible at <code class="bg-gray-200 px-2 py-1 rounded">/tv-screen</code></li>
 					<li>• Changes take effect immediately after saving</li>
 				</ul>
 			</div>
