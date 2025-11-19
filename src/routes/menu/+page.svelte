@@ -8,6 +8,7 @@
 	let menuItems = $state<MenuItem[]>(data?.menuItems || []);
 	let isMenuHidden = $state(false);
 	let backgroundImage = $state<string | null>(data?.backgroundImage || null);
+	let selectedCategory = $state<string | null>(null);
 
 	onMount(async () => {
 		
@@ -57,7 +58,29 @@
 		return grouped;
 	}
 
-	const groupedMenu = $derived(groupByCategory(menuItems));
+	const groupedMenu = $derived.by(() => groupByCategory(menuItems));
+	
+	// Get unique categories - will be sorted by the API based on category settings
+	const categories = $derived.by(() => {
+		const categorySet = new Set<string>();
+		menuItems.forEach(item => {
+			if (item.category && item.category.trim()) {
+				categorySet.add(item.category.trim());
+			}
+		});
+		// Categories are already sorted by the API based on category settings
+		return Array.from(categorySet);
+	});
+
+	// Filter menu items by selected category
+	const filteredMenuItems = $derived.by(() => {
+		if (!selectedCategory) {
+			return menuItems;
+		}
+		return menuItems.filter(item => item.category === selectedCategory);
+	});
+
+	const filteredGroupedMenu = $derived.by(() => groupByCategory(filteredMenuItems));
 </script>
 
 <SEOHead />
@@ -74,35 +97,104 @@
 </div>
 
 <!-- Menu Section -->
-<section class="py-16 px-4 bg-white">
+<section class="py-16 px-4 bg-gradient-to-b from-[#f5f1eb] via-[#faf8f5] to-[#f5f1eb]">
 	<div class="max-w-6xl mx-auto">
 		{#if isMenuHidden}
 			<div class="text-center py-12">
-				<p class="text-xl text-gray-600 mb-4">We are updating our menu, come back soon</p>
+				<p class="text-xl text-[#5d4e37] mb-4">We are updating our menu, come back soon</p>
 			</div>
-		{:else if Object.keys(groupedMenu).length > 0}
-			{#each Object.entries(groupedMenu) as [category, items]}
-				<div class="mb-12">
-					<h2 class="text-4xl font-bold text-[#39918c] mb-6 text-center">{category}</h2>
-					<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-						{#each items as item (item.id)}
-							<div class="bg-white rounded-lg p-6 shadow-md border border-gray-200 hover:shadow-lg transition-shadow">
-								<div class="flex justify-between items-start mb-2">
-									<h3 class="text-2xl font-bold text-[#39918c] flex-1">{item.name}</h3>
-									<span class="text-xl font-bold text-[#39918c] ml-4">{formatPrice(item.price)}</span>
+		{:else if categories.length > 0}
+			<!-- Category Filter Tabs -->
+			<div class="mb-12">
+				<div class="flex flex-wrap justify-center gap-3 border-b-2 border-[#d0b49f] pb-3">
+					<button
+						onclick={() => selectedCategory = null}
+						class="relative px-5 py-2.5 rounded-lg font-semibold text-sm transition-all duration-300 ease-in-out {selectedCategory === null 
+							? 'bg-[#ab6b51] text-white shadow-lg transform translate-y-[-2px]' 
+							: 'bg-[#e8ddd4] text-[#5d4e37] hover:bg-[#d0b49f] hover:text-[#3d2f1f]'}"
+					>
+						All
+						{#if selectedCategory === null}
+							<span class="absolute bottom-[-8px] left-1/2 transform -translate-x-1/2 w-3 h-3 bg-[#ab6b51] rotate-45"></span>
+						{/if}
+					</button>
+					{#each categories as category, index}
+						<button
+							onclick={() => selectedCategory = category}
+							class="relative px-5 py-2.5 rounded-lg font-semibold text-sm transition-all duration-300 ease-in-out {selectedCategory === category 
+								? 'bg-[#ab6b51] text-white shadow-lg transform translate-y-[-2px]' 
+								: 'bg-[#e8ddd4] text-[#5d4e37] hover:bg-[#d0b49f] hover:text-[#3d2f1f]'}"
+						>
+							{category}
+							{#if selectedCategory === category}
+								<span class="absolute bottom-[-8px] left-1/2 transform -translate-x-1/2 w-3 h-3 bg-[#ab6b51] rotate-45"></span>
+							{/if}
+						</button>
+					{/each}
+				</div>
+			</div>
+
+			<!-- Menu Items -->
+			{#if selectedCategory}
+				<!-- Show items for selected category only -->
+				{#if filteredMenuItems.length > 0}
+					<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-4">
+						{#each filteredMenuItems as item (item.id)}
+							<div class="bg-white/80 backdrop-blur-sm rounded-lg p-3.5 shadow-sm border border-[#d0b49f]/30 hover:shadow-md hover:border-[#ab6b51]/50 transition-all duration-200">
+								<div class="flex justify-between items-start gap-2 mb-1">
+									<h3 class="text-xl font-bold text-[#3d2f1f] flex-1 leading-tight">{item.name}</h3>
+									<span class="text-base font-bold text-[#ab6b51] whitespace-nowrap">{formatPrice(item.price)}</span>
 								</div>
 								{#if item.description}
-									<p class="text-gray-600">{item.description}</p>
+									<p class="text-xs text-[#5d4e37] leading-snug mt-1.5 italic line-clamp-2">{item.description}</p>
 								{/if}
 							</div>
 						{/each}
 					</div>
+				{:else}
+					<div class="text-center py-12">
+						<p class="text-xl text-[#5d4e37] mb-4">No items in this category</p>
+					</div>
+				{/if}
+			{:else if Object.keys(filteredGroupedMenu).length > 0}
+				<!-- Show all items grouped by category -->
+				{#each Object.entries(filteredGroupedMenu) as [category, items], categoryIndex}
+					<div class="mb-12 last:mb-0">
+						<!-- Category Header -->
+						<div class="mb-6 text-center">
+							<div class="inline-block relative">
+								<h2 class="text-3xl md:text-4xl font-bold text-[#3d2f1f] mb-2 tracking-wide">
+									{category}
+								</h2>
+								<div class="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-[#ab6b51] to-transparent"></div>
+							</div>
+						</div>
+						
+						<!-- Menu Items Cards -->
+						<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-4">
+							{#each items as item (item.id)}
+								<div class="bg-white/80 backdrop-blur-sm rounded-lg p-3.5 shadow-sm border border-[#d0b49f]/30 hover:shadow-md hover:border-[#ab6b51]/50 transition-all duration-200">
+									<div class="flex justify-between items-start gap-2 mb-1">
+										<h3 class="text-base font-bold text-[#3d2f1f] flex-1 leading-tight">{item.name}</h3>
+										<span class="text-base font-bold text-[#ab6b51] whitespace-nowrap">{formatPrice(item.price)}</span>
+									</div>
+									{#if item.description}
+										<p class="text-xs text-[#5d4e37] leading-snug mt-1.5 italic line-clamp-2">{item.description}</p>
+									{/if}
+								</div>
+							{/each}
+						</div>
+					</div>
+				{/each}
+			{:else}
+				<div class="text-center py-12">
+					<p class="text-xl text-[#5d4e37] mb-4">No items found</p>
 				</div>
-			{/each}
+			{/if}
 		{:else}
 			<div class="text-center py-12">
-				<p class="text-xl text-gray-600 mb-4">Menu coming soon!</p>
-				<p class="text-gray-500">Check back soon for our full menu.</p>
+				<p class="text-xl text-[#5d4e37] mb-4">Menu coming soon!</p>
+				<p class="text-[#5d4e37]/70">Check back soon for our full menu.</p>
 			</div>
 		{/if}
 	</div>

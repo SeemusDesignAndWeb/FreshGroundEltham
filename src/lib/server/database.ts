@@ -27,6 +27,16 @@ export interface MenuItem {
 	name: string;
 	description: string;
 	price: number;
+	order?: number; // Order for sorting (lower numbers appear first)
+}
+
+export interface MenuCategory {
+	name: string;
+	order: number; // Order for sorting (lower numbers appear first)
+}
+
+export interface MenuCategorySettings {
+	categories: MenuCategory[];
 }
 
 export interface OpeningTimes {
@@ -120,6 +130,7 @@ export interface Database {
 	gallerySettings?: GallerySettings;
 	tvScreenSettings?: TvScreenSettings;
 	eventsSettings?: EventsSettings;
+	menuCategorySettings?: MenuCategorySettings;
 }
 
 export interface SpecialOffersDatabase {
@@ -386,7 +397,26 @@ export function removeTestimonial(testimonialId: string): void {
 
 export function getMenuItems(): MenuItem[] {
 	const db = readDatabase();
-	return db.menuItems || [];
+	const items = db.menuItems || [];
+	const categorySettings = getMenuCategorySettings();
+	
+	// Create a map of category to order
+	const categoryOrderMap = new Map<string, number>();
+	categorySettings.categories.forEach(cat => {
+		categoryOrderMap.set(cat.name, cat.order);
+	});
+	
+	// Sort by category order first, then by order within category
+	return items.sort((a, b) => {
+		const categoryOrderA = categoryOrderMap.get(a.category) ?? 999;
+		const categoryOrderB = categoryOrderMap.get(b.category) ?? 999;
+		if (categoryOrderA !== categoryOrderB) {
+			return categoryOrderA - categoryOrderB;
+		}
+		const orderA = a.order ?? 999;
+		const orderB = b.order ?? 999;
+		return orderA - orderB;
+	});
 }
 
 export function addMenuItem(menuItem: MenuItem): void {
@@ -416,6 +446,61 @@ export function removeMenuItem(menuItemId: string): void {
 		db.menuItems = [];
 	}
 	db.menuItems = db.menuItems.filter(m => m.id !== menuItemId);
+	writeDatabase(db);
+}
+
+export function getMenuCategorySettings(): MenuCategorySettings {
+	const db = readDatabase();
+	if (!db.menuCategorySettings || !db.menuCategorySettings.categories) {
+		// Initialize from existing menu items
+		const categorySet = new Set<string>();
+		const items = db.menuItems || [];
+		items.forEach(item => {
+			if (item.category && item.category.trim()) {
+				categorySet.add(item.category.trim());
+			}
+		});
+		
+		const categories: MenuCategory[] = Array.from(categorySet).map((name, index) => ({
+			name,
+			order: index
+		}));
+		
+		const settings: MenuCategorySettings = { categories };
+		db.menuCategorySettings = settings;
+		writeDatabase(db);
+		return settings;
+	}
+	return db.menuCategorySettings;
+}
+
+export function updateMenuCategorySettings(settings: MenuCategorySettings): void {
+	const db = readDatabase();
+	db.menuCategorySettings = settings;
+	writeDatabase(db);
+}
+
+export function renameMenuCategory(oldName: string, newName: string): void {
+	const db = readDatabase();
+	if (!db.menuItems) {
+		return;
+	}
+	
+	// Update all menu items with the old category name
+	db.menuItems.forEach(item => {
+		if (item.category === oldName) {
+			item.category = newName;
+		}
+	});
+	
+	// Update category settings
+	if (db.menuCategorySettings) {
+		const category = db.menuCategorySettings.categories.find(c => c.name === oldName);
+		if (category) {
+			category.name = newName;
+		}
+	}
+	
 	writeDatabase(db);
 }
 

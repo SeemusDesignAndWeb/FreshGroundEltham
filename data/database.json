@@ -126,14 +126,14 @@
     {
       "id": "1762812893069dcd1lsva3",
       "category": "Breakfast",
-      "name": "Large Englsih Breakfast",
+      "name": "Large English Breakfast",
       "description": "Egg, bacon, sausage, beans and toast",
       "price": 9.5
     },
     {
       "id": "1762812893069h5ufzsw14",
       "category": "Breakfast",
-      "name": "Smashed Avocado on Toast. V",
+      "name": "Smashed Avocado on Toast.",
       "description": "",
       "price": 4.85
     },
@@ -148,7 +148,7 @@
       "id": "1762812893070czkzb8xkz",
       "category": "Sandwiches",
       "name": "Smashed Avocado & Bacon or Chicken",
-      "description": "Tomato",
+      "description": "With tomato",
       "price": 6.65
     },
     {
@@ -188,21 +188,21 @@
     },
     {
       "id": "1762812893071jgvrnu97d",
-      "category": "Jacket Potatoes with side salad",
+      "category": "Jacket Potatoes",
       "name": "Beans or Cheese",
       "description": "",
       "price": 6.95
     },
     {
       "id": "17628128930717oj9qyrw5",
-      "category": "Jacket Potatoes with side salad",
+      "category": "Jacket Potatoes",
       "name": "Chicken Mayo",
       "description": "",
       "price": 7.95
     },
     {
       "id": "1762812893071muimbjlbl",
-      "category": "Jacket Potatoes with side salad",
+      "category": "Jacket Potatoes",
       "name": "Tuna Mayo",
       "description": "",
       "price": 7.95
@@ -260,7 +260,7 @@
       "id": "1762812893073s3bhknwbd",
       "category": "Panini",
       "name": "Tuna Melt",
-      "description": "Tuna and Cheese",
+      "description": "",
       "price": 5.15
     },
     {
@@ -275,14 +275,254 @@
       "category": "Saver Menu",
       "name": "Cheese Toastie",
       "description": "",
-      "price": 2.75
+      "price": 2.75,
+      "categoryOrder": -1
     },
     {
       "id": "1762812893074izyoav4zd",
       "category": "Saver Menu",
       "name": "Ham and Cheese Toastie",
       "description": "",
-      "price": 2.75
+      "price": 2.75,
+      "categoryOrder": -1
+    },
+    {
+      "id": "1763588019317txba5ha5p",
+      "category": "Drinks",
+      "name": "Espresso",
+      "description": "",
+      "price": 2.35,
+      "categoryOrder": 0
+    },
+    {
+      "id": "1763588019318sr11atebz",
+      "category": "Drinks",
+      "name": "Macchiato",
+      "description": "",
+      "price": 2.6,
+      "categoryOrder": 0
+    },
+    {
+      "id": "1763588019318zqgxumjmj",
+      "category": "Drinks",
+      "name": "Americano Small",
+      "description": "",
+      "price": 2.8,
+      "categoryOrder": 0
+    },
+    {
+      "id": "1763588019319lstixcg3r",
+      "category": "Drinks",
+      "name": "Americano Large",
+      "description": "",
+      "price": 3.4,
+      "categoryOrder": 0
+    },
+    {
+      "id": "1763588019319iagbns4an",
+      "category": "Drinks",
+      "name": "Flat White",
+      "description": "",
+      "price": 3.6,
+      "categoryOrder": 0
+    },
+    {
+      "id": "1763588019320q6kgwn80t",
+      "category": "Drinks",
+      "name": "Cappucino Small",
+      "description": "",
+      "price": 3.2,
+      "categoryOrder": 0
+    },
+    {
+      "id": "1763588019320hf8u45p18",
+      "category": "Drinks",
+      "name": "Cappucino Large",
+      "description": "",
+      "price": 3.6,
+      "categoryOrder": 0
+    },
+    {
+      "id": "1763588019321ayyb85jx9",
+      "category": "Drinks",
+      "name": "Latte Small",
+      "description": "",
+      "price": 3.2,
+      "categoryOrder": 0
+    },
+    {
+      "id": "1763588019321lfx4h19m4",
+      "category": "Drinks",
+      "name": "Latte Large",
+      "description": "",
+      "price": 3.6,
+      "categoryOrder": 0
+    },
+    {
+      "id": "1763588019322nglw2q1qw",
+      "category": "Drinks",
+      "name": "Cortado",
+      "description": "",
+      "price": 3.15,
+      "categoryOrder": 0
+    },
+    {
+      "id": "1763588019322r6nxcb1cx",
+      "category": "Drinks",
+      "name": "Mocha",
+      "description": "",
+      "price": 3.8,
+      "categoryOrder": 0
+    },
+    {
+      "id": "1763588019322r7riog8ny",
+      "category": "Drinks",
+      "name": "Hot Chocolate Small",
+      "description": "",
+      "price": 3,
+      "categoryOrder": 0
+    },
+    {
+      "id": "1763588019323rodpe2w20",
+      "category": "Drinks",
+      "name": "Hot Chocolate Large",
+      "description": "",
+      "price": 3.6,
+      "categoryOrder": 0
+    },
+    {
+      "id": "1763588019324fxudp0565",
+      "category": "Drinks",
+      "name": "Hot Chocolate Luxury",
+      "description": "",
+      "price": 3.9,
+      "categoryOrder": 0
+    },
+    {
+      "id": "1763588019324xi79esnar",
+      "category": "Drinks",
+      "name": "Chai Latte",
+      "description": "",
+      "price": 3.6,
+      "categoryOrder": 0
+    },
+    {
+      "id": "1763588019324snihnq48r",
+      "category": "Drinks",
+      "name": "Builders Tea",
+      "description": "",
+      "price": 1,
+      "categoryOrder": 0
+    },
+    {
+      "id": "1763588019325e0ew65550",
+      "category": "Drinks",
+      "name": "Speciality Tea",
+      "description": "",
+      "price": 3.6,
+      "categoryOrder": 0
+    },
+    {
+      "id": "1763588019325ygpugrip7",
+      "category": "Drinks",
+      "name": "Cold Milk",
+      "description": "",
+      "price": 1.75,
+      "categoryOrder": 0
+    },
+    {
+      "id": "1763588019326d3dvsos4r",
+      "category": "Drinks",
+      "name": "BabyCino",
+      "description": "",
+      "price": 0.75,
+      "categoryOrder": 0
+    },
+    {
+      "id": "1763588019326f503757gf",
+      "category": "Drinks",
+      "name": "Chocycino",
+      "description": "",
+      "price": 1,
+      "categoryOrder": 0
+    },
+    {
+      "id": "1763588019327bjr371rv0",
+      "category": "Drinks",
+      "name": "Kids Luxury Choc",
+      "description": "",
+      "price": 1.5,
+      "categoryOrder": 0
+    },
+    {
+      "id": "17635880193273cxt7sks9",
+      "category": "Drinks",
+      "name": "Smoothies",
+      "description": "",
+      "price": 4.5,
+      "categoryOrder": 0
+    },
+    {
+      "id": "1763588019328u40o20vgv",
+      "category": "Drinks",
+      "name": "Frappes",
+      "description": "",
+      "price": 4.5,
+      "categoryOrder": 0
+    },
+    {
+      "id": "17635880193281dpo0u1m2",
+      "category": "Drinks",
+      "name": "Kids Milkshake",
+      "description": "",
+      "price": 2.55,
+      "categoryOrder": 0
+    },
+    {
+      "id": "1763588019329gmtsgeoiq",
+      "category": "Drinks",
+      "name": "Adult Milkshake",
+      "description": "",
+      "price": 3.05,
+      "categoryOrder": 0
+    },
+    {
+      "id": "1763588019329i6fa6u9wr",
+      "category": "Drinks",
+      "name": "Iced Coffee",
+      "description": "",
+      "price": 3.6,
+      "categoryOrder": 0
+    },
+    {
+      "id": "1763588019330z6adkverj",
+      "category": "Drinks",
+      "name": "Iced Latte",
+      "description": "",
+      "price": 3.6,
+      "categoryOrder": 0
+    },
+    {
+      "id": "1763588019330exjdcj8rz",
+      "category": "Drinks",
+      "name": "Iced Mocha",
+      "description": "",
+      "price": 3.8,
+      "categoryOrder": 0
+    },
+    {
+      "id": "1763588019330ct7yje291",
+      "category": "Kids Menu",
+      "name": "Childrens Picnic",
+      "description": "",
+      "price": 5.5
+    },
+    {
+      "id": "1763588019331wz6qilqxg",
+      "category": "Kids Menu",
+      "name": "Childrens Menu",
+      "description": "",
+      "price": 4.5
     }
   ],
   "openingTimes": {
@@ -451,5 +691,45 @@
   },
   "eventsSettings": {
     "hideFromHomePage": true
+  },
+  "menuCategorySettings": {
+    "categories": [
+      {
+        "name": "Drinks",
+        "order": 0
+      },
+      {
+        "name": "Breakfast",
+        "order": 1
+      },
+      {
+        "name": "Kids Menu",
+        "order": 2
+      },
+      {
+        "name": "Sandwiches",
+        "order": 3
+      },
+      {
+        "name": "Panini",
+        "order": 4
+      },
+      {
+        "name": "Saver Menu",
+        "order": 5
+      },
+      {
+        "name": "Jacket Potatoes",
+        "order": 6
+      },
+      {
+        "name": "Yamis Latin Soup",
+        "order": 7
+      },
+      {
+        "name": "Scotch Pancakes",
+        "order": 8
+      }
+    ]
   }
 }
