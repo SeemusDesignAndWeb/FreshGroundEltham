@@ -1,7 +1,7 @@
-<script lang="ts">
+<script lang="js">
 	import { onMount } from 'svelte';
 	import { notify } from '$lib/stores/notifications';
-	import type { SiteImage } from '$lib/server/database';
+	// SiteImage type not needed in JavaScript
 	import ImageSelector from '$lib/components/ImageSelector.svelte';
 
 	// List of pages that can have background images
@@ -18,8 +18,8 @@
 		{ path: '/cookies', label: 'Cookies' }
 	];
 
-	let backgrounds = $state<Record<string, string>>({});
-	let images = $state<SiteImage[]>([]);
+	let backgrounds = $state({});
+	let images = $state([]);
 	let isSaving = $state(false);
 	let isLoading = $state(true);
 
@@ -77,7 +77,7 @@
 		}
 	}
 
-	function updatePageBackground(path: string, imagePath: string) {
+	function updatePageBackground(path, imagePath) {
 		backgrounds[path] = imagePath;
 	}
 </script>

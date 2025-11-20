@@ -1,11 +1,11 @@
-<script lang="ts">
+<script lang="js">
 	import { onMount } from 'svelte';
 	import HeroSlider from './HeroSlider.svelte';
 	import TestimonialCarousel from './TestimonialCarousel.svelte';
 	import SEOHead from '$lib/components/SEOHead.svelte';
 	import StructuredData from '$lib/components/StructuredData.svelte';
 	
-	let galleryImages = $state<Array<{src: string; alt: string; category: string}>>([]);
+	let galleryImages = $state([]);
 	
 	onMount(async () => {
 		// Load gallery images from API
@@ -20,15 +20,15 @@
 		}
 	});
 	
-	function handleImageError(event: Event) {
-		const img = event.target as HTMLImageElement;
+	function handleImageError(event) {
+		const img = event.target;
 		if (img) {
 			img.style.display = 'none';
 		}
 	}
 	
-	function handleGalleryImageError(event: Event) {
-		const img = event.target as HTMLImageElement;
+	function handleGalleryImageError(event) {
+		const img = event.target;
 		if (img) {
 			img.style.display = 'none';
 		}
@@ -138,7 +138,7 @@
 		{:else}
 			<!-- Fallback while loading or if no images -->
 			<div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
-				{#each Array(4) as _, index}
+				{#each [1, 2, 3, 4] as _, index}
 					<div class="aspect-square rounded-lg overflow-hidden bg-gray-200 relative">
 						<div class="absolute inset-0 items-center justify-center bg-gray-300 flex">
 							<span class="text-gray-500">Loading...</span>

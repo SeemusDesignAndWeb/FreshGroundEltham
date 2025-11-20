@@ -1,13 +1,13 @@
-<script lang="ts">
+<script lang="js">
 	import { onMount } from 'svelte';
 	import { notify } from '$lib/stores/notifications';
-	import type { NavigationItem } from '$lib/server/database';
+	// NavigationItem type not needed in JavaScript
 
-	let navigationItems = $state<NavigationItem[]>([]);
+	let navigationItems = $state([]);
 	let isSaving = $state(false);
 	let isLoading = $state(true);
-	let draggedIndex = $state<number | null>(null);
-	let dragOverIndex = $state<number | null>(null);
+	let draggedIndex = $state(null);
+	let dragOverIndex = $state(null);
 
 	onMount(async () => {
 		try {
@@ -50,11 +50,11 @@
 		}
 	}
 
-	function toggleHidden(index: number) {
+	function toggleHidden(index) {
 		navigationItems[index].hidden = !navigationItems[index].hidden;
 	}
 
-	function handleDragStart(index: number) {
+	function handleDragStart(index) {
 		draggedIndex = index;
 	}
 
@@ -63,7 +63,7 @@
 		dragOverIndex = null;
 	}
 
-	function handleDragOver(e: DragEvent, index: number) {
+	function handleDragOver(e, index) {
 		e.preventDefault();
 		if (draggedIndex === null || draggedIndex === index) return;
 		dragOverIndex = index;
@@ -73,7 +73,7 @@
 		dragOverIndex = null;
 	}
 
-	function handleDrop(e: DragEvent, index: number) {
+	function handleDrop(e, index) {
 		e.preventDefault();
 		if (draggedIndex === null || draggedIndex === index) return;
 

@@ -1,4 +1,4 @@
-<script lang="ts">
+<script lang="js">
 	import { onMount } from 'svelte';
 	import { notify } from '$lib/stores/notifications';
 	import BannerIcon from '$lib/components/BannerIcon.svelte';

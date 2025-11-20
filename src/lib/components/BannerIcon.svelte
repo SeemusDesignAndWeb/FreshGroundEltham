@@ -1,8 +1,8 @@
-<script lang="ts">
-	export let icon: string;
-	export let size: number = 16;
+<script lang="js">
+	export let icon;
+	export let size = 16;
 	
-	const icons: Record<string, string> = {
+	const icons = {
 		star: 'M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z',
 		explosion: 'M12 2L8 8l-6 1 4 4-1 6 6-4 6 4-1-6 4-4-6-1-4-6zM12 2l2 4 4 1-3 3 1 4-4-2-4 2 1-4-3-3 4-1 2-4z',
 		sparkle: 'M12 2l1.5 4.5L18 8l-4.5 1.5L12 14l-1.5-4.5L6 8l4.5-1.5L12 2zM8 16l2 6 6-2-2-6-6 2z',

@@ -1,19 +1,17 @@
-<script lang="ts">
+<script lang="js">
 	import { onMount } from 'svelte';
-	import type { Activity } from '$lib/stores/cart';
-	import type { SiteImage } from '$lib/server/database';
-	import type { PageData } from './$types';
+	// Activity and SiteImage types not needed in JavaScript
 	import { notify } from '$lib/stores/notifications';
 	import ImageSelector from '$lib/components/ImageSelector.svelte';
 
-	let { data } = $props<PageData>();
-	let activities = $state<Activity[]>(data?.activities || []);
-	let editingId = $state<string | null>(null);
+	let { data } = $props();
+	let activities = $state(data?.activities || []);
+	let editingId = $state(null);
 	let showAddForm = $state(false);
-	let settings = $state<{ hidden: boolean; message: string }>(data?.settings || { hidden: false, message: 'No activities scheduled at the moment. Check back soon for upcoming kids activities!' });
+	let settings = $state(data?.settings || { hidden: false, message: 'No activities scheduled at the moment. Check back soon for upcoming kids activities!' });
 	let showSettingsForm = $state(false);
-	let images = $state<SiteImage[]>([]);
-	let formData = $state<Partial<Activity>>({
+	let images = $state([]);
+	let formData = $state({
 		title: '',
 		description: '',
 		image: '',
@@ -70,14 +68,14 @@
 		loadImages();
 	});
 
-	function handleImageError(event: Event) {
-		const img = event.target as HTMLImageElement;
+	function handleImageError(event) {
+		const img = event.target;
 		if (img) {
 			img.style.display = 'none';
 		}
 	}
 
-	function handleEdit(activity: Activity) {
+	function handleEdit(activity) {
 		editingId = activity.id;
 		formData = { ...activity };
 		showAddForm = true;
@@ -108,8 +106,8 @@
 				});
 				if (!response.ok) throw new Error('Failed to update');
 			} else {
-				const newActivity: Activity = {
-					id: Date.now().toString(),
+          const newActivity = {
+            id: Date.now().toString(),
 					title: formData.title || '',
 					description: formData.description || '',
 					image: formData.image || '/images/pastries.jpg',
@@ -150,7 +148,7 @@
 		};
 	}
 
-	function formatDate(dateString: string) {
+	function formatDate(dateString) {
 		const date = new Date(dateString);
 		return date.toLocaleDateString('en-GB', { 
 			weekday: 'long', 
@@ -160,7 +158,7 @@
 		});
 	}
 
-	function formatPrice(price: number) {
+	function formatPrice(price) {
 		return new Intl.NumberFormat('en-GB', {
 			style: 'currency',
 			currency: 'GBP'

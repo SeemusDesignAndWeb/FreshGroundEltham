@@ -1,4 +1,4 @@
-<script lang="ts">
+<script lang="js">
 	import { page } from '$app/stores';
 	import { goto } from '$app/navigation';
 	import { onMount } from 'svelte';
@@ -6,7 +6,7 @@
 	let { children } = $props();
 
 	let showMobileMenu = $state(false);
-	let openDropdown = $state<string | null>(null);
+	let openDropdown = $state(null);
 
 	async function handleLogout() {
 		try {
@@ -18,14 +18,14 @@
 		}
 	}
 
-	function toggleDropdown(name: string) {
+	function toggleDropdown(name) {
 		openDropdown = openDropdown === name ? null : name;
 	}
 
 	// Close dropdown when clicking outside
 	onMount(() => {
-		const handleClick = (e: MouseEvent) => {
-			const target = e.target as HTMLElement;
+		const handleClick = (e) => {
+        const target = e.target;
 			// If click is outside any dropdown button or menu, close all dropdowns
 			if (!target.closest('.dropdown-container')) {
 				openDropdown = null;
@@ -72,7 +72,7 @@
 	];
 
 	// Check if current page is in a category
-	function isCategoryActive(items: Array<{ path: string; label: string }>) {
+	function isCategoryActive(items) {
 		return items.some(item => $page.url.pathname === item.path);
 	}
 </script>

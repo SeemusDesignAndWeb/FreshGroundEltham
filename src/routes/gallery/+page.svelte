@@ -1,33 +1,35 @@
-<script lang="ts">
+<script lang="js">
 	import { onMount } from 'svelte';
 	import SEOHead from '$lib/components/SEOHead.svelte';
-	import type { PageData } from './$types';
 
-	let { data }: { data: PageData } = $props();
-	let selectedImage = $state<string | null>(null);
-	let images = $state<Array<{src: string; alt: string; category: string}>>([]);
-	let backgroundImage = $state<string | null>(data?.backgroundImage || null);
+	let { data } = $props();
+	let selectedImage = $state(null);
+	let images = $state(data?.images || []);
+	let backgroundImage = $state(data?.backgroundImage || null);
 
-	let filteredImages = $state(images);
-	let selectedCategory = $state<string>('all');
+	let selectedCategory = $state('all');
 
 	// Get unique categories from loaded images
-	let categories = $derived(() => {
+	let categories = $derived.by(() => {
 		const uniqueCats = new Set(images.map(img => img.category).filter(cat => cat && cat !== ''));
 		const catArray = Array.from(uniqueCats).map(cat => ({ id: cat, label: cat.charAt(0).toUpperCase() + cat.slice(1) }));
 		return [{ id: 'all', label: 'All' }, ...catArray];
 	});
 
-	function filterImages(category: string) {
-		selectedCategory = category;
-		if (category === 'all') {
-			filteredImages = images;
+	// Filter images based on selected category
+	let filteredImages = $derived.by(() => {
+		if (selectedCategory === 'all') {
+			return images;
 		} else {
-			filteredImages = images.filter(img => img.category === category);
+			return images.filter(img => img.category === selectedCategory);
 		}
+	});
+
+	function filterImages(category) {
+		selectedCategory = category;
 	}
 
-	function openModal(imageSrc: string) {
+	function openModal(imageSrc) {
 		selectedImage = imageSrc;
 		document.body.style.overflow = 'hidden';
 	}
@@ -37,19 +39,19 @@
 		document.body.style.overflow = '';
 	}
 
-	function handleKeydown(event: KeyboardEvent) {
+	function handleKeydown(event) {
 		if (event.key === 'Escape' && selectedImage) {
 			closeModal();
 		}
 	}
 
-	function navigateImage(direction: 'prev' | 'next') {
+	function navigateImage(direction) {
 		if (!selectedImage) return;
 		
 		const currentIndex = filteredImages.findIndex(img => img.src === selectedImage);
 		if (currentIndex === -1) return;
 
-		let newIndex: number;
+		let newIndex;
 		if (direction === 'next') {
 			newIndex = (currentIndex + 1) % filteredImages.length;
 		} else {
@@ -66,12 +68,10 @@
 			if (response.ok) {
 				const data = await response.json();
 				images = data.images || [];
-				filteredImages = images; // Initialize filtered images
 			}
 		} catch (error) {
 			console.error('Error loading gallery images:', error);
 			images = [];
-			filteredImages = [];
 		}
 		
 		window.addEventListener('keydown', handleKeydown);

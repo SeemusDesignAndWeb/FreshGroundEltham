@@ -1,14 +1,13 @@
-<script lang="ts">
-	import type { MenuItem } from '$lib/server/database';
-	import type { PageData } from './$types';
+<script lang="js">
+	// MenuItem type not needed in JavaScript
 	import SEOHead from '$lib/components/SEOHead.svelte';
 	import { onMount } from 'svelte';
 
-	let { data }: { data: PageData } = $props();
-	let menuItems = $state<MenuItem[]>(data?.menuItems || []);
+	let { data } = $props();
+	let menuItems = $state(data?.menuItems || []);
 	let isMenuHidden = $state(false);
-	let backgroundImage = $state<string | null>(data?.backgroundImage || null);
-	let selectedCategory = $state<string | null>(null);
+	let backgroundImage = $state(data?.backgroundImage || null);
+	let selectedCategory = $state(null);
 
 	onMount(async () => {
 		
@@ -17,7 +16,7 @@
 			const navResponse = await fetch('/api/navigation');
 			if (navResponse.ok) {
 				const navData = await navResponse.json();
-				const menuNavItem = navData.items?.find((item: any) => item.path === '/menu');
+				const menuNavItem = navData.items?.find((item) => item.path === '/menu');
 				if (menuNavItem && menuNavItem.hidden) {
 					isMenuHidden = true;
 					menuItems = []; // Clear any menu items
@@ -40,15 +39,15 @@
 		}
 	});
 
-	function formatPrice(price: number) {
+	function formatPrice(price) {
 		return new Intl.NumberFormat('en-GB', {
 			style: 'currency',
 			currency: 'GBP'
 		}).format(price);
 	}
 
-	function groupByCategory(items: MenuItem[]) {
-		const grouped: Record<string, MenuItem[]> = {};
+	function groupByCategory(items) {
+		const grouped = {};
 		items.forEach(item => {
 			if (!grouped[item.category]) {
 				grouped[item.category] = [];
@@ -62,7 +61,7 @@
 	
 	// Get unique categories - will be sorted by the API based on category settings
 	const categories = $derived.by(() => {
-		const categorySet = new Set<string>();
+		const categorySet = new Set();
 		menuItems.forEach(item => {
 			if (item.category && item.category.trim()) {
 				categorySet.add(item.category.trim());

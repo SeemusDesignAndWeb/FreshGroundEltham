@@ -1,12 +1,12 @@
-<script lang="ts">
+<script lang="js">
 	import { onMount } from 'svelte';
-	import type { Testimonial } from '$lib/server/database';
+	// Testimonial type not needed in JavaScript
 	import { notify } from '$lib/stores/notifications';
 
-	let testimonials = $state<Testimonial[]>([]);
-	let editingTestimonialId = $state<string | null>(null);
+	let testimonials = $state([]);
+	let editingTestimonialId = $state(null);
 	let showTestimonialForm = $state(false);
-	let testimonialFormData = $state<Partial<Testimonial>>({
+	let testimonialFormData = $state({
 		name: '',
 		text: '',
 		rating: 5
@@ -28,7 +28,7 @@
 		loadTestimonials();
 	});
 
-	function handleEditTestimonial(testimonial: Testimonial) {
+	function handleEditTestimonial(testimonial) {
 		editingTestimonialId = testimonial.id;
 		testimonialFormData = { ...testimonial };
 		showTestimonialForm = true;
@@ -54,7 +54,7 @@
 				});
 				if (!response.ok) throw new Error('Failed to update');
 			} else {
-				const newTestimonial: Testimonial = {
+          const newTestimonial = {
 					id: Date.now().toString(),
 					name: testimonialFormData.name || '',
 					text: testimonialFormData.text || '',

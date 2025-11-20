@@ -1,12 +1,11 @@
-<script lang="ts">
+<script lang="js">
 	import { onMount } from 'svelte';
-	import type { Event } from '$lib/stores/cart';
-	import type { PageData } from './$types';
+	// Event type not needed in JavaScript
 	import SEOHead from '$lib/components/SEOHead.svelte';
 
-	let { data } = $props<PageData>();
-	let events = $state<Event[]>(data?.events || []);
-	let backgroundImage = $state<string | null>(data?.backgroundImage || null);
+	let { data } = $props();
+	let events = $state(data?.events || []);
+	let backgroundImage = $state(data?.backgroundImage || null);
 
 	onMount(async () => {
 		// Reload events in case they've been updated
@@ -21,14 +20,14 @@
 		}
 	});
 
-	function handleImageError(event: Event) {
-		const img = event.target as HTMLImageElement;
+	function handleImageError(event) {
+		const img = event.target;
 		if (img) {
 			img.style.display = 'none';
 		}
 	}
 
-	function formatDate(dateString: string) {
+	function formatDate(dateString) {
 		const date = new Date(dateString);
 		return date.toLocaleDateString('en-GB', { 
 			weekday: 'long', 
@@ -38,7 +37,7 @@
 		});
 	}
 
-	function formatTime(time24: string): string {
+	function formatTime(time24) {
 		if (!time24) return '';
 		const [hours, minutes] = time24.split(':');
 		const hour = parseInt(hours, 10);

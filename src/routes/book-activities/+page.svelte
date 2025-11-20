@@ -1,4 +1,4 @@
-<script lang="ts">
+<script lang="js">
 	import SEOHead from '$lib/components/SEOHead.svelte';
 	
 	let formSubmitted = $state(false);
@@ -12,14 +12,14 @@
 		message: ''
 	});
 
-	function handleImageError(event: Event) {
-		const img = event.target as HTMLImageElement;
+	function handleImageError(event) {
+		const img = event.target;
 		if (img) {
 			img.style.display = 'none';
 		}
 	}
 
-	function handleSubmit(event: Event) {
+	function handleSubmit(event) {
 		event.preventDefault();
 		// In a real app, you would submit this to a server
 		console.log('Booking submitted:', formData);

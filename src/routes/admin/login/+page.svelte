@@ -1,4 +1,4 @@
-<script lang="ts">
+<script lang="js">
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
 
@@ -6,7 +6,7 @@
 	let error = $state('');
 	let loading = $state(false);
 
-	async function handleLogin(event: Event) {
+	async function handleLogin(event) {
 		event.preventDefault();
 		error = '';
 		loading = true;

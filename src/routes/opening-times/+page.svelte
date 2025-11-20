@@ -1,11 +1,10 @@
-<script lang="ts">
-	import type { OpeningTimes } from '$lib/server/database';
-	import type { PageData } from './$types';
+<script lang="js">
+	// OpeningTimes type not needed in JavaScript
 	import SEOHead from '$lib/components/SEOHead.svelte';
 
-	let { data }: { data: PageData } = $props();
-	let openingTimes = $state<OpeningTimes | null>(data?.openingTimes || null);
-	let backgroundImage = $state<string | null>(data?.backgroundImage || null);
+	let { data } = $props();
+	let openingTimes = $state(data?.openingTimes || null);
+	let backgroundImage = $state(data?.backgroundImage || null);
 </script>
 
 <SEOHead />

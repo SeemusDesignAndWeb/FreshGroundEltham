@@ -1,17 +1,15 @@
-<script lang="ts">
+<script lang="js">
 	import { onMount } from 'svelte';
-	import type { Event } from '$lib/stores/cart';
-	import type { SiteImage } from '$lib/server/database';
-	import type { PageData } from './$types';
+	// Event and SiteImage types not needed in JavaScript
 	import { notify } from '$lib/stores/notifications';
 	import ImageSelector from '$lib/components/ImageSelector.svelte';
 
-	let { data } = $props<PageData>();
-	let events = $state<Event[]>(data?.events || []);
-	let editingId = $state<string | null>(null);
+	let { data } = $props();
+	let events = $state(data?.events || []);
+	let editingId = $state(null);
 	let showAddForm = $state(false);
-	let images = $state<SiteImage[]>([]);
-	let formData = $state<Partial<Event>>({
+	let images = $state([]);
+	let formData = $state({
 		title: '',
 		description: '',
 		image: '',
@@ -22,7 +20,7 @@
 	});
 	let eventsSettings = $state({ hideFromHomePage: false });
 	let showSettingsForm = $state(false);
-	let selectedDays = $state<string[]>([]);
+	let selectedDays = $state([]);
 	const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
 	async function loadEvents() {
@@ -83,14 +81,14 @@
 		loadEventsSettings();
 	});
 
-	function handleImageError(event: Event) {
-		const img = event.target as HTMLImageElement;
+	function handleImageError(event) {
+		const img = event.target;
 		if (img) {
 			img.style.display = 'none';
 		}
 	}
 
-	function handleEdit(event: Event) {
+	function handleEdit(event) {
 		editingId = event.id;
 		formData = { ...event };
 		selectedDays = event.recurring || [];
@@ -128,7 +126,7 @@
 				if (!response.ok) throw new Error('Failed to update');
 				notify.success('Event updated successfully!');
 			} else {
-				const newEvent: Event = {
+				const newEvent = {
 					id: Date.now().toString(),
 					title: formData.title || '',
 					description: formData.description || '',
@@ -170,7 +168,7 @@
 		selectedDays = [];
 	}
 
-	function formatDate(dateString: string) {
+	function formatDate(dateString) {
 		const date = new Date(dateString);
 		return date.toLocaleDateString('en-GB', { 
 			weekday: 'long', 
@@ -180,7 +178,7 @@
 		});
 	}
 
-	function formatTime(time24: string): string {
+	function formatTime(time24) {
 		if (!time24) return '';
 		const [hours, minutes] = time24.split(':');
 		const hour = parseInt(hours, 10);

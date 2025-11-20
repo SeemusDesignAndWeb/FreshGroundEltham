@@ -1,11 +1,11 @@
-<script lang="ts">
+<script lang="js">
 	import { onMount } from 'svelte';
 	import { notify } from '$lib/stores/notifications';
-	import type { SiteImage } from '$lib/server/database';
+	// SiteImage type not needed in JavaScript
 	import ImageSelector from '$lib/components/ImageSelector.svelte';
 
-	let tvScreenImages = $state<string[]>([]);
-	let images = $state<SiteImage[]>([]);
+	let tvScreenImages = $state([]);
+	let images = $state([]);
 	let transitionDuration = $state(5000);
 	let isSaving = $state(false);
 	let isLoading = $state(true);
@@ -72,11 +72,11 @@
 		tvScreenImages = [...tvScreenImages, ''];
 	}
 
-	function removeImage(index: number) {
+	function removeImage(index) {
 		tvScreenImages = tvScreenImages.filter((_, i) => i !== index);
 	}
 
-	function updateImage(index: number, value: string) {
+	function updateImage(index, value) {
 		tvScreenImages[index] = value;
 		tvScreenImages = [...tvScreenImages]; // Trigger reactivity
 	}

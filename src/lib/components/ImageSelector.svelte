@@ -1,15 +1,5 @@
-<script lang="ts">
-	import type { SiteImage } from '$lib/types';
-
-	interface Props {
-		images: SiteImage[];
-		value?: string;
-		label?: string;
-		placeholder?: string;
-		allowCustomUrl?: boolean;
-		showPreview?: boolean;
-		onchange?: (value: string) => void;
-	}
+<script lang="js">
+	// SiteImage type not needed in JavaScript
 
 	let {
 		images = $bindable(),
@@ -19,7 +9,7 @@
 		allowCustomUrl = true,
 		showPreview = true,
 		onchange
-	}: Props = $props();
+	} = $props();
 
 	let showModal = $state(false);
 	let customUrl = $state('');
@@ -44,7 +34,7 @@
 		);
 	}
 
-	function selectImage(imagePath: string) {
+	function selectImage(imagePath) {
 		value = imagePath;
 		if (onchange) {
 			onchange(imagePath);
@@ -79,14 +69,14 @@
 	}
 
 	// Close modal on Escape key
-	function handleKeydown(event: KeyboardEvent) {
+	function handleKeydown(event) {
 		if (event.key === 'Escape' && showModal) {
 			closeModal();
 		}
 	}
 
 	// Close modal when clicking outside
-	function handleBackdropClick(event: MouseEvent) {
+	function handleBackdropClick(event) {
 		if (event.target === event.currentTarget) {
 			closeModal();
 		}
@@ -140,7 +130,7 @@
 			type="text"
 			value={value}
 			oninput={(e) => {
-				const newValue = (e.target as HTMLInputElement).value;
+				const newValue = (e.target).value;
 				value = newValue;
 				if (onchange) {
 					onchange(newValue);
@@ -159,7 +149,7 @@
 				alt="Preview"
 				class="max-w-full max-h-32 object-contain border border-gray-300 rounded"
 				onerror={(e) => {
-					(e.target as HTMLImageElement).style.display = 'none';
+					(e.target).style.display = 'none';
 				}}
 			/>
 		</div>
@@ -242,7 +232,7 @@
 										alt={image.alt || image.name}
 										class="w-full h-full object-cover"
 										onerror={(e) => {
-											const target = e.target as HTMLImageElement;
+											const target = e.target;
 											target.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="200" height="200"%3E%3Crect fill="%23ddd" width="200" height="200"/%3E%3Ctext fill="%23999" font-family="sans-serif" font-size="14" x="50%25" y="50%25" text-anchor="middle" dy=".3em"%3EImage%3C/text%3E%3C/svg%3E';
 										}}
 									/>

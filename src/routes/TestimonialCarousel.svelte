@@ -1,10 +1,10 @@
-<script lang="ts">
+<script lang="js">
 	import { onMount } from 'svelte';
-	import type { Testimonial } from '$lib/server/database';
+	// Testimonial type not needed in JavaScript
 
-	let testimonials = $state<Testimonial[]>([]);
+	let testimonials = $state([]);
 	let currentIndex = $state(0);
-	let interval: ReturnType<typeof setInterval>;
+	let interval;
 
 	onMount(async () => {
 		try {
@@ -31,7 +31,7 @@
 		};
 	});
 
-	function goToTestimonial(index: number) {
+	function goToTestimonial(index) {
 		currentIndex = index;
 		if (interval) {
 			clearInterval(interval);
@@ -44,7 +44,7 @@
 		}
 	}
 
-	function renderStars(rating: number) {
+	function renderStars(rating) {
 		return Array.from({ length: 5 }, (_, i) => i < rating);
 	}
 </script>

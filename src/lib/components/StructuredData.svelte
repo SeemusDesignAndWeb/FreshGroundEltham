@@ -1,11 +1,8 @@
-<script lang="ts">
+<script lang="js">
 	import { page } from '$app/stores';
 	
-	interface Props {
-		type?: 'LocalBusiness' | 'Organization' | 'WebSite';
-	}
 	
-	let { type = 'LocalBusiness' }: Props = $props();
+    let { type = 'LocalBusiness' } = $props();
 	
 	// Get current site URL
 	const siteUrl = typeof window !== 'undefined' ? window.location.origin : 'https://freshgroundeltham.co.uk';
@@ -101,7 +98,7 @@
 		}
 	};
 	
-	let schema = $derived(() => {
+	let schema = $derived.by(() => {
 		switch (type) {
 			case 'LocalBusiness':
 				return localBusinessSchema;
@@ -115,4 +112,4 @@
 	});
 </script>
 
-{@html `<script type="application/ld+json">${JSON.stringify(schema(), null, 2)}</script>`}
+{@html `<script type="application/ld+json">${JSON.stringify(schema, null, 2)}</script>`}

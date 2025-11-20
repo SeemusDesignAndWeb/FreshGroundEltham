@@ -1,18 +1,18 @@
-<script lang="ts">
+<script lang="js">
 	import { onMount } from 'svelte';
-	import type { MenuItem, MenuCategory } from '$lib/server/database';
+	// MenuItem and MenuCategory types not needed in JavaScript
 	import { notify } from '$lib/stores/notifications';
 
-	let menuItems = $state<MenuItem[]>([]);
-	let editingMenuItemId = $state<string | null>(null);
+	let menuItems = $state([]);
+	let editingMenuItemId = $state(null);
 	let showMenuItemForm = $state(false);
 	let importing = $state(false);
 	let showImportForm = $state(false);
 	let showCategorySettings = $state(false);
-	let categories = $state<MenuCategory[]>([]);
-	let editingCategoryName = $state<string | null>(null);
-	let draggedCategoryIndex = $state<number | null>(null);
-	let menuItemFormData = $state<Partial<MenuItem>>({
+	let categories = $state([]);
+	let editingCategoryName = $state(null);
+	let draggedCategoryIndex = $state(null);
+	let menuItemFormData = $state({
 		category: '',
 		name: '',
 		description: '',
@@ -26,7 +26,7 @@
 
 	// Group menu items by category
 	const groupedMenuItems = $derived.by(() => {
-		const grouped: Record<string, MenuItem[]> = {};
+		const grouped = {};
 		menuItems.forEach(item => {
 			if (!grouped[item.category]) {
 				grouped[item.category] = [];
@@ -71,7 +71,7 @@
 		loadCategories();
 	});
 
-	function handleEditMenuItem(menuItem: MenuItem) {
+	function handleEditMenuItem(menuItem) {
 		editingMenuItemId = menuItem.id;
 		menuItemFormData = { ...menuItem };
 		showMenuItemForm = true;
@@ -112,7 +112,7 @@
 				});
 				if (!response.ok) throw new Error('Failed to update');
 			} else {
-				const newMenuItem: MenuItem = {
+          const newMenuItem = {
 					id: Date.now().toString(),
 					category: menuItemFormData.category || '',
 					name: menuItemFormData.name || '',
@@ -173,7 +173,7 @@
 		}
 	}
 
-	async function handleRenameCategory(oldName: string, newName: string) {
+	async function handleRenameCategory(oldName, newName) {
 		if (!newName.trim()) {
 			notify.error('Category name cannot be empty');
 			return;
@@ -203,11 +203,11 @@
 		}
 	}
 
-	function handleDragStart(index: number) {
+	function handleDragStart(index) {
 		draggedCategoryIndex = index;
 	}
 
-	function handleDragOver(event: DragEvent, index: number) {
+    function handleDragOver(event, index) {
 		event.preventDefault();
 		if (draggedCategoryIndex === null || draggedCategoryIndex === index) return;
 
@@ -225,15 +225,15 @@
 	}
 
 
-	function formatPrice(price: number) {
+	function formatPrice(price) {
 		return new Intl.NumberFormat('en-GB', {
 			style: 'currency',
 			currency: 'GBP'
 		}).format(price);
 	}
 
-	async function handleFileSelect(event: Event) {
-		const input = event.target as HTMLInputElement;
+	async function handleFileSelect(event) {
+		const input = event.target;
 		const file = input.files?.[0];
 		
 		if (!file) return;
@@ -291,7 +291,7 @@
 		}
 	}
 
-	async function importExcel(file: File) {
+	async function importExcel(file) {
 		importing = true;
 		try {
 			const formData = new FormData();
@@ -325,7 +325,7 @@
 			showImportForm = false;
 			
 			// Reset file input
-			const fileInput = document.getElementById('excelFile') as HTMLInputElement;
+			const fileInput = document.getElementById('excelFile');
 			if (fileInput) {
 				fileInput.value = '';
 			}

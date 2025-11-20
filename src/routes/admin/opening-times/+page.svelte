@@ -1,15 +1,14 @@
-<script lang="ts">
+<script lang="js">
 	import { onMount } from 'svelte';
-	import type { OpeningTimes } from '$lib/server/database';
-	import type { SiteImage } from '$lib/server/database';
+	// OpeningTimes and SiteImage types not needed in JavaScript
 	import { notify } from '$lib/stores/notifications';
 	import ImageSelector from '$lib/components/ImageSelector.svelte';
 
-	let openingTimes = $state<OpeningTimes | null>(null);
+	let openingTimes = $state(null);
 	let loading = $state(true);
 	let saving = $state(false);
 	let successMessage = $state('');
-	let images = $state<SiteImage[]>([]);
+	let images = $state([]);
 
 	onMount(async () => {
 		await loadOpeningTimes();

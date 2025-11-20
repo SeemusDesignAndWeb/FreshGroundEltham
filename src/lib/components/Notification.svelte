@@ -1,4 +1,4 @@
-<script lang="ts">
+<script lang="js">
 	import { notifications, removeNotification } from '$lib/stores/notifications';
 	import { onMount } from 'svelte';
 

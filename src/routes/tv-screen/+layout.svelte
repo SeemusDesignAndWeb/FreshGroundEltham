@@ -1,4 +1,4 @@
-<script lang="ts">
+<script lang="js">
 	import Notification from '$lib/components/Notification.svelte';
 	import '../../app.css';
 

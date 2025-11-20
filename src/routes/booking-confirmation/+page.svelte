@@ -1,19 +1,19 @@
-<script lang="ts">
+<script lang="js">
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
 	import SEOHead from '$lib/components/SEOHead.svelte';
 
-	let confirmation = $state<any>(null);
+	let confirmation = $state(null);
 	let emailSent = $state(false);
 
-	function formatPrice(price: number) {
+	function formatPrice(price) {
 		return new Intl.NumberFormat('en-GB', {
 			style: 'currency',
 			currency: 'GBP'
 		}).format(price);
 	}
 
-	function formatDate(dateString: string) {
+	function formatDate(dateString) {
 		const date = new Date(dateString);
 		return date.toLocaleDateString('en-GB', { 
 			weekday: 'long', 

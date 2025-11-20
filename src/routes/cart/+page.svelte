@@ -1,10 +1,10 @@
-<script lang="ts">
+<script lang="js">
 	import { cart, removeFromCart, updateQuantity, clearCart } from '$lib/stores/cart';
 	import { goto } from '$app/navigation';
-	import type { CartItem } from '$lib/stores/cart';
+	// CartItem type not needed in JavaScript
 	import SEOHead from '$lib/components/SEOHead.svelte';
 
-	function formatPrice(price: number) {
+	function formatPrice(price) {
 		return new Intl.NumberFormat('en-GB', {
 			style: 'currency',
 			currency: 'GBP'

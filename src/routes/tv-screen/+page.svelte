@@ -1,13 +1,13 @@
-<script lang="ts">
+<script lang="js">
 	import { onMount, onDestroy } from 'svelte';
-	import type { TvScreenSettings } from '$lib/server/database';
+	// TvScreenSettings type not needed in JavaScript
 
-	let images = $state<string[]>([]);
+	let images = $state([]);
 	let currentIndex = $state(0);
 	let transitionDuration = $state(5000);
 	let isLoading = $state(true);
-	let transitionTimer: ReturnType<typeof setInterval> | null = null;
-	let loadedImages = $state<Set<string>>(new Set());
+	let transitionTimer = null;
+	let loadedImages = $state(new Set());
 
 	onMount(async () => {
 		await loadTvScreenSettings();
@@ -28,7 +28,7 @@
 		try {
 			const response = await fetch('/api/tv-screen');
 			if (response.ok) {
-				const data: TvScreenSettings = await response.json();
+				const data = await response.json();
 				images = data.images || [];
 				transitionDuration = data.transitionDuration || 5000;
 			}
@@ -49,7 +49,7 @@
 		}, transitionDuration);
 	}
 
-	function goToImage(index: number) {
+	function goToImage(index) {
 		currentIndex = index;
 		if (transitionTimer) {
 			clearInterval(transitionTimer);
@@ -100,7 +100,7 @@
 					class="w-full h-full object-cover"
 					onerror={(e) => {
 						console.error('Failed to load image:', image);
-						(e.target as HTMLImageElement).style.display = 'none';
+						(e.target).style.display = 'none';
 					}}
 				/>
 			</div>

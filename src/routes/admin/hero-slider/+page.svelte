@@ -1,11 +1,11 @@
-<script lang="ts">
+<script lang="js">
 	import { onMount } from 'svelte';
 	import { notify } from '$lib/stores/notifications';
-	import type { SiteImage } from '$lib/server/database';
+	// SiteImage type not needed in JavaScript
 	import ImageSelector from '$lib/components/ImageSelector.svelte';
 
-	let heroImages = $state<string[]>([]);
-	let images = $state<SiteImage[]>([]);
+	let heroImages = $state([]);
+	let images = $state([]);
 	let isSaving = $state(false);
 	let isLoading = $state(true);
 
@@ -69,11 +69,11 @@
 		heroImages = [...heroImages, ''];
 	}
 
-	function removeImage(index: number) {
+	function removeImage(index) {
 		heroImages = heroImages.filter((_, i) => i !== index);
 	}
 
-	function updateImage(index: number, value: string) {
+	function updateImage(index, value) {
 		heroImages[index] = value;
 		heroImages = [...heroImages]; // Trigger reactivity
 	}

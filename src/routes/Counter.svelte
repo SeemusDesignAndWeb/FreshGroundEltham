@@ -1,4 +1,4 @@
-<script lang="ts">
+<script lang="js">
 	import { spring } from 'svelte/motion';
 
 	let count = $state(0);
@@ -11,7 +11,7 @@
 	});
 	let offset = $derived(modulo($displayedCount, 1));
 
-	function modulo(n: number, m: number) {
+	function modulo(n, m) {
 		// handle negative numbers
 		return ((n % m) + m) % m;
 	}

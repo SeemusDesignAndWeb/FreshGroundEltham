@@ -1,4 +1,4 @@
-<script lang="ts">
+<script lang="js">
 	import { onMount } from 'svelte';
 
 	let activitiesCount = $state(0);
@@ -7,16 +7,18 @@
 	let menuItemsCount = $state(0);
 	let imagesCount = $state(0);
 	let specialOffersCount = $state(0);
+	let announcementsCount = $state(0);
 
 	onMount(async () => {
 		try {
-			const [activitiesRes, eventsRes, testimonialsRes, menuRes, imagesRes, offersRes] = await Promise.all([
+			const [activitiesRes, eventsRes, testimonialsRes, menuRes, imagesRes, offersRes, announcementsRes] = await Promise.all([
 				fetch('/api/admin/activities'),
 				fetch('/api/admin/events'),
 				fetch('/api/admin/testimonials'),
 				fetch('/api/admin/menu'),
 				fetch('/api/admin/images'),
-				fetch('/api/admin/special-offers')
+				fetch('/api/admin/special-offers'),
+				fetch('/api/admin/announcements')
 			]);
 
 			if (activitiesRes.ok) {
@@ -43,6 +45,10 @@
 				const data = await offersRes.json();
 				specialOffersCount = data.offers?.length || 0;
 			}
+			if (announcementsRes.ok) {
+				const data = await announcementsRes.json();
+				announcementsCount = data.announcements?.length || 0;
+			}
 		} catch (error) {
 			console.error('Error loading dashboard data:', error);
 		}
@@ -60,6 +66,17 @@
 		<h1 class="text-4xl font-bold text-[#39918c] mb-8">Admin Dashboard</h1>
 		
 		<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+			<a href="/admin/announcements" class="bg-white rounded-lg p-6 shadow-lg border-2 border-[#ff8c42] hover:shadow-xl transition-shadow">
+				<div class="flex items-center justify-between mb-4">
+					<h2 class="text-2xl font-bold text-[#ff8c42]">Announcements</h2>
+					<svg class="w-8 h-8 text-[#ff8c42]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z"/>
+					</svg>
+				</div>
+				<p class="text-4xl font-bold text-gray-700 mb-2">{announcementsCount}</p>
+				<p class="text-gray-600">Homepage announcements</p>
+			</a>
+			
 			<a href="/admin/special-offers" class="bg-white rounded-lg p-6 shadow-lg border-2 border-[#ab6b51] hover:shadow-xl transition-shadow">
 				<div class="flex items-center justify-between mb-4">
 					<h2 class="text-2xl font-bold text-[#ab6b51]">Special Offers</h2>

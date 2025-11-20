@@ -1,9 +1,8 @@
-<script lang="ts">
+<script lang="js">
 	import SEOHead from '$lib/components/SEOHead.svelte';
-	import type { PageData } from './$types';
 
-	let { data }: { data: PageData } = $props();
-	let backgroundImage = $state<string | null>(data?.backgroundImage || null);
+	let { data } = $props();
+	let backgroundImage = $state(data?.backgroundImage || null);
 </script>
 
 <SEOHead />

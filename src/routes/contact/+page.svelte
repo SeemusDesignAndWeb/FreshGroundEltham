@@ -1,11 +1,10 @@
-<script lang="ts">
+<script lang="js">
 	import SEOHead from '$lib/components/SEOHead.svelte';
-	import type { PageData } from './$types';
 
-	let { data }: { data: PageData } = $props();
-	let backgroundImage = $state<string | null>(data?.backgroundImage || null);
+	let { data } = $props();
+	let backgroundImage = $state(data?.backgroundImage || null);
 	let formSubmitted = $state(false);
-	let formError = $state<string | null>(null);
+	let formError = $state(null);
 	let isSubmitting = $state(false);
 	let formStartTime = $state(Date.now());
 	let formData = $state({
@@ -17,14 +16,14 @@
 		website: '' // Honeypot field - should remain empty
 	});
 
-	function handleImageError(event: Event) {
-		const img = event.target as HTMLImageElement;
+	function handleImageError(event) {
+		const img = event.target;
 		if (img) {
 			img.style.display = 'none';
 		}
 	}
 
-	async function handleSubmit(event: Event) {
+	async function handleSubmit(event) {
 		event.preventDefault();
 		formError = null;
 		isSubmitting = true;

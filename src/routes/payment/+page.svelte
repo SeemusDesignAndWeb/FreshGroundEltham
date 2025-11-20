@@ -1,18 +1,18 @@
-<script lang="ts">
+<script lang="js">
 	import { onMount } from 'svelte';
 	import { cart, clearCart } from '$lib/stores/cart';
 	import { goto } from '$app/navigation';
 	import { browser } from '$app/environment';
 	import SEOHead from '$lib/components/SEOHead.svelte';
 
-	let bookingData = $state<any>(null);
-	let paypalButtons: any = null;
+	let bookingData = $state(null);
+	let paypalButtons = null;
 	let paypalLoaded = $state(false);
-	let orderId = $state<string | null>(null);
-	let paypalClientId = $state<string | null>(null);
-	let paypal: any = null;
+	let orderId = $state(null);
+	let paypalClientId = $state(null);
+	let paypal = null;
 
-	function formatPrice(price: number) {
+	function formatPrice(price) {
 		return new Intl.NumberFormat('en-GB', {
 			style: 'currency',
 			currency: 'GBP'
@@ -105,7 +105,7 @@
 		}
 	});
 
-	function renderPayPalButtons(container: HTMLElement) {
+	function renderPayPalButtons(container) {
 		if (!paypal || !paypal.Buttons || !orderId) {
 			console.error('PayPal SDK or order ID not available');
 			return;
@@ -115,7 +115,7 @@
 			createOrder: async () => {
 				return orderId;
 			},
-			onApprove: async (data: any) => {
+			onApprove: async (data) => {
 				try {
 					// Capture the payment
 					const response = await fetch('/api/capture-payment', {
@@ -152,7 +152,7 @@
 					alert('Payment failed. Please try again.');
 				}
 			},
-			onError: (err: any) => {
+			onError: (err) => {
 				console.error('PayPal error:', err);
 				alert('An error occurred with PayPal. Please try again.');
 			},
@@ -166,7 +166,7 @@
 
 		paypalButtons.render(container).then(() => {
 			paypalLoaded = true;
-		}).catch((err: any) => {
+		}).catch((err) => {
 			console.error('Error rendering PayPal buttons:', err);
 			alert('Failed to load payment buttons. Please refresh the page.');
 		});

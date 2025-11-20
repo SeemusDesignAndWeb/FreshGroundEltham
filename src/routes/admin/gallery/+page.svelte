@@ -1,11 +1,11 @@
-<script lang="ts">
+<script lang="js">
 	import { onMount } from 'svelte';
 	import { notify } from '$lib/stores/notifications';
-	import type { SiteImage, GalleryImage } from '$lib/server/database';
+	// SiteImage and GalleryImage types not needed in JavaScript
 	import ImageSelector from '$lib/components/ImageSelector.svelte';
 
-	let galleryImages = $state<GalleryImage[]>([]);
-	let images = $state<SiteImage[]>([]);
+	let galleryImages = $state([]);
+	let images = $state([]);
 	let isSaving = $state(false);
 	let isLoading = $state(true);
 
@@ -70,17 +70,17 @@
 		galleryImages = [...galleryImages, { src: '', alt: '', category: 'other' }];
 	}
 
-	function removeImage(index: number) {
+	function removeImage(index) {
 		galleryImages = galleryImages.filter((_, i) => i !== index);
 	}
 
-	function updateImage(index: number, field: keyof GalleryImage, value: string) {
+    function updateImage(index, field, value) {
 		galleryImages[index] = { ...galleryImages[index], [field]: value };
 		galleryImages = [...galleryImages]; // Trigger reactivity
 	}
 
 	// Handle image selection from library - auto-populate category and alt text
-	function handleImageSrcChange(index: number, newSrc: string) {
+	function handleImageSrcChange(index, newSrc) {
 		const selectedImage = images.find(img => img.path === newSrc);
 		if (selectedImage) {
 			// Auto-populate category and alt text from the image library

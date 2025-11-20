@@ -1,7 +1,7 @@
-<script lang="ts">
+<script lang="js">
 	import { cart } from '$lib/stores/cart';
 	import { goto } from '$app/navigation';
-	import type { CartItem } from '$lib/stores/cart';
+	// CartItem type not needed in JavaScript
 	import SEOHead from '$lib/components/SEOHead.svelte';
 
 	let formData = $state({
@@ -10,9 +10,9 @@
 		phone: ''
 	});
 
-	let errors = $state<Record<string, string>>({});
+	let errors = $state({});
 
-	function formatPrice(price: number) {
+	function formatPrice(price) {
 		return new Intl.NumberFormat('en-GB', {
 			style: 'currency',
 			currency: 'GBP'
@@ -32,7 +32,7 @@
 		return Object.keys(errors).length === 0;
 	}
 
-	function handleSubmit(event: Event) {
+	function handleSubmit(event) {
 		event.preventDefault();
 		if (validateForm()) {
 			// Store booking data in sessionStorage for payment page

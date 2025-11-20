@@ -1,15 +1,15 @@
-<script lang="ts">
+<script lang="js">
 	import { onMount } from 'svelte';
-	import type { SiteImage } from '$lib/server/database';
+	// SiteImage type not needed in JavaScript
 	import { notify } from '$lib/stores/notifications';
 
-	let images = $state<SiteImage[]>([]);
-	let editingId = $state<string | null>(null);
+	let images = $state([]);
+	let editingId = $state(null);
 	let showAddForm = $state(false);
 	let uploading = $state(false);
-	let selectedFile = $state<File | null>(null);
-	let uploadPreview = $state<string | null>(null);
-	let formData = $state<Partial<SiteImage>>({
+	let selectedFile = $state(null);
+	let uploadPreview = $state(null);
+	let formData = $state({
 		name: '',
 		path: '',
 		alt: '',
@@ -52,7 +52,7 @@
 		}
 	});
 
-	function handleEdit(image: SiteImage) {
+	function handleEdit(image) {
 		editingId = image.id;
 		formData = { ...image };
 		showAddForm = true;
@@ -71,8 +71,8 @@
 		showAddForm = true;
 	}
 
-	async function handleFileSelect(event: Event) {
-		const input = event.target as HTMLInputElement;
+	async function handleFileSelect(event) {
+		const input = event.target;
 		const file = input.files?.[0];
 		
 		if (!file) return;
@@ -107,7 +107,7 @@
 		// Create preview
 		const reader = new FileReader();
 		reader.onload = (e) => {
-			uploadPreview = e.target?.result as string;
+			uploadPreview = e.target?.result;
 		};
 		reader.readAsDataURL(file);
 
@@ -124,7 +124,7 @@
 		await uploadFile(file);
 	}
 
-	async function uploadFile(file: File) {
+	async function uploadFile(file) {
 		uploading = true;
 		try {
 			const formDataUpload = new FormData();
@@ -157,7 +157,7 @@
 			if (error instanceof Error) {
 				errorMessage = error.message;
 			} else if (typeof error === 'object' && error !== null && 'error' in error) {
-				errorMessage = String((error as any).error);
+				errorMessage = String((error).error);
 			}
 			notify.error(errorMessage);
 			selectedFile = null;
@@ -178,7 +178,7 @@
 				if (!response.ok) throw new Error('Failed to update');
 				notify.success('Image updated successfully!');
 			} else {
-				const newImage: SiteImage = {
+          const newImage = {
 					id: Date.now().toString(),
 					name: formData.name || '',
 					path: formData.path || '',
@@ -215,8 +215,8 @@
 		};
 	}
 
-	function handleImageError(event: Event) {
-		const img = event.target as HTMLImageElement;
+	function handleImageError(event) {
+		const img = event.target;
 		if (img) {
 			img.style.display = 'none';
 		}

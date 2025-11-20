@@ -1,17 +1,15 @@
-<script lang="ts">
+<script lang="js">
 	import { onMount } from 'svelte';
-	import type { SpecialOffer } from '$lib/server/database';
-	import type { SiteImage } from '$lib/server/database';
-	import type { PageData } from './$types';
+	// SpecialOffer and SiteImage types not needed in JavaScript
 	import { notify } from '$lib/stores/notifications';
 	import ImageSelector from '$lib/components/ImageSelector.svelte';
 
-	let { data } = $props<PageData>();
-	let offers = $state<SpecialOffer[]>(data?.offers || []);
-	let editingId = $state<string | null>(null);
+	let { data } = $props();
+	let offers = $state(data?.offers || []);
+	let editingId = $state(null);
 	let showAddForm = $state(false);
-	let images = $state<SiteImage[]>([]);
-	let formData = $state<Partial<SpecialOffer>>({
+	let images = $state([]);
+	let formData = $state({
 		name: '',
 		description: '',
 		image: '',
@@ -49,14 +47,14 @@
 		loadImages();
 	});
 
-	function handleImageError(event: Event) {
-		const img = event.target as HTMLImageElement;
+	function handleImageError(event) {
+		const img = event.target;
 		if (img) {
 			img.style.display = 'none';
 		}
 	}
 
-	function handleEdit(offer: SpecialOffer) {
+	function handleEdit(offer) {
 		editingId = offer.id;
 		formData = { ...offer };
 		showAddForm = true;
@@ -89,7 +87,7 @@
 				if (!response.ok) throw new Error('Failed to update');
 				notify.success('Special offer updated successfully!');
 			} else {
-				const newOffer: SpecialOffer = {
+          const newOffer = {
 					id: Date.now().toString(),
 					name: formData.name || '',
 					description: formData.description || '',
@@ -128,7 +126,7 @@
 		};
 	}
 
-	async function handleDelete(id: string) {
+	async function handleDelete(id) {
 		if (!confirm('Are you sure you want to delete this special offer?')) return;
 		
 		try {
@@ -146,7 +144,7 @@
 		}
 	}
 
-	function formatPrice(price: number) {
+	function formatPrice(price) {
 		return new Intl.NumberFormat('en-GB', {
 			style: 'currency',
 			currency: 'GBP'

@@ -1,13 +1,8 @@
-<script lang="ts">
+<script lang="js">
 	import { page } from '$app/stores';
-	import { getSEOData, generateSEOHead } from '$lib/seo';
-	
-	interface Props {
-		path?: string;
-		override?: Partial<import('$lib/seo').SEOData>;
-	}
-	
-	let { path, override }: Props = $props();
+    import { getSEOData, generateSEOHead } from '$lib/seo';
+    
+    let { path, override } = $props();
 	
 	const currentPath = path || $page.url.pathname;
 	const seoData = getSEOData(currentPath);

@@ -1,15 +1,14 @@
-<script lang="ts">
+<script lang="js">
 	import { onMount } from 'svelte';
 	import { addToCart } from '$lib/stores/cart';
 	import { goto } from '$app/navigation';
-	import type { Activity } from '$lib/stores/cart';
-	import type { PageData } from './$types';
+	// Activity type not needed in JavaScript
 	import SEOHead from '$lib/components/SEOHead.svelte';
 
-	let { data } = $props<PageData>();
-	let activities = $state<Activity[]>(data?.activities || []);
-	let settings = $state<{ hidden: boolean; message: string }>(data?.settings || { hidden: false, message: 'No activities scheduled at the moment. Check back soon for upcoming kids activities!' });
-	let backgroundImage = $state<string | null>(data?.backgroundImage || null);
+	let { data } = $props();
+	let activities = $state(data?.activities || []);
+	let settings = $state(data?.settings || { hidden: false, message: 'No activities scheduled at the moment. Check back soon for upcoming kids activities!' });
+	let backgroundImage = $state(data?.backgroundImage || null);
 
 	onMount(async () => {
 		
@@ -26,19 +25,19 @@
 		}
 	});
 
-	function handleImageError(event: Event) {
-		const img = event.target as HTMLImageElement;
+	function handleImageError(event) {
+		const img = event.target;
 		if (img) {
 			img.style.display = 'none';
 		}
 	}
 
-	function handleBookActivity(activity: Activity) {
+    function handleBookActivity(activity) {
 		addToCart(activity);
 		goto('/cart');
 	}
 
-	function formatDate(dateString: string) {
+	function formatDate(dateString) {
 		const date = new Date(dateString);
 		return date.toLocaleDateString('en-GB', { 
 			weekday: 'long', 
@@ -48,7 +47,7 @@
 		});
 	}
 
-	function formatPrice(price: number) {
+	function formatPrice(price) {
 		return new Intl.NumberFormat('en-GB', {
 			style: 'currency',
 			currency: 'GBP'

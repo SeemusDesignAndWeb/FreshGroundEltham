@@ -1,19 +1,20 @@
-<script lang="ts">
+<script lang="js">
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
 	import { addToCart } from '$lib/stores/cart';
-	import type { SpecialOffer, Event as EventType } from '$lib/stores/cart';
+	// Event and SpecialOffer types are not needed in JavaScript
 	
 	let currentIndex = $state(0);
-	let images = $state<string[]>([]);
-	let specialOffers = $state<SpecialOffer[]>([]);
-	let events = $state<EventType[]>([]);
-	let nextEvent = $state<EventType | null>(null);
+	let images = $state([]);
+	let announcement = $state(null);
+	let specialOffers = $state([]);
+	let events = $state([]);
+	let nextEvent = $state(null);
 	
-	let interval: ReturnType<typeof setInterval>;
+	let interval;
 	
-	function handleImageError(e: Event) {
-		const img = e.target as HTMLImageElement;
+	function handleImageError(e) {
+		const img = e.target;
 		if (img) {
 			img.style.display = 'none';
 		}
@@ -25,19 +26,19 @@
 		}
 	}
 	
-	function handleBuyOffer(offer: SpecialOffer) {
+	function handleBuyOffer(offer) {
 		addToCart(offer);
 		goto('/cart');
 	}
 	
-	function formatPrice(price: number) {
+	function formatPrice(price) {
 		return new Intl.NumberFormat('en-GB', {
 			style: 'currency',
 			currency: 'GBP'
 		}).format(price);
 	}
 
-	function formatTime(time24: string): string {
+	function formatTime(time24) {
 		if (!time24) return '';
 		const [hours, minutes] = time24.split(':');
 		const hour = parseInt(hours, 10);
@@ -46,7 +47,7 @@
 		return `${hour12}:${minutes} ${ampm}`;
 	}
 
-	function formatEventDate(event: EventType): string {
+	function formatEventDate(event) {
 		if (event.recurring && event.recurring.length > 0) {
 			return `Every ${event.recurring.join(', ')}`;
 		} else {
@@ -60,7 +61,7 @@
 		}
 	}
 
-	function getNextEvent(events: EventType[], maxDays: number = Infinity): EventType | null {
+	function getNextEvent(events, maxDays = Infinity) {
 		if (events.length === 0) return null;
 
 		const now = new Date();
@@ -98,7 +99,7 @@
 			return 0;
 		});
 
-		let nextEvent: EventType | null = null;
+		let nextEvent = null;
 
 		// Find the first valid upcoming event within the date range
 		for (const event of sortedEvents) {
@@ -204,16 +205,54 @@
 			images = [];
 		}
 		
-		// Load special offers
+		// Load announcements first (they override offers and events)
 		try {
-			const response = await fetch('/api/special-offers');
-			if (response.ok) {
-				const data = await response.json();
-				specialOffers = data.offers || [];
-				
-				// Load events if no enabled special offers (offers with enabled=false won't be in the response)
-				// Also check if we need to show events within 10 days when offers exist but are disabled
-				if (specialOffers.length === 0) {
+			const announcementResponse = await fetch('/api/announcements');
+			if (announcementResponse.ok) {
+				const announcementData = await announcementResponse.json();
+				announcement = announcementData.announcement || null;
+			}
+		} catch (error) {
+			console.error('Error loading announcements:', error);
+		}
+		
+		// Only load offers and events if no active announcement
+		if (!announcement) {
+			// Load special offers
+			try {
+				const response = await fetch('/api/special-offers');
+				if (response.ok) {
+					const data = await response.json();
+					specialOffers = data.offers || [];
+					
+					// Load events if no enabled special offers (offers with enabled=false won't be in the response)
+					// Also check if we need to show events within 10 days when offers exist but are disabled
+					if (specialOffers.length === 0) {
+						try {
+							// Check events settings first
+							const settingsResponse = await fetch('/api/events/settings');
+							let hideFromHomePage = false;
+							if (settingsResponse.ok) {
+								const settingsData = await settingsResponse.json();
+								hideFromHomePage = settingsData.settings?.hideFromHomePage || false;
+							}
+							
+							// Only load events if not hidden globally
+							if (!hideFromHomePage) {
+								const eventsResponse = await fetch('/api/events');
+								if (eventsResponse.ok) {
+									const eventsData = await eventsResponse.json();
+									events = eventsData.events || [];
+									// If no enabled offers, show next event within 10 days
+									nextEvent = getNextEvent(events, 10);
+								}
+							}
+						} catch (error) {
+							console.error('Error loading events:', error);
+						}
+					}
+				} else {
+					// If special offers fetch fails, try loading events anyway
 					try {
 						// Check events settings first
 						const settingsResponse = await fetch('/api/events/settings');
@@ -229,7 +268,6 @@
 							if (eventsResponse.ok) {
 								const eventsData = await eventsResponse.json();
 								events = eventsData.events || [];
-								// If no enabled offers, show next event within 10 days
 								nextEvent = getNextEvent(events, 10);
 							}
 						}
@@ -237,7 +275,8 @@
 						console.error('Error loading events:', error);
 					}
 				}
-			} else {
+			} catch (error) {
+				console.error('Error loading special offers:', error);
 				// If special offers fetch fails, try loading events anyway
 				try {
 					// Check events settings first
@@ -257,33 +296,9 @@
 							nextEvent = getNextEvent(events, 10);
 						}
 					}
-				} catch (error) {
-					console.error('Error loading events:', error);
+				} catch (eventsError) {
+					console.error('Error loading events:', eventsError);
 				}
-			}
-		} catch (error) {
-			console.error('Error loading special offers:', error);
-			// If special offers fetch fails, try loading events anyway
-			try {
-				// Check events settings first
-				const settingsResponse = await fetch('/api/events/settings');
-				let hideFromHomePage = false;
-				if (settingsResponse.ok) {
-					const settingsData = await settingsResponse.json();
-					hideFromHomePage = settingsData.settings?.hideFromHomePage || false;
-				}
-				
-				// Only load events if not hidden globally
-				if (!hideFromHomePage) {
-					const eventsResponse = await fetch('/api/events');
-					if (eventsResponse.ok) {
-						const eventsData = await eventsResponse.json();
-						events = eventsData.events || [];
-						nextEvent = getNextEvent(events, 10);
-					}
-				}
-			} catch (eventsError) {
-				console.error('Error loading events:', eventsError);
 			}
 		}
 		
@@ -336,8 +351,19 @@
 			<h1 class="text-4xl md:text-6xl font-bold mb-2 md:mb-4 px-2">A community café serving the best coffee in Eltham</h1>
 			<p class="text-base md:text-xl text-gray-200 mb-4 md:mb-8 px-2">Run by <a href="https://www.egcc.co.uk" target="_blank" rel="noopener noreferrer" class="text-white hover:text-gray-200">Eltham Green Community Church</a></p>
 			
-			<!-- Special Offers Banner -->
-			{#if specialOffers.length > 0}
+			<!-- Announcement Banner (highest priority - overrides offers and events) -->
+			{#if announcement}
+				<div class="mt-4 md:mt-8 space-y-3 md:space-y-4 flex flex-col items-center">
+					<div class="bg-[#fef9f0]/95 backdrop-blur-sm rounded-xl md:rounded-2xl px-4 py-3 md:px-6 md:py-4 shadow-2xl border-2 border-[#39918c] max-w-xl w-full mx-auto special-offer-banner">
+						<div class="text-center space-y-2 md:space-y-3 leading-tight">
+							<h3 class="text-2xl md:text-4xl font-bold text-[#39918c] leading-tight px-2">{announcement.title}</h3>
+							<p class="text-sm md:text-base text-gray-700 leading-tight px-2">
+								{announcement.description}
+							</p>
+						</div>
+					</div>
+				</div>
+			{:else if specialOffers.length > 0}
 				<div class="mt-4 md:mt-8 space-y-3 md:space-y-4 flex flex-col items-center">
 					{#each specialOffers as offer (offer.id)}
 						<div class="bg-black/25 backdrop-blur-md rounded-xl md:rounded-2xl px-3 py-2 md:px-4 md:py-3 shadow-2xl border border-black/20 max-w-xl w-full mx-auto special-offer-banner relative">
@@ -345,13 +371,13 @@
 								<div class="text-xs md:text-sm text-white/80 drop-shadow-md -mb-0.5 md:-mb-1">Only</div>
 								<span class="text-2xl md:text-3xl font-bold text-white drop-shadow-lg">{formatPrice(offer.price)}</span>
 							</div>
-							<a 
-								href="javascript:void(0)"
+							<button 
+								type="button"
 								onclick={() => handleBuyOffer(offer)}
 								class="absolute top-2 right-2 md:top-3 md:right-3 bg-[#ff8c42]/30 backdrop-blur-sm text-[#ff8c42] px-3 py-1.5 md:px-4 md:py-1.5 rounded-full hover:bg-[#ff8c42]/40 transition-all duration-300 text-sm md:text-sm font-medium border border-[#ff8c42]/50 hover:border-[#ff8c42]/70 shadow-md hover:shadow-lg whitespace-nowrap inline-block font-bold z-10"
 							>
 								Buy Now
-							</a>
+							</button>
 							<div class="text-center space-y-1.5 md:space-y-2 leading-tight pt-8 md:pt-0">
 								<div class="space-y-0.5 md:space-y-1">
 									<span class="inline-block text-sm md:text-base font-bold text-[#ff8c42] uppercase tracking-wider px-2 py-0.5 md:px-3 md:py-1 bg-[#ff8c42]/30 rounded-full drop-shadow-lg animate-pulse-bright">Special Offer</span>

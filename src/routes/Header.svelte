@@ -1,4 +1,4 @@
-<script lang="ts">
+<script lang="js">
 	import { page } from '$app/stores';
 	import { onMount } from 'svelte';
 	import { cart } from '$lib/stores/cart';
@@ -24,7 +24,7 @@
 	let bannerEnabled = $state(false);
 	let bannerIcon = $state('');
 	let bannerEndIcon = $state('');
-	let navigationItems = $state<Array<{path: string; label: string; hidden: boolean}>>([]);
+	let navigationItems = $state([]);
 	
 	let cartCount = $derived($cart.reduce((sum, item) => sum + item.quantity, 0));
 	
@@ -79,8 +79,8 @@
 		return () => window.removeEventListener('scroll', handleScroll);
 	});
 	
-	function handleImageError(event: Event) {
-		const img = event.target as HTMLImageElement;
+	function handleImageError(event) {
+		const img = event.target;
 		if (img) {
 			img.style.display = 'none';
 			// Show text if image fails
