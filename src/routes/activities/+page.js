@@ -8,7 +8,7 @@ export const load = async ({ fetch }) => {
 		]);
 		
 		let activities = [];
-		let settings = { hidden, message: 'No activities scheduled at the moment. Check back soon for upcoming kids activities!' };
+		let settings = { hidden: false, message: 'No activities scheduled at the moment. Check back soon for upcoming kids activities!' };
 		if (activitiesResponse.ok) {
 			const activitiesData = await activitiesResponse.json();
 			activities = activitiesData.activities || [];
@@ -29,8 +29,8 @@ export const load = async ({ fetch }) => {
 	} catch (error) {
 		console.error('Error loading activities data:', error);
 		return {
-			activities,
-			settings: { hidden, message: 'No activities scheduled at the moment. Check back soon for upcoming kids activities!' },
+			activities: [],
+			settings: { hidden: false, message: 'No activities scheduled at the moment. Check back soon for upcoming kids activities!' },
 			backgroundImage: null
 		};
 	}

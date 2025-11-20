@@ -405,7 +405,7 @@ export function updateOpeningTimes(openingTimes) {
 export function getActivitiesSettings() {
 	const db = readDatabase();
 	return db.activitiesSettings || {
-		hidden,
+		hidden: false,
 		message: 'No activities scheduled at the moment. Check back soon for upcoming kids activities!'
 	};
 }
