@@ -17,7 +17,8 @@
 				headers: {
 					'Content-Type': 'application/json'
 				},
-				body: JSON.stringify({ password })
+				body: JSON.stringify({ password }),
+				credentials: 'include' // Ensure cookies are sent/received
 			});
 
 			const data = await response.json();

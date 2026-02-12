@@ -27,11 +27,12 @@ export const POST = async ({ request, cookies }) => {
 
 		if (password === adminPassword) {
 			// Set a session cookie (expires in 24 hours)
+			// Use sameSite: 'lax' for better compatibility with redirects after login
 			cookies.set('admin_session', 'authenticated', {
 				path: '/',
 				maxAge: 60 * 60 * 24, // 24 hours
 				httpOnly: true,
-				sameSite: 'strict',
+				sameSite: 'lax',
 				secure: process.env.NODE_ENV === 'production'
 			});
 

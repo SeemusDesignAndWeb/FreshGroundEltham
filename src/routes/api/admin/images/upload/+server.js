@@ -1,12 +1,11 @@
 import { json } from '@sveltejs/kit';
-
-import { v2} from 'cloudinary';
+import { v2 as cloudinary } from 'cloudinary';
 import { env } from '$env/dynamic/private';
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 const ALLOWED_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp', 'image/svg+xml'];
 
-export const POST= async ({ request, cookies }) => {
+export const POST = async ({ request, cookies }) => {
 	// Check authentication
 	if (!cookies.get('admin_session')) {
 		return json({ error: 'Unauthorized' }, { status: 401 });
@@ -18,21 +17,22 @@ export const POST= async ({ request, cookies }) => {
 	const CLOUDINARY_API_SECRET = env.CLOUDINARY_API_SECRET?.trim();
 
 	if (!CLOUDINARY_CLOUD_NAME || !CLOUDINARY_API_KEY || !CLOUDINARY_API_SECRET) {
-		console.error('Cloudinary configuration missing:', {
-			hasCloudName: !!CLOUDINARY_CLOUD_NAME,
-			hasApiKey: !!CLOUDINARY_API_KEY,
-			hasApiSecret: !!CLOUDINARY_API_SECRET
-		});
-		return json({ 
+		const missing = [
+			!CLOUDINARY_CLOUD_NAME && 'CLOUDINARY_CLOUD_NAME',
+			!CLOUDINARY_API_KEY && 'CLOUDINARY_API_KEY',
+			!CLOUDINARY_API_SECRET && 'CLOUDINARY_API_SECRET'
+		].filter(Boolean);
+		console.error('Cloudinary configuration missing:', missing);
+		return json({
 			error: 'Cloudinary not configured',
-			details: 'Please set CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, and CLOUDINARY_API_SECRET in your .env file'
+			details: `Set these environment variables in production: ${missing.join(', ')}. See CLOUDINARY_SETUP.md`
 		}, { status: 500 });
 	}
 
 	// Configure Cloudinary for this request
 	cloudinary.config({
-		cloud_name,
-		api_key,
+		cloud_name: CLOUDINARY_CLOUD_NAME,
+		api_key: CLOUDINARY_API_KEY,
 		api_secret: CLOUDINARY_API_SECRET
 	});
 
@@ -46,8 +46,8 @@ export const POST= async ({ request, cookies }) => {
 
 		// Validate file type
 		if (!ALLOWED_TYPES.includes(file.type)) {
-			return json({ 
-				error: 'Invalid file type. Allowed types, SVG' 
+			return json({
+				error: 'Invalid file type. Allowed types: JPEG, PNG, GIF, WebP, SVG'
 			}, { status: 400 });
 		}
 
@@ -55,8 +55,8 @@ export const POST= async ({ request, cookies }) => {
 		if (file.size > MAX_FILE_SIZE) {
 			const fileSizeMB = (file.size / (1024 * 1024)).toFixed(2);
 			const maxSizeMB = (MAX_FILE_SIZE / (1024 * 1024)).toFixed(0);
-			return json({ 
-				error: `File too large`,
+			return json({
+				error: 'File too large',
 				details: `File size is ${fileSizeMB}MB. Maximum allowed size is ${maxSizeMB}MB. Please compress or resize the image before uploading.`
 			}, { status: 400 });
 		}
@@ -64,10 +64,10 @@ export const POST= async ({ request, cookies }) => {
 		// Generate a sanitized public_id for Cloudinary
 		const originalName = file.name;
 		const sanitizedName = originalName
-			.replace(/\.[^/.]+$/, '') // Remove extension
+			.replace(/\.[^/.]+$/, '')
 			.replace(/[^a-zA-Z0-9-]/g, '_')
 			.toLowerCase();
-		
+
 		const timestamp = Date.now();
 		const publicId = `freshground/${sanitizedName}_${timestamp}`;
 
@@ -75,7 +75,7 @@ export const POST= async ({ request, cookies }) => {
 		const arrayBuffer = await file.arrayBuffer();
 		const buffer = Buffer.from(arrayBuffer);
 		const base64 = buffer.toString('base64');
-		const dataURI = `data: {file.type};base64,${base64}`;
+		const dataURI = `data:${file.type};base64,${base64}`;
 
 		console.log('Uploading to Cloudinary:', {
 			publicId,
@@ -85,9 +85,8 @@ export const POST= async ({ request, cookies }) => {
 		});
 
 		try {
-			// Upload to Cloudinary
 			const result = await cloudinary.uploader.upload(dataURI, {
-				public_id,
+				public_id: publicId,
 				folder: 'freshground',
 				resource_type: 'auto',
 				overwrite: false
@@ -99,9 +98,8 @@ export const POST= async ({ request, cookies }) => {
 				format: result.format
 			});
 
-			// Return the Cloudinary URL
-			return json({ 
-				success, 
+			return json({
+				success: true,
 				path: result.secure_url,
 				filename: result.public_id,
 				originalName,
@@ -112,23 +110,20 @@ export const POST= async ({ request, cookies }) => {
 				height: result.height
 			});
 		} catch (uploadError) {
-			console.error('Cloudinary upload error:', uploadError);
-			return json({ 
+			const errMsg = uploadError instanceof Error ? uploadError.message : String(uploadError);
+			console.error('Cloudinary upload error:', errMsg, uploadError);
+			const details = process.env.NODE_ENV === 'development' ? errMsg : (errMsg.includes('Invalid') || errMsg.includes('Unauthorized') ? 'Check Cloudinary API key and secret in environment variables' : 'Verify Cloudinary credentials in your hosting dashboard');
+			return json({
 				error: 'Failed to upload image to Cloudinary',
-				details: process.env.NODE_ENV === 'development' ? (uploadError instanceof Error ? uploadError.message : String(uploadError)) : 'Please check Cloudinary configuration'
+				details
 			}, { status: 500 });
 		}
 	} catch (error) {
-		console.error('Error uploading image:', error);
 		const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
-		console.error('Error details:', {
-			message,
-			stack: error instanceof Error ? error.stack : undefined
-		});
-		return json({ 
+		console.error('Error uploading image:', errorMessage, error);
+		return json({
 			error: 'Failed to upload image',
-			details: process.env.NODE_ENV === 'development' ? errorMessage : undefined
+			details: process.env.NODE_ENV === 'development' ? errorMessage : 'Check server logs for details'
 		}, { status: 500 });
 	}
 };
-
