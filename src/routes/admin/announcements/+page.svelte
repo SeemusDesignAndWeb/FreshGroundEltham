@@ -12,7 +12,9 @@
 		visibleDate: '',
 		visibleTime: '',
 		endDate: '',
-		endTime: ''
+		endTime: '',
+		buttonText: '',
+		buttonLink: ''
 	});
 
 	async function loadAnnouncements() {
@@ -33,7 +35,11 @@
 
 	function handleEdit(announcement) {
 		editingId = announcement.id;
-		formData = { ...announcement };
+		formData = {
+			...announcement,
+			buttonText: announcement.buttonText || '',
+			buttonLink: announcement.buttonLink || ''
+		};
 		showAddForm = true;
 	}
 
@@ -44,7 +50,9 @@
 			visibleDate: '',
 			visibleTime: '',
 			endDate: '',
-			endTime: ''
+			endTime: '',
+			buttonText: '',
+			buttonLink: ''
 		};
 		editingId = null;
 		showAddForm = true;
@@ -94,7 +102,9 @@
 					visibleDate: formData.visibleDate || '',
 					visibleTime: formData.visibleTime || '',
 					endDate: formData.endDate || undefined,
-					endTime: formData.endTime || undefined
+					endTime: formData.endTime || undefined,
+					buttonText: formData.buttonText || '',
+					buttonLink: formData.buttonLink || ''
 				};
 				const response = await fetch('/api/admin/announcements', {
 					method: 'POST',
@@ -122,7 +132,9 @@
 			visibleDate: '',
 			visibleTime: '',
 			endDate: '',
-			endTime: ''
+			endTime: '',
+			buttonText: '',
+			buttonLink: ''
 		};
 	}
 
@@ -243,6 +255,32 @@
 
 					<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
 						<div>
+							<label for="announcement-button-text" class="block text-gray-700 font-medium mb-2">Button Text (Optional)</label>
+							<input 
+								id="announcement-button-text"
+								type="text" 
+								bind:value={formData.buttonText}
+								placeholder="e.g., Learn More"
+								class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#39918c]"
+							/>
+							<p class="text-sm text-gray-500 mt-1">Label for the optional call-to-action button</p>
+						</div>
+
+						<div>
+							<label for="announcement-button-link" class="block text-gray-700 font-medium mb-2">Button Link (Optional)</label>
+							<input 
+								id="announcement-button-link"
+								type="text" 
+								bind:value={formData.buttonLink}
+								placeholder="e.g., /events or https://example.com"
+								class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#39918c]"
+							/>
+							<p class="text-sm text-gray-500 mt-1">URL for the button (internal path or full URL)</p>
+						</div>
+					</div>
+
+					<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+						<div>
 							<label for="announcement-end-date" class="block text-gray-700 font-medium mb-2">End Date (Optional)</label>
 							<input 
 								id="announcement-end-date"
@@ -316,6 +354,11 @@
 									{/if}
 								</div>
 								<p class="text-gray-700 mb-3">{announcement.description}</p>
+								{#if announcement.buttonText && announcement.buttonLink}
+									<p class="text-sm text-[#39918c] mb-2">
+										<strong>Button:</strong> "{announcement.buttonText}" → {announcement.buttonLink}
+									</p>
+								{/if}
 								<div class="text-sm text-gray-600 space-y-1">
 									<p><strong>Visible from:</strong> {formatDateTime(announcement.visibleDate, announcement.visibleTime)}</p>
 									{#if announcement.endDate}

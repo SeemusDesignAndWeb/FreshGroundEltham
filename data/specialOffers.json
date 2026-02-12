@@ -6,7 +6,7 @@
       "description": "This is a description fo what you get",
       "image": "/images/pastries.jpg",
       "price": 10,
-      "enabled": true,
+      "enabled": false,
       "emailInformation": "This is some information on the email"
     }
   ]

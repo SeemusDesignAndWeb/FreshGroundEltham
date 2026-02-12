@@ -737,10 +737,12 @@
       "id": "1763644857312",
       "title": "New Christmas Menu - Wed 26th!",
       "description": "Come and enjoy our Christmas Menu of Food and Drink!",
-      "visibleDate": "2025-11-20",
-      "visibleTime": "10:00",
-      "endDate": "2025-12-12",
-      "endTime": "14:00"
+      "visibleDate": "2026-02-12",
+      "visibleTime": "08:00",
+      "endDate": "2026-02-19",
+      "endTime": "14:00",
+      "buttonText": "Book now!",
+      "buttonLink": "/activities"
     }
   ]
 }

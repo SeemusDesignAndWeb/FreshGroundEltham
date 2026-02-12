@@ -360,6 +360,16 @@
 							<p class="text-sm md:text-base text-gray-700 leading-tight px-2">
 								{announcement.description}
 							</p>
+							{#if announcement.buttonText && announcement.buttonLink}
+								<a 
+									href={announcement.buttonLink}
+									class="inline-block mt-2 bg-[#39918c] text-white px-6 py-2 rounded-lg hover:bg-[#2f435a] transition-colors font-medium"
+									target={announcement.buttonLink.startsWith('http') ? '_blank' : undefined}
+									rel={announcement.buttonLink.startsWith('http') ? 'noopener noreferrer' : undefined}
+								>
+									{announcement.buttonText}
+								</a>
+							{/if}
 						</div>
 					</div>
 				</div>
