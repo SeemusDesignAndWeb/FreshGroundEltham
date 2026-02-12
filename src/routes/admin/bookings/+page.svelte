@@ -6,6 +6,12 @@
 	let loading = $state(true);
 	let searchTerm = $state('');
 	let selectedBooking = $state(null);
+	
+	// Filters
+	let filterActivity = $state('');
+	let filterDateFrom = $state('');
+	let filterDateTo = $state('');
+	let showFilters = $state(false);
 
 	async function loadBookings() {
 		loading = true;
@@ -69,20 +75,79 @@
 		});
 	}
 
+	// Get unique activity names from all bookings
+	function getUniqueActivities() {
+		const activities = new Set();
+		bookings.forEach(booking => {
+			(booking.cart || []).forEach(item => {
+				if (item.title) activities.add(item.title);
+			});
+		});
+		return Array.from(activities).sort();
+	}
+
 	function getFilteredBookings() {
-		if (!searchTerm.trim()) return bookings;
-		const term = searchTerm.toLowerCase();
-		return bookings.filter(booking => 
-			booking.name?.toLowerCase().includes(term) ||
-			booking.email?.toLowerCase().includes(term) ||
-			booking.phone?.toLowerCase().includes(term) ||
-			booking.id?.toLowerCase().includes(term) ||
-			booking.transactionId?.toLowerCase().includes(term)
-		);
+		let filtered = bookings;
+		
+		// Filter by search term
+		if (searchTerm.trim()) {
+			const term = searchTerm.toLowerCase();
+			filtered = filtered.filter(booking => 
+				booking.name?.toLowerCase().includes(term) ||
+				booking.email?.toLowerCase().includes(term) ||
+				booking.phone?.toLowerCase().includes(term) ||
+				booking.id?.toLowerCase().includes(term) ||
+				booking.transactionId?.toLowerCase().includes(term) ||
+				(booking.cart || []).some(item => item.title?.toLowerCase().includes(term))
+			);
+		}
+		
+		// Filter by activity
+		if (filterActivity) {
+			filtered = filtered.filter(booking => 
+				(booking.cart || []).some(item => item.title === filterActivity)
+			);
+		}
+		
+		// Filter by date range
+		if (filterDateFrom) {
+			const fromDate = new Date(filterDateFrom);
+			fromDate.setHours(0, 0, 0, 0);
+			filtered = filtered.filter(booking => {
+				const bookingDate = new Date(booking.paidAt);
+				return bookingDate >= fromDate;
+			});
+		}
+		
+		if (filterDateTo) {
+			const toDate = new Date(filterDateTo);
+			toDate.setHours(23, 59, 59, 999);
+			filtered = filtered.filter(booking => {
+				const bookingDate = new Date(booking.paidAt);
+				return bookingDate <= toDate;
+			});
+		}
+		
+		return filtered;
+	}
+	
+	function clearFilters() {
+		searchTerm = '';
+		filterActivity = '';
+		filterDateFrom = '';
+		filterDateTo = '';
+	}
+	
+	function hasActiveFilters() {
+		return searchTerm || filterActivity || filterDateFrom || filterDateTo;
 	}
 
 	function getTotalRevenue() {
 		return bookings.reduce((sum, booking) => sum + (booking.total || 0), 0);
+	}
+	
+	function getFilteredRevenue() {
+		return getFilteredBookings().reduce((sum, booking) => sum + (booking.total || 0), 0);
 	}
 
 	function viewBookingDetails(booking) {
@@ -120,27 +185,126 @@
 		<!-- Stats Cards -->
 		<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
 			<div class="bg-gradient-to-r from-[#39918c] to-[#2f435a] rounded-lg p-6 text-white">
-				<h3 class="text-lg font-medium opacity-90">Total Bookings</h3>
-				<p class="text-4xl font-bold mt-2">{bookings.length}</p>
+				<h3 class="text-lg font-medium opacity-90">{hasActiveFilters() ? 'Filtered Bookings' : 'Total Bookings'}</h3>
+				<p class="text-4xl font-bold mt-2">{hasActiveFilters() ? getFilteredBookings().length : bookings.length}</p>
+				{#if hasActiveFilters()}
+					<p class="text-sm opacity-75 mt-1">of {bookings.length} total</p>
+				{/if}
 			</div>
 			<div class="bg-gradient-to-r from-[#ff8c42] to-[#ab6b51] rounded-lg p-6 text-white">
-				<h3 class="text-lg font-medium opacity-90">Total Revenue</h3>
-				<p class="text-4xl font-bold mt-2">{formatPrice(getTotalRevenue())}</p>
+				<h3 class="text-lg font-medium opacity-90">{hasActiveFilters() ? 'Filtered Revenue' : 'Total Revenue'}</h3>
+				<p class="text-4xl font-bold mt-2">{formatPrice(hasActiveFilters() ? getFilteredRevenue() : getTotalRevenue())}</p>
+				{#if hasActiveFilters()}
+					<p class="text-sm opacity-75 mt-1">of {formatPrice(getTotalRevenue())} total</p>
+				{/if}
 			</div>
 			<div class="bg-gradient-to-r from-[#2f435a] to-[#39918c] rounded-lg p-6 text-white">
 				<h3 class="text-lg font-medium opacity-90">Avg. Booking Value</h3>
-				<p class="text-4xl font-bold mt-2">{bookings.length > 0 ? formatPrice(getTotalRevenue() / bookings.length) : '£0.00'}</p>
+				{#if hasActiveFilters()}
+					<p class="text-4xl font-bold mt-2">{getFilteredBookings().length > 0 ? formatPrice(getFilteredRevenue() / getFilteredBookings().length) : '£0.00'}</p>
+					<p class="text-sm opacity-75 mt-1">for filtered results</p>
+				{:else}
+					<p class="text-4xl font-bold mt-2">{bookings.length > 0 ? formatPrice(getTotalRevenue() / bookings.length) : '£0.00'}</p>
+				{/if}
 			</div>
 		</div>
 
-		<!-- Search -->
-		<div class="mb-6">
-			<input 
-				type="text" 
-				placeholder="Search by name, email, phone, booking ID, or transaction ID..."
-				bind:value={searchTerm}
-				class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#39918c] focus:border-transparent"
-			/>
+		<!-- Filters -->
+		<div class="bg-gray-50 rounded-lg p-4 mb-6 border border-gray-200">
+			<div class="flex items-center justify-between mb-4">
+				<button 
+					onclick={() => showFilters = !showFilters}
+					class="flex items-center gap-2 text-[#39918c] font-medium hover:text-[#2f435a] transition-colors"
+				>
+					<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/>
+					</svg>
+					{showFilters ? 'Hide Filters' : 'Show Filters'}
+					{#if hasActiveFilters()}
+						<span class="bg-[#ff8c42] text-white text-xs px-2 py-0.5 rounded-full">Active</span>
+					{/if}
+				</button>
+				{#if hasActiveFilters()}
+					<button 
+						onclick={clearFilters}
+						class="text-sm text-gray-500 hover:text-red-500 transition-colors"
+					>
+						Clear all filters
+					</button>
+				{/if}
+			</div>
+			
+			<!-- Search (always visible) -->
+			<div class="mb-4">
+				<input 
+					type="text" 
+					placeholder="Search by name, email, phone, booking ID, transaction ID, or activity..."
+					bind:value={searchTerm}
+					class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#39918c] focus:border-transparent bg-white"
+				/>
+			</div>
+			
+			{#if showFilters}
+				<div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-4 border-t border-gray-200">
+					<!-- Activity Filter -->
+					<div>
+						<label for="filter-activity" class="block text-sm font-medium text-gray-700 mb-1">Activity</label>
+						<select 
+							id="filter-activity"
+							bind:value={filterActivity}
+							class="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#39918c] focus:border-transparent bg-white"
+						>
+							<option value="">All Activities</option>
+							{#each getUniqueActivities() as activity}
+								<option value={activity}>{activity}</option>
+							{/each}
+						</select>
+					</div>
+					
+					<!-- Date From Filter -->
+					<div>
+						<label for="filter-date-from" class="block text-sm font-medium text-gray-700 mb-1">Date From</label>
+						<input 
+							id="filter-date-from"
+							type="date" 
+							bind:value={filterDateFrom}
+							class="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#39918c] focus:border-transparent bg-white"
+						/>
+					</div>
+					
+					<!-- Date To Filter -->
+					<div>
+						<label for="filter-date-to" class="block text-sm font-medium text-gray-700 mb-1">Date To</label>
+						<input 
+							id="filter-date-to"
+							type="date" 
+							bind:value={filterDateTo}
+							class="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#39918c] focus:border-transparent bg-white"
+						/>
+					</div>
+				</div>
+			{/if}
+			
+			<!-- Results count -->
+			{#if hasActiveFilters()}
+				<div class="mt-4 pt-4 border-t border-gray-200">
+					<p class="text-sm text-gray-600">
+						Showing <strong>{getFilteredBookings().length}</strong> of <strong>{bookings.length}</strong> bookings
+						{#if filterActivity}
+							for <strong>{filterActivity}</strong>
+						{/if}
+						{#if filterDateFrom || filterDateTo}
+							{#if filterDateFrom && filterDateTo}
+								between <strong>{formatDate(filterDateFrom)}</strong> and <strong>{formatDate(filterDateTo)}</strong>
+							{:else if filterDateFrom}
+								from <strong>{formatDate(filterDateFrom)}</strong>
+							{:else if filterDateTo}
+								until <strong>{formatDate(filterDateTo)}</strong>
+							{/if}
+						{/if}
+					</p>
+				</div>
+			{/if}
 		</div>
 
 		<!-- Bookings Table -->
@@ -150,13 +314,13 @@
 			</div>
 		{:else if getFilteredBookings().length === 0}
 			<div class="text-center py-12 bg-gray-50 rounded-lg">
-				{#if searchTerm}
-					<p class="text-xl text-gray-600">No bookings found matching "{searchTerm}"</p>
+				{#if hasActiveFilters()}
+					<p class="text-xl text-gray-600">No bookings found matching your filters</p>
 					<button 
-						onclick={() => searchTerm = ''}
+						onclick={clearFilters}
 						class="mt-4 text-[#39918c] hover:underline"
 					>
-						Clear search
+						Clear all filters
 					</button>
 				{:else}
 					<p class="text-xl text-gray-600">No bookings yet.</p>
