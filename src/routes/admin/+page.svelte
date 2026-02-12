@@ -8,17 +8,27 @@
 	let imagesCount = $state(0);
 	let specialOffersCount = $state(0);
 	let announcementsCount = $state(0);
+	let bookingsCount = $state(0);
+	let bookingsTotal = $state(0);
+
+	function formatPrice(price) {
+		return new Intl.NumberFormat('en-GB', {
+			style: 'currency',
+			currency: 'GBP'
+		}).format(price);
+	}
 
 	onMount(async () => {
 		try {
-			const [activitiesRes, eventsRes, testimonialsRes, menuRes, imagesRes, offersRes, announcementsRes] = await Promise.all([
+			const [activitiesRes, eventsRes, testimonialsRes, menuRes, imagesRes, offersRes, announcementsRes, bookingsRes] = await Promise.all([
 				fetch('/api/admin/activities'),
 				fetch('/api/admin/events'),
 				fetch('/api/admin/testimonials'),
 				fetch('/api/admin/menu'),
 				fetch('/api/admin/images'),
 				fetch('/api/admin/special-offers'),
-				fetch('/api/admin/announcements')
+				fetch('/api/admin/announcements'),
+				fetch('/api/admin/bookings')
 			]);
 
 			if (activitiesRes.ok) {
@@ -49,6 +59,11 @@
 				const data = await announcementsRes.json();
 				announcementsCount = data.announcements?.length || 0;
 			}
+			if (bookingsRes.ok) {
+				const data = await bookingsRes.json();
+				bookingsCount = data.bookings?.length || 0;
+				bookingsTotal = data.bookings?.reduce((sum, b) => sum + (b.total || 0), 0) || 0;
+			}
 		} catch (error) {
 			console.error('Error loading dashboard data:', error);
 		}
@@ -65,6 +80,20 @@
 	<div class="max-w-7xl mx-auto">
 		<h1 class="text-4xl font-bold text-[#39918c] mb-8">Admin Dashboard</h1>
 		
+		<!-- Bookings Highlight -->
+		<a href="/admin/bookings" class="block bg-gradient-to-r from-[#39918c] to-[#2f435a] rounded-lg p-6 shadow-lg hover:shadow-xl transition-shadow mb-8">
+			<div class="flex items-center justify-between text-white">
+				<div>
+					<h2 class="text-2xl font-bold mb-2">Bookings & Payments</h2>
+					<p class="text-white/80">View all customer bookings and payment history</p>
+				</div>
+				<div class="text-right">
+					<p class="text-4xl font-bold">{bookingsCount}</p>
+					<p class="text-white/80">Total: {formatPrice(bookingsTotal)}</p>
+				</div>
+			</div>
+		</a>
+
 		<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
 			<a href="/admin/announcements" class="bg-white rounded-lg p-6 shadow-lg border-2 border-[#ff8c42] hover:shadow-xl transition-shadow">
 				<div class="flex items-center justify-between mb-4">

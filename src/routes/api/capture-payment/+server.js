@@ -1,6 +1,6 @@
 import { json } from '@sveltejs/kit';
-
 import { env } from '$env/dynamic/private';
+import { addBooking } from '$lib/server/database';
 
 // Get PayPal access token
 async function getAccessToken() {
@@ -46,7 +46,7 @@ export const POST= async ({ request }) => {
 	}
 
 	try {
-		const { orderId } = await request.json();
+		const { orderId, bookingData } = await request.json();
 
 		if (!orderId) {
 			return json({ error: 'Order ID is required' }, { status: 400 });
@@ -71,6 +71,25 @@ export const POST= async ({ request }) => {
 		}
 
 		const captureData = await response.json();
+
+		// Store booking in database if bookingData was provided
+		if (bookingData) {
+			const booking = {
+				id: `BK-${Date.now()}`,
+				orderId: captureData.id,
+				status: captureData.status,
+				paymentMethod: 'PayPal',
+				transactionId: captureData.id,
+				paidAt: new Date().toISOString(),
+				name: bookingData.name || '',
+				email: bookingData.email || '',
+				phone: bookingData.phone || '',
+				cart: bookingData.cart || [],
+				total: bookingData.total || 0,
+				payer: captureData.payer || null
+			};
+			addBooking(booking);
+		}
 
 		return json({
 			success: true,

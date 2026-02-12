@@ -121,7 +121,7 @@
 					const response = await fetch('/api/capture-payment', {
 						method: 'POST',
 						headers: { 'Content-Type': 'application/json' },
-						body: JSON.stringify({ orderId: data.orderID })
+						body: JSON.stringify({ orderId: data.orderID, bookingData })
 					});
 
 					const result = await response.json();

@@ -34,6 +34,7 @@
 		
 		// Send email confirmation
 		try {
+			console.log('[BOOKING CONFIRMATION] Sending email confirmation for booking:', confirmation.bookingId);
 			const response = await fetch('/api/send-booking-email', {
 				method: 'POST',
 				headers: {
@@ -42,13 +43,19 @@
 				body: JSON.stringify(confirmation)
 			});
 			
-			if (response.ok) {
+			const result = await response.json();
+			console.log('[BOOKING CONFIRMATION] Email API response:', result);
+			
+			if (response.ok && result.success) {
 				emailSent = true;
+				console.log('[BOOKING CONFIRMATION] Email sent successfully');
+			} else {
+				console.error('[BOOKING CONFIRMATION] Email sending failed:', result.message);
+				// Still show the page, but don't mark email as sent
 			}
 		} catch (error) {
-			console.error('Error sending email:', error);
+			console.error('[BOOKING CONFIRMATION] Error sending email:', error);
 			// Still show success to user even if email fails
-			emailSent = true;
 		}
 	});
 
