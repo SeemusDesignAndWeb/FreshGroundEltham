@@ -26,7 +26,7 @@ export const POST= async ({ request }) => {
 				Activities Booked:</h2>
 				
 					${bookingData.cart.map((item) => `
-						${item.title} - ${item.date} at ${item.time} (Qty: {item.quantity})</li>
+						${item.title} - ${item.date} at ${item.time}${item.endTime ? ` – ${item.endTime}` : ''} (Qty: ${item.quantity})</li>
 					`).join('')}
 				</ul>
 				We look forward to seeing you!</p>

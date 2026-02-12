@@ -70,7 +70,7 @@
 								{#if item.type === 'activity' && item.date && item.time}
 									<div class="flex flex-wrap gap-4 text-sm text-gray-600">
 										<span>📅 Date: {new Date(item.date).toLocaleDateString('en-GB', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</span>
-										<span>🕐 Time: {item.time}</span>
+										<span>🕐 Time: {item.time}{item.endTime ? ` – ${item.endTime}` : ''}</span>
 									</div>
 								{/if}
 							</div>

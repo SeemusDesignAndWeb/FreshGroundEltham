@@ -23,7 +23,8 @@ export function addToCart(item) {
       type: isActivity ? 'activity' : 'special-offer',
 			...(isActivity && { 
 				date: item.date, 
-				time: item.time 
+				time: item.time,
+				endTime: item.endTime
 			}),
 			emailInformation: item.emailInformation
 		};

@@ -17,6 +17,7 @@
 		image: '',
 		date: '',
 		time: '',
+		endTime: '',
 		price: 0,
 		capacity: 0,
 		emailInformation: ''
@@ -88,6 +89,7 @@
 			image: '',
 			date: '',
 			time: '',
+			endTime: '',
 			price: 0,
 			capacity: 0,
 			emailInformation: ''
@@ -113,6 +115,7 @@
 					image: formData.image || '/images/pastries.jpg',
 					date: formData.date || '',
 					time: formData.time || '',
+					endTime: formData.endTime || undefined,
 					price: formData.price || 0,
 					capacity: formData.capacity || 0,
 					emailInformation: formData.emailInformation || ''
@@ -142,6 +145,7 @@
 			image: '',
 			date: '',
 			time: '',
+			endTime: '',
 			price: 0,
 			capacity: 0,
 			emailInformation: ''
@@ -287,7 +291,7 @@
 						></textarea>
 					</div>
 
-					<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+					<div class="grid grid-cols-1 md:grid-cols-4 gap-4">
 						<div>
 							<label for="date" class="block text-gray-700 font-medium mb-2">Date *</label>
 							<input 
@@ -299,12 +303,21 @@
 							/>
 						</div>
 						<div>
-							<label for="time" class="block text-gray-700 font-medium mb-2">Time *</label>
+							<label for="time" class="block text-gray-700 font-medium mb-2">Start Time *</label>
 							<input 
 								id="time"
 								type="time" 
 								bind:value={formData.time}
 								required
+								class="w-full px-4 py-2 border-2 border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#39918c]"
+							/>
+						</div>
+						<div>
+							<label for="endTime" class="block text-gray-700 font-medium mb-2">End Time</label>
+							<input 
+								id="endTime"
+								type="time" 
+								bind:value={formData.endTime}
 								class="w-full px-4 py-2 border-2 border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#39918c]"
 							/>
 						</div>
@@ -385,7 +398,7 @@
 						
 						<div class="space-y-1 text-sm text-gray-600 mb-4">
 							<p><strong>Date:</strong> {formatDate(activity.date)}</p>
-							<p><strong>Time:</strong> {activity.time}</p>
+							<p><strong>Time:</strong> {activity.time}{activity.endTime ? ` – ${activity.endTime}` : ''}</p>
 							<p><strong>Price:</strong> {formatPrice(activity.price)}</p>
 							<p><strong>Capacity:</strong> {activity.capacity} children</p>
 						</div>

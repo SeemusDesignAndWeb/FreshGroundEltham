@@ -117,7 +117,7 @@
 								<div class="flex justify-between items-start">
 									<div>
 										<p class="font-semibold text-gray-800">{item.title}</p>
-										<p class="text-sm text-gray-600">Date: {item.date} at {item.time}</p>
+										<p class="text-sm text-gray-600">Date: {item.date} at {item.time}{item.endTime ? ` – ${item.endTime}` : ''}</p>
 										<p class="text-sm text-gray-600">Quantity: {item.quantity}</p>
 									</div>
 									<p class="font-bold text-[#39918c]">{formatPrice(item.price * item.quantity)}</p>
