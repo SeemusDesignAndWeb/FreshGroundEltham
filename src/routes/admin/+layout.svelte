@@ -89,14 +89,16 @@
 					</a>
 					<!-- Desktop Navigation -->
 					<div class="hidden lg:flex items-center gap-3 flex-1">
-						<!-- Bookings Link (standalone - important) -->
-						<a
-							href="/admin/bookings"
-							class="px-4 py-2 rounded-lg font-medium whitespace-nowrap transition-all {$page.url.pathname === '/admin/bookings' ? 'bg-[#ff8c42] text-white' : 'text-gray-200 hover:bg-[#ff8c42]/30'}"
-						>
-							Bookings
-						</a>
 						{#each navCategories as category}
+							<!-- Insert Bookings link before Settings -->
+							{#if category.key === 'settings'}
+								<a
+									href="/admin/bookings"
+									class="px-4 py-2 rounded-lg font-medium whitespace-nowrap transition-all {$page.url.pathname === '/admin/bookings' ? 'bg-[#ff8c42] text-white' : 'text-gray-200 hover:bg-[#ff8c42]/30'}"
+								>
+									Bookings
+								</a>
+							{/if}
 							<div class="relative dropdown-container">
 								<button
 									type="button"
@@ -175,15 +177,17 @@
 		</button>
 		{#if showMobileMenu}
 			<div class="px-6 py-3 flex flex-col gap-2 border-t border-[#39918c]/20">
-				<!-- Bookings Link (standalone - important) -->
-				<a 
-					href="/admin/bookings"
-					onclick={() => showMobileMenu = false}
-					class="block px-4 py-2.5 rounded-lg transition-colors mb-2 {$page.url.pathname === '/admin/bookings' ? 'bg-[#ff8c42] text-white' : 'text-gray-200 hover:bg-[#ff8c42]/30'}"
-				>
-					Bookings
-				</a>
 				{#each navCategories as category}
+					<!-- Insert Bookings link before Settings -->
+					{#if category.key === 'settings'}
+						<a 
+							href="/admin/bookings"
+							onclick={() => showMobileMenu = false}
+							class="block px-4 py-2.5 rounded-lg transition-colors mb-2 {$page.url.pathname === '/admin/bookings' ? 'bg-[#ff8c42] text-white' : 'text-gray-200 hover:bg-[#ff8c42]/30'}"
+						>
+							Bookings
+						</a>
+					{/if}
 					<div class="mb-2">
 						<p class="text-xs uppercase text-gray-400 font-semibold mb-2 px-2">{category.name}</p>
 						{#each category.items as item}
