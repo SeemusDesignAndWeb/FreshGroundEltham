@@ -136,9 +136,18 @@
 			});
 
 			if (!response.ok) {
-				const errorData = await response.json();
-				const errorMsg = errorData.error || 'Upload failed';
-				const details = errorData.details ? ` (${errorData.details})` : '';
+				let errorMsg = 'Upload failed';
+				let details = '';
+				try {
+					const text = await response.text();
+					const parsed = text ? JSON.parse(text) : {};
+					errorMsg = parsed?.error || errorMsg;
+					details = parsed?.details ? ` - ${parsed.details}` : '';
+				} catch {
+					// Non-JSON response (e.g. HTML error page)
+					errorMsg = `Server error (${response.status})`;
+					details = ' - Check production logs';
+				}
 				throw new Error(`${errorMsg}${details}`);
 			}
 
