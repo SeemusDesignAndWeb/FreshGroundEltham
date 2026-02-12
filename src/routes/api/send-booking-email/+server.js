@@ -1,6 +1,7 @@
 import { json } from '@sveltejs/kit';
 import { env } from '$env/dynamic/private';
 import { Resend } from 'resend';
+import { isBookingEmailSent, markBookingEmailSent } from '$lib/server/database';
 
 // Initialize Resend
 const RESEND_API_KEY = env.RESEND_API_KEY;
@@ -61,6 +62,16 @@ export const POST = async ({ request }) => {
 				success: false,
 				message: 'Email address is required'
 			}, { status: 400 });
+		}
+
+		// Check if email has already been sent for this booking (server-side duplicate prevention)
+		if (bookingData.bookingId && isBookingEmailSent(bookingData.bookingId)) {
+			console.log('[BOOKING EMAIL] Email already sent for booking:', bookingData.bookingId);
+			return json({
+				success: true,
+				message: 'Email already sent for this booking',
+				alreadySent: true
+			});
 		}
 
 		// Get site URL for logo
@@ -339,6 +350,12 @@ Paid At: ${new Date(bookingData.paidAt).toLocaleString('en-GB')}
 		}
 
 		console.log('Booking confirmation email sent to:', bookingData.email);
+
+		// Mark email as sent in database (server-side duplicate prevention)
+		if (bookingData.bookingId) {
+			markBookingEmailSent(bookingData.bookingId);
+			console.log('[BOOKING EMAIL] Marked booking as email sent:', bookingData.bookingId);
+		}
 
 		return json({
 			success: true,

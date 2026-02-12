@@ -247,6 +247,29 @@ export function getBookings() {
 	return db.bookings;
 }
 
+export function getBookingById(bookingId) {
+	const db = readDatabase();
+	return db.bookings?.find(b => b.id === bookingId) || null;
+}
+
+export function markBookingEmailSent(bookingId) {
+	const db = readDatabase();
+	if (!db.bookings) return false;
+	const index = db.bookings.findIndex(b => b.id === bookingId);
+	if (index !== -1) {
+		db.bookings[index].emailSent = true;
+		db.bookings[index].emailSentAt = new Date().toISOString();
+		writeDatabase(db);
+		return true;
+	}
+	return false;
+}
+
+export function isBookingEmailSent(bookingId) {
+	const booking = getBookingById(bookingId);
+	return booking?.emailSent === true;
+}
+
 export function getTestimonials() {
 	const db = readDatabase();
 	return db.testimonials || [];

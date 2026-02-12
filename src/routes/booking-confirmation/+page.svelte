@@ -32,6 +32,16 @@
 		
 		confirmation = JSON.parse(stored);
 		
+		// Check if we've already sent an email for this booking (prevents duplicates on refresh)
+		const emailSentKey = `emailSent_${confirmation.bookingId}`;
+		const alreadySent = sessionStorage.getItem(emailSentKey);
+		
+		if (alreadySent) {
+			console.log('[BOOKING CONFIRMATION] Email already sent for booking:', confirmation.bookingId);
+			emailSent = true;
+			return;
+		}
+		
 		// Send email confirmation
 		try {
 			console.log('[BOOKING CONFIRMATION] Sending email confirmation for booking:', confirmation.bookingId);
@@ -48,6 +58,8 @@
 			
 			if (response.ok && result.success) {
 				emailSent = true;
+				// Mark this booking as having had its email sent
+				sessionStorage.setItem(emailSentKey, 'true');
 				console.log('[BOOKING CONFIRMATION] Email sent successfully');
 			} else {
 				console.error('[BOOKING CONFIRMATION] Email sending failed:', result.message);
