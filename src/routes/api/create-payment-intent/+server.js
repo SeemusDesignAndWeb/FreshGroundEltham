@@ -18,7 +18,7 @@ async function getAccessToken() {
 		console.warn('PayPal Client ID format may be incorrect (should start with A or AQ)');
 	}
 
-	const auth = Buffer.from(`${PAYPAL_CLIENT_ID}{PAYPAL_CLIENT_SECRET}`).toString('base64');
+	const auth = Buffer.from(`${PAYPAL_CLIENT_ID}:${PAYPAL_CLIENT_SECRET}`).toString('base64');
 	
 	const response = await fetch(`${PAYPAL_BASE_URL}/v1/oauth2/token`, {
 		method: 'POST',
@@ -37,13 +37,13 @@ async function getAccessToken() {
 		console.error('PayPal auth error details:', {
 			status: response.status,
 			statusText: response.statusText,
-			baseUrl,
+			baseUrl: PAYPAL_BASE_URL,
 			clientIdLength: PAYPAL_CLIENT_ID?.length || 0,
 			secretLength: PAYPAL_CLIENT_SECRET?.length || 0,
 			error: errorData
 		});
 		
-		throw new Error(`PayPal authentication failed: {errorMessage}`);
+		throw new Error(`PayPal authentication failed: ${errorMessage}`);
 	}
 
 	const data = await response.json();
@@ -100,7 +100,7 @@ export const POST= async ({ request }) => {
 		if (!response.ok) {
 			const error = await response.json().catch(() => ({}));
 			const errorDetails = error.details?.[0]?.description || error.message || error.name || 'Failed to create PayPal order';
-			throw new Error(`PayPal order creation failed: {errorDetails}`);
+			throw new Error(`PayPal order creation failed: ${errorDetails}`);
 		}
 
 		const order = await response.json();
