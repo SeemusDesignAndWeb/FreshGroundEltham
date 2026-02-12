@@ -13,7 +13,7 @@ async function getAccessToken() {
 		throw new Error('PayPal credentials not configured');
 	}
 
-	const auth = Buffer.from(`${PAYPAL_CLIENT_ID}{PAYPAL_CLIENT_SECRET}`).toString('base64');
+	const auth = Buffer.from(`${PAYPAL_CLIENT_ID}:${PAYPAL_CLIENT_SECRET}`).toString('base64');
 	
 	const response = await fetch(`${PAYPAL_BASE_URL}/v1/oauth2/token`, {
 		method: 'POST',
@@ -65,8 +65,9 @@ export const POST= async ({ request }) => {
 		});
 
 		if (!response.ok) {
-			const error = await response.json();
-			throw new Error(error.message || 'Failed to capture payment');
+			const error = await response.json().catch(() => ({}));
+			const errorDetails = error.details?.[0]?.description || error.message || error.name || 'Failed to capture payment';
+			throw new Error(errorDetails);
 		}
 
 		const captureData = await response.json();
